@@ -24,33 +24,99 @@ add_action( 'wp_enqueue_scripts', 'child_theme_configurator_css', 10 );
 // END ENQUEUE PARENT ACTION
 
 /**
+ * Corregir rutas incorrectas de WooCommerce assets
+ */
+function fix_woocommerce_asset_urls() {
+    ?>
+    <style type="text/css">
+    /* Corregir rutas de iconos y fuentes de WooCommerce */
+    @font-face {
+        font-family: 'WooCommerce';
+        src: url('<?php echo WC()->plugin_url(); ?>/assets/fonts/WooCommerce.woff') format('woff'),
+             url('<?php echo WC()->plugin_url(); ?>/assets/fonts/WooCommerce.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+    </style>
+    <?php
+}
+add_action('wp_head', 'fix_woocommerce_asset_urls', 999);
+
+/**
  * Capturar y guardar la vista previa del Live Content Preview (LCP)
  * cuando se añade al carrito
  */
 function wapf_lcp_capture_preview_script() {
+    // Solo cargar en páginas de producto
     if ( ! is_product() ) {
         return;
     }
     
+    // DEBUG: Verificar producto
     global $product;
-    if ( ! $product || ! $product->is_type( 'variable' ) ) {
+    if ( ! $product ) {
+        echo '<!-- LCP DEBUG: No hay producto global -->';
         return;
     }
+    
+    echo '<!-- LCP DEBUG: Producto encontrado, tipo: ' . $product->get_type() . ' -->';
     
     ?>
     <script type="text/javascript">
     jQuery(document).ready(function($) {
         
-        // Librería para capturar HTML como imagen
+        console.log('=== DIAGNÓSTICO LCP CAPTURA ===');
+        console.log('jQuery cargado:', typeof jQuery !== 'undefined');
+        console.log('wapf_config existe:', typeof wapf_config !== 'undefined');
+        console.log('wapf_lcp_nonce existe:', typeof wapf_lcp_nonce !== 'undefined');
+        
+        // Verificar si existe el LCP en la página
+        var $lcpElements = $('.lcp-wrap');
+        console.log('Elementos LCP encontrados:', $lcpElements.length);
+        
+        if ($lcpElements.length > 0) {
+            console.log('✅ LCP existe en la página');
+            console.log('Estructura:', $lcpElements.first().html().substring(0, 100));
+        } else {
+            console.warn('⚠️ No se encontró .lcp-wrap en la página');
+        }
+        
+        // Verificar galería de producto
+        var $gallery = $('.woocommerce-product-gallery__image');
+        console.log('Imágenes de galería encontradas:', $gallery.length);
+        
+        // Verificar formulario
+        var $form = $('form.cart');
+        console.log('Formulario cart encontrado:', $form.length);
+        
+        console.log('=== FIN DIAGNÓSTICO ===');
+        
+        // Verificar el botón añadir al carrito
+        var $addToCartButton = $('.single_add_to_cart_button');
+        console.log('Botón añadir al carrito encontrado:', $addToCartButton.length);
+        if ($addToCartButton.length) {
+            console.log('Texto del botón:', $addToCartButton.text());
+            console.log('Clase del botón:', $addToCartButton.attr('class'));
+        }
+        
+        // Librería para capturar HTML como imagen (LOCAL - no CDN por CSP)
         var loadHtml2Canvas = function(callback) {
             if (typeof html2canvas !== 'undefined') {
+                console.log('html2canvas ya cargado');
                 callback();
                 return;
             }
             
+            console.log('Cargando html2canvas desde archivo local...');
             var script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-            script.onload = callback;
+            script.src = '<?php echo get_stylesheet_directory_uri(); ?>/html2canvas.min.js';
+            script.onload = function() {
+                console.log('✅ html2canvas cargado correctamente');
+                callback();
+            };
+            script.onerror = function() {
+                console.error('❌ Error al cargar html2canvas');
+            };
             document.head.appendChild(script);
         };
         
@@ -166,43 +232,64 @@ function wapf_lcp_capture_preview_script() {
             });
         }
         
-        // Interceptar el botón "Añadir al carrito"
-        $('form.cart').on('submit', function(e) {
-            var $form = $(this);
-            var $button = $form.find('.single_add_to_cart_button');
+        // NUEVA ESTRATEGIA: Interceptar CLIC del botón directamente
+        // Usar capture: true para interceptar ANTES que otros handlers
+        document.addEventListener('click', function(e) {
+            // Buscar si el elemento clickeado es o está dentro del botón
+            var button = e.target.closest('.single_add_to_cart_button');
             
-            // Verificar si hay vista previa LCP
-            if (!$('.lcp-wrap').length) {
+            if (!button) {
+                return; // No es el botón, ignorar
+            }
+            
+            console.log('🔵 CLIC en botón añadir al carrito interceptado');
+            
+            // Verificar si hay LCP
+            var $lcpCheck = $('.lcp-wrap');
+            console.log('LCP presente:', $lcpCheck.length);
+            
+            if (!$lcpCheck.length) {
                 console.log('LCP: No hay vista previa, añadiendo normalmente');
-                return true;
+                return; // Dejar que el clic continúe normalmente
             }
             
-            // Si ya se capturó la vista previa, permitir submit
+            // Verificar si ya se capturó
+            var $form = $('form.cart');
             if ($form.data('lcp-captured')) {
-                console.log('LCP: Vista previa ya capturada, enviando...');
-                return true;
+                console.log('LCP: Ya capturado, permitiendo clic');
+                return; // Dejar que el clic continúe
             }
             
-            // Prevenir submit temporalmente
+            // PREVENIR el clic para capturar primero
+            console.log('🔴 Previniendo clic para capturar LCP');
             e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
             
             // Deshabilitar botón
-            $button.prop('disabled', true).text('Preparando...');
+            var $button = $(button);
+            var originalText = $button.text();
+            $button.prop('disabled', true).text('Preparando vista previa...');
+            console.log('Botón deshabilitado, iniciando captura...');
             
-            // Capturar y guardar vista previa
+            // Capturar vista previa
             generateAndSavePreview(function() {
+                console.log('✅ Captura completada, re-habilitando botón');
+                
                 // Marcar como capturado
                 $form.data('lcp-captured', true);
                 
                 // Re-habilitar botón
-                $button.prop('disabled', false).text($button.data('original-text') || 'Añadir al carrito');
+                $button.prop('disabled', false).text(originalText);
                 
-                // Enviar formulario
-                $form.submit();
+                // Simular clic de nuevo (ahora sí se ejecutará normalmente)
+                console.log('🟢 Re-ejecutando clic del botón');
+                setTimeout(function() {
+                    button.click();
+                }, 100);
             });
             
-            return false;
-        });
+        }, true); // true = capture phase (se ejecuta ANTES que otros handlers)
         
         // Guardar texto original del botón
         $('.single_add_to_cart_button').each(function() {
