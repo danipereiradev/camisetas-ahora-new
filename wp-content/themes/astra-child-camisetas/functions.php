@@ -24,6 +24,79 @@ add_action( 'wp_enqueue_scripts', 'child_theme_configurator_css', 10 );
 // END ENQUEUE PARENT ACTION
 
 /**
+ * Cambiar la imagen del carrito para mostrar la imagen personalizada subida
+ * en lugar de la imagen base del producto
+ */
+function wapf_change_cart_item_thumbnail( $product_image, $cart_item, $cart_item_key ) {
+    
+    // Verificar si el item tiene campos WAPF con archivos subidos
+    if ( ! isset( $cart_item['wapf'] ) || ! is_array( $cart_item['wapf'] ) ) {
+        return $product_image;
+    }
+    
+    // Buscar el primer campo de tipo archivo con una imagen
+    foreach ( $cart_item['wapf'] as $field ) {
+        
+        // Solo procesar campos de tipo file
+        if ( ! isset( $field['type'] ) || $field['type'] !== 'file' ) {
+            continue;
+        }
+        
+        // Verificar que tenga valor
+        if ( empty( $field['raw'] ) ) {
+            continue;
+        }
+        
+        // Obtener las URLs de los archivos
+        $upload_dir = wp_upload_dir();
+        $files = explode( ',', $field['raw'] );
+        
+        foreach ( $files as $file ) {
+            $file = trim( $file );
+            
+            if ( empty( $file ) ) {
+                continue;
+            }
+            
+            // Construir la URL completa
+            // Si ya es una URL completa (order again), usarla directamente
+            if ( strpos( $file, 'http://' ) === 0 || strpos( $file, 'https://' ) === 0 ) {
+                $file_url = $file;
+            } else {
+                $file_url = trailingslashit( $upload_dir['baseurl'] ) . 'wapf/' . $file;
+            }
+            
+            // Verificar si es una imagen
+            $image_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
+            $file_extension = strtolower( pathinfo( $file_url, PATHINFO_EXTENSION ) );
+            
+            if ( in_array( $file_extension, $image_extensions ) ) {
+                // Encontramos una imagen - usarla como thumbnail del carrito
+                
+                // Obtener el producto para las dimensiones
+                $product = $cart_item['data'];
+                $thumbnail_size = apply_filters( 'woocommerce_cart_item_thumbnail_size', 'woocommerce_thumbnail' );
+                
+                // Crear el HTML de la imagen
+                $custom_image = sprintf(
+                    '<a href="%s"><img src="%s" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="%s" loading="lazy" /></a>',
+                    esc_url( wc_get_cart_url() ),
+                    esc_url( $file_url ),
+                    esc_attr( $product->get_name() )
+                );
+                
+                // Retornar la imagen personalizada en lugar de la imagen base
+                return $custom_image;
+            }
+        }
+    }
+    
+    // Si no se encontró ninguna imagen personalizada, retornar la imagen por defecto
+    return $product_image;
+}
+add_filter( 'woocommerce_cart_item_thumbnail', 'wapf_change_cart_item_thumbnail', 10, 3 );
+
+/**
  * Preservar variaciones seleccionadas (color, talla) al cambiar entre ellas
  * Solución para que no se quite el color al cambiar talla (y viceversa)
  */

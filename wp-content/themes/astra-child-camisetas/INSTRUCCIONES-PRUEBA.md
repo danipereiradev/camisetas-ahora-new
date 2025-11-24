@@ -2,12 +2,13 @@
 
 ## ✅ Soluciones Implementadas
 
-He añadido código personalizado que **preserva automáticamente**:
+He añadido código personalizado que **funciona automáticamente**:
 
 1. **Las variaciones seleccionadas** (color y talla) - Ya no se quitan al cambiar entre ellas
 2. **Las imágenes subidas** - Persisten cuando cambias variaciones
-3. **Las imágenes al añadir al carrito** - Ya NO se borran (NUEVO)
-4. **Las variaciones al cambiar cantidad** - Color/talla se mantienen (NUEVO)
+3. **Las imágenes al añadir al carrito** - Ya NO se borran
+4. **Las variaciones al cambiar cantidad** - Color/talla se mantienen
+5. **Imagen del carrito personalizada** - Muestra el diseño del cliente, no la imagen base (NUEVO)
 
 ## 🧪 Cómo Probar
 
@@ -84,7 +85,40 @@ He añadido código personalizado que **preserva automáticamente**:
 
 ---
 
-### Prueba D: Todo Integrado (Flujo Completo)
+### Prueba D: Imagen Personalizada en Carrito (NUEVO)
+
+#### 1. Sube un Diseño Personalizado
+- Sube una imagen distintiva (logo, diseño, etc.)
+
+#### 2. Selecciona Variaciones y Añade
+- Color: Rojo
+- Talla: M
+- Añadir al carrito
+
+#### 3. Ve al Carrito
+- Haz clic en "Ver carrito"
+
+#### 4. Verifica la Imagen Principal (Thumbnail)
+- Mira la imagen al **lado izquierdo** del producto
+- **🎉 Debería mostrar TU diseño personalizado**
+- ❌ NO debería mostrar la imagen genérica del producto
+
+#### 5. Añade Otro Producto con Diferente Diseño
+- Vuelve al producto
+- Sube OTRA imagen diferente
+- Selecciona: Azul, L
+- Añadir al carrito
+
+#### 6. Verifica Ambos en el Carrito
+- **🎉 Producto 1 muestra diseño 1**
+- **🎉 Producto 2 muestra diseño 2**
+- Cada producto es visualmente distinguible
+
+✅ **Resultado Esperado:** Cada producto en el carrito muestra su diseño personalizado
+
+---
+
+### Prueba E: Todo Integrado (Flujo Completo)
 
 #### 1. Abre un Producto con Variaciones
 - Ve a tu tienda
@@ -139,15 +173,18 @@ He añadido código personalizado que **preserva automáticamente**:
 - ✅ Puedes añadir múltiples variaciones con las mismas imágenes
 - ✅ Los clientes pueden hacer pedidos de diferentes colores/tallas con el mismo diseño
 
-#### Ambas Soluciones Juntas
+#### Todas las Soluciones Juntas
 
 **Flujo Completo Funcionando:**
-1. ✅ Subes 2 diseños
+1. ✅ Subes 2 diseños (logo.jpg, texto.jpg)
 2. ✅ Seleccionas color Rojo
 3. ✅ Seleccionas talla M
-4. ✅ Cambias a color Azul → Talla M se mantiene, imágenes intactas
-5. ✅ Cambias a talla L → Color Azul se mantiene, imágenes intactas
-6. ✅ Añades al carrito → Todo correcto
+4. ✅ Cambias cantidad a 3 → Color y talla se mantienen
+5. ✅ Cambias a color Azul → Talla M se mantiene, imágenes intactas
+6. ✅ Cambias a talla L → Color Azul se mantiene, imágenes intactas
+7. ✅ Añades al carrito → Imágenes NO se borran
+8. ✅ **Vas al carrito** → **VES tu logo.jpg como imagen principal** (NUEVO)
+9. ✅ Todo perfecto - experiencia completa
 
 ## 🐛 Depuración (Opcional)
 
