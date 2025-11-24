@@ -774,23 +774,126 @@ function wapf_preserve_uploads_on_variation_change() {
             }
         });
         
-        // SOLUCIÓN PROBLEMA 1: Prevenir que se limpien las imágenes al añadir al carrito
-        // Interceptar el evento ANTES de que el plugin lo procese
-        var preventClearOnAddToCart = function() {
-            // Desactivar el handler original del plugin
-            $(document.body).off('added_to_cart');
+        // SOLUCIÓN: Mantener imágenes visual y funcionalmente al añadir al carrito
+        var filesCache = {}; // Cache de archivos por dropzone
+        
+        var preventImageClear = function() {
+            console.log('🔧 Configurando prevención de limpieza de imágenes...');
             
-            // Añadir nuestro propio handler que NO limpia los archivos
-            $(document.body).on('added_to_cart', function(event, fragments, cart_hash, button) {
-                console.log('WAPF: Producto añadido al carrito - Manteniendo imágenes');
-                // NO limpiar archivos - permitir que persistan para añadir más productos
-                // Los archivos se mantendrán hasta que el usuario los elimine manualmente
-                // o recargue la página
+            // Estrategia 1: Guardar archivos y sobrescribir removeAllFiles
+            if (typeof Dropzone !== 'undefined' && Dropzone.instances.length > 0) {
+                Dropzone.instances.forEach(function(dz) {
+                    var dzId = dz.element.id;
+                    console.log('Dropzone instance encontrada:', dzId);
+                    
+                    // Guardar los archivos actuales
+                    if (dz.files && dz.files.length > 0) {
+                        filesCache[dzId] = dz.files.map(function(file) {
+                            return {
+                                name: file.name,
+                                size: file.size,
+                                type: file.type,
+                                dataURL: file.dataURL,
+                                status: file.status,
+                                upload: file.upload,
+                                previewElement: file.previewElement ? file.previewElement.outerHTML : null
+                            };
+                        });
+                        console.log('📦 Archivos guardados en cache:', filesCache[dzId].length);
+                    }
+                    
+                    // Sobrescribir removeAllFiles para que NO borre
+                    dz.removeAllFiles = function(cancelIfNecessary) {
+                        console.log('⚠️ removeAllFiles bloqueado - Manteniendo archivos visibles');
+                        // NO hacer nada - los archivos permanecen
+                        return;
+                    };
+                    
+                    // Sobrescribir también removeFile individual
+                    var originalRemoveFile = dz.removeFile.bind(dz);
+                    dz.removeFile = function(file) {
+                        // Solo permitir si el usuario hace clic en la X manualmente
+                        if (file.manualRemove) {
+                            console.log('Eliminación manual permitida');
+                            originalRemoveFile(file);
+                        } else {
+                            console.log('⚠️ removeFile automático bloqueado');
+                        }
+                    };
+                });
+            }
+            
+            // Estrategia 2: Interceptar added_to_cart y restaurar visuales
+            $(document.body).off('added_to_cart.wapf_maintain');
+            $(document.body).on('added_to_cart.wapf_maintain', function(event, fragments, cart_hash, button) {
+                console.log('✅ Producto añadido al carrito');
+                
+                // Esperar un momento y verificar/restaurar archivos
+                setTimeout(function() {
+                    if (typeof Dropzone !== 'undefined' && Dropzone.instances.length > 0) {
+                        Dropzone.instances.forEach(function(dz) {
+                            var dzId = dz.element.id;
+                            var $dz = $('#' + dzId);
+                            
+                            console.log('Verificando Dropzone:', dzId);
+                            console.log('- Archivos actuales:', dz.files.length);
+                            console.log('- Archivos en cache:', filesCache[dzId] ? filesCache[dzId].length : 0);
+                            
+                            // Si hay archivos en cache pero no en dropzone, restaurar
+                            if (filesCache[dzId] && filesCache[dzId].length > 0 && dz.files.length === 0) {
+                                console.log('🔄 Restaurando archivos visualmente...');
+                                
+                                filesCache[dzId].forEach(function(fileData) {
+                                    // Recrear el archivo en Dropzone
+                                    var mockFile = {
+                                        name: fileData.name,
+                                        size: fileData.size,
+                                        type: fileData.type,
+                                        status: Dropzone.SUCCESS,
+                                        dataURL: fileData.dataURL,
+                                        upload: fileData.upload
+                                    };
+                                    
+                                    // Añadir el archivo
+                                    dz.files.push(mockFile);
+                                    dz.emit("addedfile", mockFile);
+                                    
+                                    // Si tiene vista previa (imagen)
+                                    if (fileData.dataURL && fileData.type.indexOf('image') !== -1) {
+                                        dz.emit("thumbnail", mockFile, fileData.dataURL);
+                                    }
+                                    
+                                    dz.emit("complete", mockFile);
+                                });
+                                
+                                console.log('✅ Archivos restaurados visualmente');
+                            }
+                            
+                            // Ocultar mensaje "drag files" si hay archivos
+                            if (dz.files.length > 0) {
+                                $dz.find('.dz-message').hide();
+                            }
+                        });
+                    }
+                }, 300);
             });
         };
         
-        // Ejecutar después de que el plugin WAPF cargue su código
-        setTimeout(preventClearOnAddToCart, 2000);
+        // Ejecutar en múltiples momentos para asegurar que se aplique
+        setTimeout(preventImageClear, 100);   // Temprano
+        setTimeout(preventImageClear, 1000);  // Medio
+        setTimeout(preventImageClear, 2000);  // Tarde
+        
+        // También al cargar la página completamente
+        $(window).on('load', function() {
+            setTimeout(preventImageClear, 500);
+        });
+        
+        // Y después de inicializar dropzone
+        $(document).on('wapf/init_dropzone', function() {
+            console.log('Evento wapf/init_dropzone detectado');
+            setTimeout(preventImageClear, 100);
+        });
         
         console.log('WAPF: Sistema de preservación de imágenes inicializado');
     });

@@ -1,0 +1,524 @@
+# Translation of Plugins - Tiered Pricing Table for WooCommerce - Stable (latest release) in Spanish (Spain)
+# This file is distributed under the same license as the Plugins - Tiered Pricing Table for WooCommerce - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2025-08-05 14:40:36+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/4.0.3\n"
+"Language: es\n"
+"Project-Id-Version: Plugins - Tiered Pricing Table for WooCommerce - Stable (latest release)\n"
+
+#: views/addons/role-based-pricing/simple/role-based-block.php:20
+#: views/addons/role-based-pricing/variation/role-based-block.php:25
+msgid "Role based pricing"
+msgstr "Precio basado en perfil"
+
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:120
+msgid "Name of the quantity column. Set price column and quantity column name blank to do not show table heading."
+msgstr "Nombre de la columna de cantidad. Poner el nombre de la columna de precio y cantidad en blanco para no mostrar el encabezado de la tabla."
+
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:146
+msgid "Name of discount column."
+msgstr "Nombre de la columna de descuento."
+
+#: src/Addons/GlobalTieredPricing/CPT/Columns/Pricing.php:24
+#: src/Addons/GlobalTieredPricing/CPT/Columns/Pricing.php:65
+#: src/Integrations/Plugins/WPAllImport.php:160
+#: views/addons/global-rules/role-specific-pricing/pricing.php:73
+#: views/addons/role-based-pricing/simple/add-price-rules.php:25
+#: views/addons/role-based-pricing/variation/add-price-rules.php:19
+#: views/admin/components/regular-pricing-form.php:119
+#: views/admin/components/regular-pricing-form.php:129
+msgid "Regular price"
+msgstr "Precio normal"
+
+#: views/addons/global-rules/role-specific-pricing/pricing.php:78
+#: views/addons/global-rules/role-specific-pricing/pricing.php:92
+#: views/addons/role-based-pricing/simple/add-price-rules.php:29
+#: views/addons/role-based-pricing/simple/add-price-rules.php:39
+#: views/addons/role-based-pricing/variation/add-price-rules.php:22
+#: views/addons/role-based-pricing/variation/add-price-rules.php:32
+#: views/admin/components/regular-pricing-form.php:137
+#: views/admin/components/regular-pricing-form.php:155
+msgid "Leave empty to don't change it"
+msgstr "Dejar vacío para no cambiarlo"
+
+#: src/Addons/GlobalTieredPricing/CPT/Columns/Pricing.php:64
+#: src/Integrations/Plugins/WPAllImport.php:169
+#: views/addons/global-rules/role-specific-pricing/pricing.php:87
+#: views/addons/role-based-pricing/simple/add-price-rules.php:35
+#: views/addons/role-based-pricing/variation/add-price-rules.php:29
+#: views/admin/components/regular-pricing-form.php:106
+#: views/admin/components/regular-pricing-form.php:148
+msgid "Sale price"
+msgstr "Precio rebajado"
+
+#: views/addons/role-based-pricing/role-based-block.php:64
+#: views/addons/role-based-pricing/simple/role-based-block.php:52
+msgid "Set up separate rules for different roles of customers. Choose a role and click the \"Setup for role\" button."
+msgstr "Configura reglas separadas para los diferentes perfiles de los clientes. Elige la función y haz clic en el botón «Configurar para perfil»."
+
+#: src/Admin/ProductManagers/ProductManager.php:66
+#: src/Admin/ProductPage/TieredPricingTab.php:202
+#: views/addons/category-tiers/add-free.php:43
+#: views/addons/category-tiers/edit-free.php:59
+#: views/addons/role-based-pricing/simple/add-price-rules.php:20
+#: views/admin/add-price-rules-variation.php:64
+msgid "Upgrade"
+msgstr "Actualizar"
+
+#: src/TierPricingTablePlugin.php:143
+msgid "Go Premium"
+msgstr "Hazte Premium"
+
+#: src/Addons/CustomColumns/Form/ColumnsForm.php:502
+#: views/addons/role-based-pricing/role-pricing-form.php:27
+#: views/addons/role-based-pricing/simple/add-price-rules.php:18
+msgid "Available only in the premium version."
+msgstr "Disponible sólo en la versión premium."
+
+#: src/Integrations/Plugins/Elementor/ElementorWidget.php:91
+msgid "Quantity column text"
+msgstr "Texto de la columna de cantidad"
+
+#: src/Integrations/Plugins/Elementor/ElementorWidget.php:109
+msgid "Price column text"
+msgstr "Texto de la columna de precios"
+
+#: views/addons/role-based-pricing/role-based-block.php:33
+msgid "Role-based pricing"
+msgstr "Precio basado en perfil"
+
+#: src/Addons/RoleBasedPricing/ProductManager.php:105
+msgid "Invalid nonce"
+msgstr "Nonce no válido"
+
+#: src/Addons/RoleBasedPricing/ProductManager.php:100
+msgid "Invalid role"
+msgstr "Perfil no válido"
+
+#: views/addons/role-based-pricing/role-based-block.php:96
+#: views/addons/role-based-pricing/simple/role-based-block.php:66
+#: views/addons/role-based-pricing/variation/role-based-block.php:71
+msgid "Setup for role"
+msgstr "Configurar para perfil"
+
+#: views/addons/role-based-pricing/role.php:35
+#: views/addons/role-based-pricing/simple/role.php:32
+#: views/addons/role-based-pricing/variation/role.php:33
+msgid "Remove"
+msgstr "Quitar"
+
+#: views/addons/role-based-pricing/variation/role-based-block.php:57
+msgid "Set up separate rules for different roles of customers. Choose role and click \"Setup for role\" button."
+msgstr "Configura reglas separadas para los diferentes perfiles de los clientes. Elige la función y haz clic en el botón «Configurar para perfil»."
+
+#: views/addons/role-based-pricing/simple/role-based-block.php:54
+msgid "If you do not use this feature, you can disable this functionality at the settings to not complicate the interface. "
+msgstr "Si no usas esta característica, puedes desactivar esta funcionalidad en los ajustes para no complicar la interfaz. "
+
+#: src/Admin/Import/WPAllImport.php:126 src/Admin/Import/WPAllImport.php:183
+#: src/Integrations/Plugins/WPAllImport.php:133
+#: src/Integrations/Plugins/WPAllImport.php:244
+msgid "The field must contain an integer value."
+msgstr "El campo debe contener un valor entero."
+
+#: src/Admin/Import/WPAllImport.php:121 src/Admin/Import/WPAllImport.php:176
+#: src/Integrations/Plugins/WPAllImport.php:128
+#: src/Integrations/Plugins/WPAllImport.php:237
+msgid "Minimum product quantity"
+msgstr "Cantidad mínima de producto"
+
+#: src/Admin/Import/WPAllImport.php:118 src/Admin/Import/WPAllImport.php:172
+#: src/Integrations/Plugins/WPAllImport.php:125
+#: src/Integrations/Plugins/WPAllImport.php:233
+msgid "The field must be either \"fixed\" or \"percentage\"."
+msgstr "El campo debe ser «fijo» o «porcentaje»."
+
+#: src/Admin/Import/WPAllImport.php:28
+#: src/Integrations/Plugins/Elementor/ElementorWidget.php:15
+#: src/Services/SystemStatusReportService.php:28
+#: views/admin/alerts/activation-alert.php:28
+#: views/admin/notifications/activation-notification.php:26
+msgid "Tiered Pricing Table"
+msgstr "Tabla de precios segmentados"
+
+#: src/Admin/Import/WPAllImport.php:105 src/Admin/Import/WPAllImport.php:156
+#: src/Integrations/Plugins/WPAllImport.php:112
+#: src/Integrations/Plugins/WPAllImport.php:217
+msgid "Format for the rules must be the following: quantity:percent_discount,quantity:percent_discount. For example: \"10:5,20:15\" where 10 and 20 are quantities and 5 and 15 are amounts of discount."
+msgstr "El formato de las reglas debe ser el siguiente: cantidad:porcentaje_descuento,cantidad:porcentaje_descuento. Por ejemplo: «10:5,20:15», donde 10 y 20 son cantidades y 5 y 15 son porcentajes de descuento."
+
+#: src/Admin/Import/WPAllImport.php:98 src/Admin/Import/WPAllImport.php:146
+#: src/Integrations/Plugins/WPAllImport.php:105
+#: src/Integrations/Plugins/WPAllImport.php:207
+msgid "The format for the rules must be the following: quantity:price,quantity:price. For example: \"10:5,20:15\" where 10 and 20 are quantities and 5 and 15 are prices for those quantities."
+msgstr "El formato de las reglas debe ser el siguiente: cantidad:precio,cantidad:precio. Por ejemplo «10:5,20:15», donde 10 y 20 son las cantidades y 5 y 15 son los precios de esas cantidades."
+
+#: src/Addons/CategoryTiers/CategoryTierAddon.php:42
+msgid "Skip category rules"
+msgstr "Omitir reglas de categoría"
+
+#: src/Addons/CategoryTiers/CategoryTierAddon.php:43
+msgid "Don't take into account tiered pricing rules from categories. "
+msgstr "No tiene en cuenta las reglas de precios segmentados de las categorías. "
+
+#: src/Admin/Import/Woocommerce.php:50 src/Admin/Import/WPAllImport.php:102
+#: src/Admin/Import/WPAllImport.php:151
+#: src/Integrations/Plugins/WPAllImport.php:109
+#: src/Integrations/Plugins/WPAllImport.php:212
+msgid "Percentage Tiered prices"
+msgstr "Porcentaje de precios segmentados"
+
+#: src/Admin/ProductManagers/ProductManager.php:81
+#: views/addons/global-rules/role-specific-pricing/pricing.php:152
+#: views/addons/role-based-pricing/simple/add-price-rules.php:45
+msgid "Minimum quantity"
+msgstr "Cantidad mínima"
+
+#: src/Settings/Sections/GeneralSection/Subsections/SummarySubsection.php:35
+msgid "The name is displaying above the summary block."
+msgstr "El nombre se muestra encima del bloque de resumen."
+
+#: src/Settings/Sections/GeneralSection/Subsections/SummarySubsection.php:68
+msgid "\"Total\" label"
+msgstr "Etiqueta «Total»"
+
+#: src/Settings/Sections/GeneralSection/Subsections/SummarySubsection.php:71
+msgid "Total:"
+msgstr "Total:"
+
+#: src/Settings/Sections/GeneralSection/Subsections/SummarySubsection.php:75
+msgid "\"Each\" label"
+msgstr "Etiqueta «Cada»"
+
+#: src/Settings/Sections/GeneralSection/Subsections/SummarySubsection.php:78
+msgid "Each: "
+msgstr "Cada: "
+
+#: src/Settings/Sections/GeneralSection/Subsections/SummarySubsection.php:53
+msgid "Where to display the summary block."
+msgstr "Dónde mostrar el bloque de resumen."
+
+#: views/addons/role-based-pricing/variation/add-price-rules.php:39
+#: views/admin/add-price-rules-variation.php:47
+msgid "Tiered pricing minimum quantity"
+msgstr "Cantidad mínima del precio segmentado"
+
+#: views/admin/add-price-rules-variation.php:52
+msgid "Please note that it uses just for building a table. For real restriction use specialized plugins."
+msgstr "Por favor, ten en cuenta que solo se utiliza para construir una tabla. Para una restricción real, utiliza plugins especializados."
+
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPagePriceSubsection.php:54
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:205
+msgid "Show total price"
+msgstr "Mostrar precio total"
+
+#: src/Admin/Export/Woocommerce.php:64
+#: src/Services/ImportExport/WoocommerceExportService.php:61
+msgid "Fixed Tiered Prices"
+msgstr "Precios segmentados fijos"
+
+#: src/Admin/Import/Woocommerce.php:35 src/Admin/Import/Woocommerce.php:49
+#: src/Admin/Import/WPAllImport.php:95 src/Admin/Import/WPAllImport.php:141
+#: src/Integrations/Plugins/WPAllImport.php:102
+#: src/Integrations/Plugins/WPAllImport.php:202
+#: src/Services/ImportExport/WoocommerceImportService.php:32
+msgid "Fixed Tiered prices"
+msgstr "Precios segmentados fijos"
+
+#: src/Settings/Sections/GeneralSection/Subsections/LayoutSubsection.php:90
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:99
+#: src/Settings/Sections/GeneralSection/Subsections/SummarySubsection.php:46
+msgid "Above add to cart form"
+msgstr "Sobre el formulario de añadir al carrito"
+
+#: src/Settings/Sections/GeneralSection/Subsections/LayoutSubsection.php:91
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:100
+#: src/Settings/Sections/GeneralSection/Subsections/SummarySubsection.php:47
+msgid "Below add to cart form"
+msgstr "Debajo del formulario de añadir al carrito"
+
+#: src/Integrations/Plugins/Elementor/ElementorWidget.php:100
+msgid "Discount column text"
+msgstr "Texto de la columna de descuento"
+
+#: views/admin/alerts/opt-in-alert.php:32
+msgid "Activate Plugin!"
+msgstr "¡Activa el plugin!"
+
+#: views/admin/alerts/upgrade-alert.php:38
+msgid "Contact Us!"
+msgstr "¡Contáctanos!"
+
+#: views/admin/alerts/opt-in-alert.php:23
+msgid "Opt in for upgrading and using more features!"
+msgstr "¡Opta por la actualización y usa más características!"
+
+#: src/Admin/Import/Woocommerce.php:33 src/Admin/Import/Woocommerce.php:51
+#: src/Admin/Import/WPAllImport.php:109 src/Admin/Import/WPAllImport.php:161
+#: src/Integrations/Plugins/WPAllImport.php:116
+#: src/Integrations/Plugins/WPAllImport.php:222
+#: src/Services/ImportExport/WoocommerceImportService.php:30
+#: src/Services/ImportExport/WoocommerceImportService.php:47
+#: views/addons/role-based-pricing/simple/add-price-rules.php:61
+#: views/addons/role-based-pricing/variation/add-price-rules.php:58
+#: views/admin/add-price-rules-variation.php:27
+#: views/admin/add-price-rules.php:24
+#: views/admin/components/tiered-pricing-rules-form.php:40
+#: src/Addons/ReactProductEditorAddon/js/role-based-pricing/index.js:1
+#: src/Addons/ReactProductEditorAddon/js/tiered-pricing/index.js:1
+msgid "Tiered pricing type"
+msgstr "Tipo de precio segmentado"
+
+#: src/Addons/GlobalTieredPricing/CPT/Form/Tabs/Pricing.php:39
+#: src/Addons/ReactProductEditorAddon/Sections/MainSection.php:38
+#: src/Addons/ReactProductEditorAddon/TieredPricingGroup.php:21
+#: src/Admin/Import/WPAllImport.php:258
+#: src/Admin/ProductManagers/ProductManager.php:43
+#: src/Admin/ProductPage/TieredPricingTab.php:38
+#: src/Integrations/Plugins/WPAllImport.php:335 src/Settings/Settings.php:227
+#: views/addons/global-rules/role-specific-pricing/pricing.php:100
+msgid "Tiered Pricing"
+msgstr "Precio segmentado"
+
+#: src/Frontend/CatalogPriceManager.php:271
+#: src/Managers/FormatPriceManager.php:132
+#: src/Settings/Sections/GeneralSection/Subsections/CatalogPricesSubsection.php:60
+msgid "From"
+msgstr "Desde"
+
+#: src/Settings/Sections/GeneralSection/Subsections/LayoutSubsection.php:141
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:79
+msgid "Tooltip border"
+msgstr "Borde de la información emergente"
+
+#: src/Settings/Sections/GeneralSection/Subsections/LayoutSubsection.php:93
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:102
+#: src/Settings/Sections/GeneralSection/Subsections/SummarySubsection.php:49
+msgid "Before product summary"
+msgstr "Antes del resumen del producto"
+
+#: src/Integrations/Plugins/WPAllImport.php:178 src/PricingTable.php:209
+#: src/Settings/Sections/GeneralSection/Subsections/LayoutSubsection.php:180
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:145
+#: views/addons/global-rules/role-specific-pricing/pricing.php:57
+#: views/admin/components/regular-pricing-form.php:75
+msgid "Discount (%)"
+msgstr "Descuento (%)"
+
+#: views/addons/role-based-pricing/simple/add-price-rules.php:147
+#: views/addons/role-based-pricing/simple/add-price-rules.php:167
+#: views/addons/role-based-pricing/variation/add-price-rules.php:136
+#: views/addons/role-based-pricing/variation/add-price-rules.php:155
+#: views/admin/add-price-rules-variation.php:131
+#: views/admin/add-price-rules-variation.php:153
+#: views/admin/add-price-rules.php:94 views/admin/add-price-rules.php:111
+msgid "Percent discount"
+msgstr "Porcentaje de descuento"
+
+#: views/addons/role-based-pricing/simple/add-price-rules.php:68
+#: views/addons/role-based-pricing/variation/add-price-rules.php:65
+#: views/admin/add-price-rules-variation.php:31
+#: views/admin/add-price-rules.php:27
+msgid "Fixed"
+msgstr "Fijo"
+
+#: views/addons/role-based-pricing/simple/add-price-rules.php:74
+#: views/addons/role-based-pricing/variation/add-price-rules.php:71
+#: views/admin/add-price-rules-variation.php:37
+#: views/admin/add-price-rules.php:32
+#: src/Addons/ReactProductEditorAddon/js/role-based-pricing/index.js:1
+#: src/Addons/ReactProductEditorAddon/js/tiered-pricing/index.js:1
+msgid "Percentage"
+msgstr "Porcentaje"
+
+#: src/Freemius.php:81 src/Freemius.php:82 src/TierPricingTablePlugin.php:153
+msgid "Contact Us"
+msgstr "Contáctanos"
+
+#: src/TierPricingTablePlugin.php:155
+msgid "Account"
+msgstr "Cuenta"
+
+#: src/Freemius.php:76 src/Freemius.php:77
+msgid "Freemius Account"
+msgstr "Cuenta en Freemius"
+
+#: src/Admin/ProductManagers/ProductManager.php:132
+msgid "Advanced settings"
+msgstr "Ajustes avanzados"
+
+#: views/admin/alerts/opt-in-alert.php:35
+#: views/admin/alerts/premium-thanking-alert.php:28
+#: views/admin/banners/premium-thanking-banner.php:36
+#: views/admin/banners/upgrade-banner.php:51
+msgid "Contact us"
+msgstr "Contáctanos"
+
+#: views/admin/alerts/premium-thanking-alert.php:25
+#: views/admin/banners/premium-thanking-banner.php:33
+msgid "My Account"
+msgstr "Mi cuenta"
+
+#: views/addons/global-rules/role-specific-pricing/pricing.php:36
+#: views/addons/global-rules/role-specific-pricing/pricing.php:137
+#: views/admin/only-in-premium-script.php:31
+msgid "Only in premium version"
+msgstr "Solamente en la versión premium"
+
+#: views/admin/alerts/upgrade-alert.php:27
+#: views/admin/banners/upgrade-banner.php:47
+msgid "Upgrade to Premium!"
+msgstr "¡Actualiza a premium!"
+
+#: views/admin/add-price-rules-variation.php:35
+#: views/admin/add-price-rules.php:30
+msgid "Percentage (Only in premium version)"
+msgstr "Porcentaje (solamente en la versión premium)"
+
+#: src/Admin/ProductManagers/ProductManager.php:111
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:43
+#: src/TierPricingTablePlugin.php:255
+#: views/admin/welcome-page/welcome-page.php:320
+msgid "Tooltip"
+msgstr "Información emergente"
+
+#: src/Admin/ProductManagers/ProductManager.php:107
+#: src/Integrations/Plugins/Elementor/ElementorWidget.php:50
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:40
+#: src/TierPricingTablePlugin.php:249 src/Blocks/build/index.js:751
+#: src/Blocks/build/index.js:489
+msgid "Table"
+msgstr "Tabla"
+
+#: src/Settings/Sections/GeneralSection/Subsections/LayoutSubsection.php:123
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:62
+msgid "Tooltip icon color"
+msgstr "Color del icono de información emergente"
+
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:97
+#: src/Settings/Sections/GeneralSection/Subsections/SummarySubsection.php:44
+msgid "Above buy button"
+msgstr "Sobre el botón de compra"
+
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:98
+#: src/Settings/Sections/GeneralSection/Subsections/SummarySubsection.php:45
+msgid "Below buy button"
+msgstr "Debajo del botón de compra"
+
+#: src/Addons/ProductCatalogLoop/Settings/ProductCatalogLoopSettingsSection.php:75
+#: src/Settings/Sections/GeneralSection/Subsections/LayoutSubsection.php:92
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:101
+#: src/Settings/Sections/GeneralSection/Subsections/SummarySubsection.php:48
+msgid "Above product title"
+msgstr "Sobre el título del producto"
+
+#: src/Settings/Sections/GeneralSection/Subsections/LayoutSubsection.php:94
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:103
+#: src/Settings/Sections/GeneralSection/Subsections/SummarySubsection.php:50
+msgid "After product summary"
+msgstr "Después del resumen del producto"
+
+#: src/Addons/GlobalTieredPricing/CPT/Columns/Pricing.php:81
+#: src/Addons/ProductCatalogLoop/Settings/ProductCatalogLoopSettingsSection.php:221
+#: src/Addons/ProductCatalogLoop/Settings/ProductCatalogLoopSettingsSection.php:389
+#: src/PricingTable.php:205 src/Settings/CustomOptions/TPTTextTemplate.php:141
+#: src/Settings/Sections/GeneralSection/Subsections/LayoutSubsection.php:173
+#: src/Settings/Sections/GeneralSection/Subsections/LayoutSubsection.php:175
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:119
+#: views/addons/category-tiers/add-free.php:24
+#: views/addons/category-tiers/add.php:51
+#: views/addons/category-tiers/edit-free.php:34
+#: views/addons/category-tiers/edit.php:59
+#: views/addons/category-tiers/edit.php:82
+#: views/addons/role-based-pricing/simple/add-price-rules.php:93
+#: views/addons/role-based-pricing/simple/add-price-rules.php:113
+#: views/addons/role-based-pricing/simple/add-price-rules.php:141
+#: views/addons/role-based-pricing/simple/add-price-rules.php:163
+#: views/addons/role-based-pricing/variation/add-price-rules.php:89
+#: views/addons/role-based-pricing/variation/add-price-rules.php:107
+#: views/addons/role-based-pricing/variation/add-price-rules.php:132
+#: views/addons/role-based-pricing/variation/add-price-rules.php:151
+#: views/admin/add-price-rules-variation.php:78
+#: views/admin/add-price-rules-variation.php:99
+#: views/admin/add-price-rules-variation.php:127
+#: views/admin/add-price-rules-variation.php:150
+#: views/admin/add-price-rules.php:48 views/admin/add-price-rules.php:66
+#: views/admin/add-price-rules.php:90 views/admin/add-price-rules.php:108
+#: views/admin/components/tiered-pricing-rules-form.php:92
+#: views/admin/components/tiered-pricing-rules-form.php:146
+#: src/Addons/ReactProductEditorAddon/js/role-based-pricing/index.js:1
+#: src/Addons/ReactProductEditorAddon/js/tiered-pricing/index.js:1
+msgid "Quantity"
+msgstr "Cantidad"
+
+#: src/Addons/CustomColumns/Form/ColumnsForm.php:463
+#: src/Addons/CustomColumns/Schema.php:20
+#: src/Addons/GlobalTieredPricing/CPT/Columns/Pricing.php:87
+#: src/Addons/ProductCatalogLoop/Settings/ProductCatalogLoopSettingsSection.php:235
+#: src/Addons/ProductCatalogLoop/Settings/ProductCatalogLoopSettingsSection.php:393
+#: src/PricingTable.php:207 src/Settings/CustomOptions/TPTTextTemplate.php:200
+#: src/Settings/Sections/GeneralSection/Subsections/LayoutSubsection.php:183
+#: src/Settings/Sections/GeneralSection/Subsections/LayoutSubsection.php:185
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:128
+#: views/addons/role-based-pricing/simple/add-price-rules.php:98
+#: views/addons/role-based-pricing/simple/add-price-rules.php:117
+#: views/addons/role-based-pricing/variation/add-price-rules.php:93
+#: views/addons/role-based-pricing/variation/add-price-rules.php:110
+#: views/admin/add-price-rules-variation.php:82
+#: views/admin/add-price-rules-variation.php:102
+#: views/admin/add-price-rules.php:52 views/admin/add-price-rules.php:69
+#: views/admin/components/tiered-pricing-rules-form.php:153
+#: src/Addons/ReactProductEditorAddon/js/role-based-pricing/index.js:1
+#: src/Addons/ReactProductEditorAddon/js/tiered-pricing/index.js:1
+msgid "Price"
+msgstr "Precio"
+
+#: src/TierPricingTablePlugin.php:141
+#: views/addons/global-rules/pricing-notice.php:15
+#: views/admin/alerts/activation-alert.php:56
+#: views/admin/notifications/activation-notification.php:56
+#: views/admin/welcome-page/welcome-page.php:213
+msgid "Settings"
+msgstr "Ajustes"
+
+#: views/addons/category-tiers/add.php:69
+#: views/addons/category-tiers/edit-free.php:46
+#: views/addons/category-tiers/edit.php:100
+#: views/addons/role-based-pricing/simple/add-price-rules.php:125
+#: views/addons/role-based-pricing/simple/add-price-rules.php:176
+#: views/addons/role-based-pricing/variation/add-price-rules.php:118
+#: views/addons/role-based-pricing/variation/add-price-rules.php:164
+#: views/admin/add-price-rules-variation.php:111
+#: views/admin/add-price-rules-variation.php:162
+#: views/admin/add-price-rules.php:77 views/admin/add-price-rules.php:119
+#: views/admin/components/tiered-pricing-rules-form.php:116
+#: views/admin/components/tiered-pricing-rules-form.php:170
+msgid "New tier"
+msgstr "Nuevo segmento"
+
+#: views/addons/role-based-pricing/simple/add-price-rules.php:84
+#: views/addons/role-based-pricing/simple/add-price-rules.php:132
+#: views/addons/role-based-pricing/variation/add-price-rules.php:82
+#: views/addons/role-based-pricing/variation/add-price-rules.php:125
+#: views/admin/add-price-rules-variation.php:70
+#: views/admin/add-price-rules-variation.php:116
+#: views/admin/add-price-rules.php:41 views/admin/add-price-rules.php:83
+#: views/admin/components/tiered-pricing-rules-form.php:72
+#: views/admin/components/tiered-pricing-rules-form.php:126
+msgid "Tiered price"
+msgstr "Precio segmentado"
+
+#. Plugin Name of the plugin
+#: tier-pricing-table.php
+msgid "WooCommerce Tiered Price Table"
+msgstr "WooCommerce Tiered Price Table"
+
+#: src/Settings/Sections/GeneralSection/Subsections/LayoutSubsection.php:132
+#: src/Settings/Sections/GeneralSection/Subsections/ProductPageSubsection.php:71
+msgid "Tooltip icon size (px)"
+msgstr "Tamaño (px) del icono de la información emergente"
