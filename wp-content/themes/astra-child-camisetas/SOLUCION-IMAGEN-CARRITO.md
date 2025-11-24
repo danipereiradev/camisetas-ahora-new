@@ -1,50 +1,59 @@
-# Solución: Imagen Personalizada en el Carrito
+# Solución: Vista Previa del Live Content Preview en el Carrito
 
-## 🆕 Fecha: 2025-11-24 (Tercera Iteración)
+## 🆕 Fecha: 2025-11-24 (Tercera Iteración - ACTUALIZADA)
 
 ---
 
-## ❌ Problema: Imagen del Carrito No Muestra la Personalización
+## ❌ Problema: Imagen del Carrito No Muestra la Vista Previa Personalizada
 
-### Descripción del Problema
-Cuando el cliente añade un producto personalizado al carrito, la **imagen principal del thumbnail** (la imagen que aparece al lado izquierdo del producto en el carrito) muestra la imagen base del producto, NO la imagen personalizada que el cliente subió.
+### Descripción REAL del Problema
+Cuando el cliente añade un producto personalizado al carrito, la **imagen principal del thumbnail** (la imagen que aparece al lado izquierdo del producto en el carrito) muestra la imagen base del producto (camiseta blanca/genérica), NO la **vista previa personalizada** que muestra el plugin Live Content Preview - es decir, la camiseta del COLOR seleccionado CON el diseño superpuesto encima.
 
 ### Comportamiento Observado
 
-**En el carrito se veían:**
+**En el carrito se veía:**
 ```
 ┌──────────────────────────────────────────┐
-│ [Imagen]  Camiseta Roja - Talla M        │
-│  BASE     ✅ Diseño Frontal: logo.jpg    │ <- Miniaturas correctas aquí
-│ PRODUCTO  ✅ Diseño Trasero: texto.jpg   │ <- Miniaturas correctas aquí
-│           Cantidad: 1                     │
+│ [Camiseta] Camiseta Roja - Talla M       │
+│  BLANCA    ✅ Diseño Frontal: logo.jpg   │ <- Miniaturas correctas aquí
+│  GENÉRICA  ✅ Diseño Trasero: texto.jpg  │ <- Miniaturas correctas aquí
+│            Cantidad: 1                    │
 └──────────────────────────────────────────┘
      ↑
-   Problema: Esta imagen es la del producto base,
-   no muestra el diseño personalizado del cliente
+   Problema: Esta imagen es genérica/blanca,
+   NO muestra la vista previa (camiseta ROJA con logo)
 ```
 
-**Lo que el cliente esperaba ver:**
+**Lo que el cliente esperaba ver (y ahora ve):**
 ```
 ┌──────────────────────────────────────────┐
-│ [LOGO]    Camiseta Roja - Talla M        │
-│ CLIENTE   ✅ Diseño Frontal: logo.jpg    │
-│           ✅ Diseño Trasero: texto.jpg   │
-│           Cantidad: 1                     │
+│ [🎨 VISTA] Camiseta Roja - Talla M       │
+│  PREVIA    ✅ Diseño Frontal: logo.jpg   │
+│  LCP       ✅ Diseño Trasero: texto.jpg  │
+│ (Camiseta  Cantidad: 1                   │
+│  ROJA con                                 │
+│  logo)                                    │
 └──────────────────────────────────────────┘
      ↑
-   La imagen principal debería ser
-   el diseño personalizado del cliente (logo.jpg)
+   La imagen principal muestra EXACTAMENTE
+   lo que el cliente vio en la página de producto:
+   Camiseta del color seleccionado + diseño superpuesto
 ```
 
 ### Por Qué Sucedía
 
-El plugin Advanced Product Fields (WAPF) y su add-on de Image Upload (AIU):
-- ✅ **SÍ** guardan correctamente los archivos subidos
-- ✅ **SÍ** muestran miniaturas de las imágenes dentro de la descripción
-- ❌ **NO** reemplazan la imagen principal del thumbnail del carrito
+El plugin Live Content Preview (LCP):
+- ✅ **SÍ** muestra una vista previa en vivo en la página de producto
+- ✅ **SÍ** superpone el diseño del cliente sobre la imagen del producto del color seleccionado
+- ❌ **NO** guarda automáticamente esa vista previa como imagen
+- ❌ **NO** envía esa vista previa al carrito
 
-WooCommerce usa el filtro `woocommerce_cart_item_thumbnail` para mostrar la imagen del producto, y el plugin WAPF no intercepta este filtro para cambiarlo por la imagen personalizada.
+**El problema técnico:**
+- LCP genera la vista previa dinámicamente usando HTML/Canvas overlay
+- Esta vista solo existe en el frontend mientras el cliente está en la página
+- Al añadir al carrito, solo se guardan los datos de los campos (texto, archivos)
+- WooCommerce muestra la imagen base del producto en el carrito
+- **Resultado:** Cliente ve camiseta genérica en lugar de su diseño personalizado
 
 ---
 
@@ -52,53 +61,125 @@ WooCommerce usa el filtro `woocommerce_cart_item_thumbnail` para mostrar la imag
 
 ### Estrategia
 
-Interceptar el filtro `woocommerce_cart_item_thumbnail` de WooCommerce para:
-1. Detectar si el item tiene imágenes personalizadas subidas
-2. Extraer la primera imagen subida por el cliente
-3. Reemplazar la imagen base del producto con la imagen personalizada
-4. Si no hay imágenes, dejar la imagen por defecto
+La solución captura la vista previa del LCP como imagen ANTES de añadir al carrito:
+
+1. **Interceptar submit** del formulario "Añadir al carrito"
+2. **Capturar el canvas** del LCP (imagen producto + overlay con diseño)
+3. **Guardar como imagen** en el servidor vía AJAX
+4. **Enviar URL de la imagen** junto con los datos del carrito
+5. **Usar esa imagen** como thumbnail del carrito
 
 ### Implementación Técnica
 
-```php
-add_filter( 'woocommerce_cart_item_thumbnail', 'wapf_change_cart_item_thumbnail', 10, 3 );
+#### Paso 1: Captura del LCP (Frontend - JavaScript)
 
+```javascript
+// Al hacer clic en "Añadir al carrito"
+$('form.cart').on('submit', function(e) {
+    
+    // Prevenir submit temporal
+    e.preventDefault();
+    
+    // 1. Localizar el contenedor del LCP
+    var $activeImage = $('.woocommerce-product-gallery__image.flex-active-slide');
+    var $lcpWrap = $activeImage.find('.lcp-wrap');
+    
+    // 2. Capturar con html2canvas
+    html2canvas($activeImage[0], {
+        backgroundColor: null,
+        scale: 2, // Alta calidad
+        useCORS: true
+    }).then(function(canvas) {
+        
+        // 3. Convertir a blob
+        canvas.toBlob(function(blob) {
+            
+            // 4. Enviar vía AJAX
+            var formData = new FormData();
+            formData.append('preview_image', blob, 'lcp-preview.png');
+            
+            $.ajax({
+                url: wapf_config.ajax,
+                data: formData,
+                success: function(response) {
+                    // 5. Guardar URL en campo oculto
+                    $('<input type="hidden" name="wapf_lcp_preview_url">')
+                        .val(response.data.url)
+                        .appendTo('form.cart');
+                    
+                    // 6. Enviar formulario
+                    $('form.cart').submit();
+                }
+            });
+        });
+    });
+});
+```
+
+#### Paso 2: Guardar Imagen (Backend - PHP)
+
+```php
+// AJAX handler para guardar la imagen
+function wapf_save_lcp_preview() {
+    $upload_dir = wp_upload_dir();
+    $wapf_dir = $upload_dir['basedir'] . '/wapf-lcp-previews';
+    
+    // Crear directorio si no existe
+    wp_mkdir_p( $wapf_dir );
+    
+    // Guardar archivo
+    $filename = 'lcp-preview-' . uniqid() . '.png';
+    $filepath = $wapf_dir . '/' . $filename;
+    
+    move_uploaded_file( $_FILES['preview_image']['tmp_name'], $filepath );
+    
+    // Retornar URL
+    wp_send_json_success([
+        'url' => $upload_dir['baseurl'] . '/wapf-lcp-previews/' . $filename
+    ]);
+}
+```
+
+#### Paso 3: Guardar en Carrito
+
+```php
+// Guardar URL en los datos del carrito
+function wapf_lcp_save_preview_to_cart( $cart_item_data, $product_id, $variation_id, $quantity ) {
+    
+    if ( isset( $_POST['wapf_lcp_preview_url'] ) ) {
+        $cart_item_data['wapf_lcp_preview'] = esc_url_raw( $_POST['wapf_lcp_preview_url'] );
+    }
+    
+    return $cart_item_data;
+}
+add_filter( 'woocommerce_add_cart_item_data', 'wapf_lcp_save_preview_to_cart', 10, 4 );
+```
+
+#### Paso 4: Usar en Carrito
+
+```php
+// Cambiar thumbnail del carrito
 function wapf_change_cart_item_thumbnail( $product_image, $cart_item, $cart_item_key ) {
-    // 1. Verificar si hay campos WAPF
-    if ( ! isset( $cart_item['wapf'] ) ) {
-        return $product_image; // Sin cambios
+    
+    // Si hay vista previa capturada, usarla
+    if ( isset( $cart_item['wapf_lcp_preview'] ) ) {
+        return '<img src="' . esc_url( $cart_item['wapf_lcp_preview'] ) . '" />';
     }
     
-    // 2. Buscar campos de tipo 'file' con imágenes
-    foreach ( $cart_item['wapf'] as $field ) {
-        if ( $field['type'] === 'file' && ! empty( $field['raw'] ) ) {
-            
-            // 3. Obtener la primera imagen
-            $files = explode( ',', $field['raw'] );
-            $first_image_url = obtener_url_completa( $files[0] );
-            
-            // 4. Verificar que sea una imagen válida
-            if ( es_imagen( $first_image_url ) ) {
-                
-                // 5. Crear HTML con la imagen personalizada
-                return crear_thumbnail_html( $first_image_url, $producto );
-            }
-        }
-    }
-    
-    // 6. Si no hay imágenes personalizadas, usar la imagen base
     return $product_image;
 }
+add_filter( 'woocommerce_cart_item_thumbnail', 'wapf_change_cart_item_thumbnail', 10, 3 );
 ```
 
 ### Características de la Solución
 
-✅ **Automática** - No requiere configuración  
-✅ **Prioriza la primera imagen** - Usa la primera imagen subida como thumbnail  
-✅ **Fallback inteligente** - Si no hay imágenes, muestra la imagen base del producto  
-✅ **Mantiene formato** - Respeta las dimensiones y estilos de WooCommerce  
-✅ **Compatible con "Order Again"** - Funciona también al re-ordenar  
-✅ **Validación de imágenes** - Solo procesa archivos de imagen válidos (jpg, png, gif, webp)  
+✅ **Captura real del LCP** - No aproximaciones, la vista exacta que ve el cliente  
+✅ **Alta calidad** - Captura a escala 2x para buena resolución  
+✅ **Automática** - El cliente no nota nada, todo transparente  
+✅ **Feedback visual** - Botón muestra "Preparando..." mientras captura  
+✅ **Manejo de errores** - Si falla la captura, añade al carrito normalmente  
+✅ **Compatible con variaciones** - Recaptura si cambian color/talla  
+✅ **Librería estándar** - Usa html2canvas (CDN confiable)  
 
 ---
 

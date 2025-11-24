@@ -24,74 +24,290 @@ add_action( 'wp_enqueue_scripts', 'child_theme_configurator_css', 10 );
 // END ENQUEUE PARENT ACTION
 
 /**
- * Cambiar la imagen del carrito para mostrar la imagen personalizada subida
- * en lugar de la imagen base del producto
+ * Capturar y guardar la vista previa del Live Content Preview (LCP)
+ * cuando se añade al carrito
+ */
+function wapf_lcp_capture_preview_script() {
+    if ( ! is_product() ) {
+        return;
+    }
+    
+    global $product;
+    if ( ! $product || ! $product->is_type( 'variable' ) ) {
+        return;
+    }
+    
+    ?>
+    <script type="text/javascript">
+    jQuery(document).ready(function($) {
+        
+        // Librería para capturar HTML como imagen
+        var loadHtml2Canvas = function(callback) {
+            if (typeof html2canvas !== 'undefined') {
+                callback();
+                return;
+            }
+            
+            var script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            script.onload = callback;
+            document.head.appendChild(script);
+        };
+        
+        /**
+         * Capturar la vista previa del LCP como imagen
+         */
+        function captureLCPPreview() {
+            console.log('LCP: Intentando capturar vista previa...');
+            
+            // Buscar la imagen activa de la galería con el overlay LCP
+            var $activeImage = $('.woocommerce-product-gallery__image.flex-active-slide, .woocommerce-product-gallery__image:first');
+            
+            if (!$activeImage.length) {
+                console.log('LCP: No se encontró imagen activa');
+                return null;
+            }
+            
+            // Buscar el wrapper del LCP
+            var $lcpWrap = $activeImage.find('.lcp-wrap');
+            
+            if (!$lcpWrap.length) {
+                console.log('LCP: No se encontró vista previa LCP');
+                return null;
+            }
+            
+            // Obtener la imagen base y el overlay
+            var $baseImage = $activeImage.find('img:not(.lcp-wrap img)').first();
+            
+            if (!$baseImage.length || !$baseImage[0].complete) {
+                console.log('LCP: Imagen base no cargada');
+                return null;
+            }
+            
+            return {
+                $container: $activeImage,
+                $baseImage: $baseImage,
+                $lcpWrap: $lcpWrap
+            };
+        }
+        
+        /**
+         * Generar imagen compuesta y guardarla
+         */
+        function generateAndSavePreview(callback) {
+            var preview = captureLCPPreview();
+            
+            if (!preview) {
+                console.log('LCP: No hay vista previa para capturar');
+                if (callback) callback();
+                return;
+            }
+            
+            loadHtml2Canvas(function() {
+                console.log('LCP: html2canvas cargado, capturando...');
+                
+                // Capturar el contenedor completo (imagen + overlay)
+                html2canvas(preview.$container[0], {
+                    backgroundColor: null,
+                    scale: 2, // Mayor calidad
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true
+                }).then(function(canvas) {
+                    
+                    // Convertir a blob
+                    canvas.toBlob(function(blob) {
+                        
+                        // Crear FormData para enviar
+                        var formData = new FormData();
+                        formData.append('action', 'wapf_save_lcp_preview');
+                        formData.append('nonce', wapf_lcp_nonce);
+                        formData.append('preview_image', blob, 'lcp-preview.png');
+                        formData.append('product_id', $('input[name=product_id], input[name=add-to-cart]').val());
+                        formData.append('variation_id', $('input[name=variation_id]').val() || '');
+                        
+                        // Guardar via AJAX
+                        $.ajax({
+                            url: wapf_config.ajax,
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                if (response.success) {
+                                    console.log('LCP: Vista previa guardada:', response.data.url);
+                                    
+                                    // Guardar la URL en un campo oculto para enviarla con el formulario
+                                    var $input = $('input[name=wapf_lcp_preview_url]');
+                                    if (!$input.length) {
+                                        $input = $('<input type="hidden" name="wapf_lcp_preview_url">');
+                                        $('form.cart').append($input);
+                                    }
+                                    $input.val(response.data.url);
+                                    
+                                    if (callback) callback();
+                                } else {
+                                    console.error('LCP: Error al guardar:', response.data);
+                                    if (callback) callback();
+                                }
+                            },
+                            error: function() {
+                                console.error('LCP: Error en AJAX');
+                                if (callback) callback();
+                            }
+                        });
+                        
+                    }, 'image/png', 0.95);
+                    
+                }).catch(function(error) {
+                    console.error('LCP: Error al capturar canvas:', error);
+                    if (callback) callback();
+                });
+            });
+        }
+        
+        // Interceptar el botón "Añadir al carrito"
+        $('form.cart').on('submit', function(e) {
+            var $form = $(this);
+            var $button = $form.find('.single_add_to_cart_button');
+            
+            // Verificar si hay vista previa LCP
+            if (!$('.lcp-wrap').length) {
+                console.log('LCP: No hay vista previa, añadiendo normalmente');
+                return true;
+            }
+            
+            // Si ya se capturó la vista previa, permitir submit
+            if ($form.data('lcp-captured')) {
+                console.log('LCP: Vista previa ya capturada, enviando...');
+                return true;
+            }
+            
+            // Prevenir submit temporalmente
+            e.preventDefault();
+            
+            // Deshabilitar botón
+            $button.prop('disabled', true).text('Preparando...');
+            
+            // Capturar y guardar vista previa
+            generateAndSavePreview(function() {
+                // Marcar como capturado
+                $form.data('lcp-captured', true);
+                
+                // Re-habilitar botón
+                $button.prop('disabled', false).text($button.data('original-text') || 'Añadir al carrito');
+                
+                // Enviar formulario
+                $form.submit();
+            });
+            
+            return false;
+        });
+        
+        // Guardar texto original del botón
+        $('.single_add_to_cart_button').each(function() {
+            $(this).data('original-text', $(this).text());
+        });
+        
+        // Limpiar flag cuando cambian variaciones
+        $('form.variations_form').on('found_variation', function() {
+            $('form.cart').data('lcp-captured', false);
+            $('input[name=wapf_lcp_preview_url]').remove();
+        });
+        
+    });
+    </script>
+    <?php
+}
+add_action( 'wp_footer', 'wapf_lcp_capture_preview_script', 1000 );
+
+/**
+ * AJAX handler para guardar la imagen de vista previa
+ */
+function wapf_save_lcp_preview() {
+    check_ajax_referer( 'wapf_lcp_nonce', 'nonce' );
+    
+    if ( ! isset( $_FILES['preview_image'] ) ) {
+        wp_send_json_error( 'No se recibió imagen' );
+    }
+    
+    require_once( ABSPATH . 'wp-admin/includes/file.php' );
+    require_once( ABSPATH . 'wp-admin/includes/image.php' );
+    
+    $upload_dir = wp_upload_dir();
+    $wapf_dir = trailingslashit( $upload_dir['basedir'] ) . 'wapf-lcp-previews';
+    
+    // Crear directorio si no existe
+    if ( ! file_exists( $wapf_dir ) ) {
+        wp_mkdir_p( $wapf_dir );
+    }
+    
+    // Nombre único para el archivo
+    $filename = 'lcp-preview-' . uniqid() . '.png';
+    $filepath = trailingslashit( $wapf_dir ) . $filename;
+    
+    // Mover archivo subido
+    if ( move_uploaded_file( $_FILES['preview_image']['tmp_name'], $filepath ) ) {
+        $file_url = trailingslashit( $upload_dir['baseurl'] ) . 'wapf-lcp-previews/' . $filename;
+        
+        wp_send_json_success( [
+            'url' => $file_url,
+            'path' => $filepath
+        ] );
+    } else {
+        wp_send_json_error( 'Error al guardar archivo' );
+    }
+}
+add_action( 'wp_ajax_wapf_save_lcp_preview', 'wapf_save_lcp_preview' );
+add_action( 'wp_ajax_nopriv_wapf_save_lcp_preview', 'wapf_save_lcp_preview' );
+
+/**
+ * Añadir nonce al frontend
+ */
+function wapf_lcp_add_nonce() {
+    if ( is_product() ) {
+        ?>
+        <script type="text/javascript">
+        var wapf_lcp_nonce = '<?php echo wp_create_nonce( 'wapf_lcp_nonce' ); ?>';
+        </script>
+        <?php
+    }
+}
+add_action( 'wp_head', 'wapf_lcp_add_nonce' );
+
+/**
+ * Guardar la URL de la vista previa en los datos del carrito
+ */
+function wapf_lcp_save_preview_to_cart( $cart_item_data, $product_id, $variation_id, $quantity ) {
+    
+    if ( isset( $_POST['wapf_lcp_preview_url'] ) && ! empty( $_POST['wapf_lcp_preview_url'] ) ) {
+        $cart_item_data['wapf_lcp_preview'] = esc_url_raw( $_POST['wapf_lcp_preview_url'] );
+    }
+    
+    return $cart_item_data;
+}
+add_filter( 'woocommerce_add_cart_item_data', 'wapf_lcp_save_preview_to_cart', 10, 4 );
+
+/**
+ * Cambiar la imagen del carrito para mostrar la vista previa del LCP
  */
 function wapf_change_cart_item_thumbnail( $product_image, $cart_item, $cart_item_key ) {
     
-    // Verificar si el item tiene campos WAPF con archivos subidos
-    if ( ! isset( $cart_item['wapf'] ) || ! is_array( $cart_item['wapf'] ) ) {
-        return $product_image;
+    // Prioridad 1: Usar la vista previa LCP capturada
+    if ( isset( $cart_item['wapf_lcp_preview'] ) && ! empty( $cart_item['wapf_lcp_preview'] ) ) {
+        $product = $cart_item['data'];
+        
+        $custom_image = sprintf(
+            '<a href="%s"><img src="%s" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="%s" loading="lazy" /></a>',
+            esc_url( wc_get_cart_url() ),
+            esc_url( $cart_item['wapf_lcp_preview'] ),
+            esc_attr( $product->get_name() . ' - Vista Previa Personalizada' )
+        );
+        
+        return $custom_image;
     }
     
-    // Buscar el primer campo de tipo archivo con una imagen
-    foreach ( $cart_item['wapf'] as $field ) {
-        
-        // Solo procesar campos de tipo file
-        if ( ! isset( $field['type'] ) || $field['type'] !== 'file' ) {
-            continue;
-        }
-        
-        // Verificar que tenga valor
-        if ( empty( $field['raw'] ) ) {
-            continue;
-        }
-        
-        // Obtener las URLs de los archivos
-        $upload_dir = wp_upload_dir();
-        $files = explode( ',', $field['raw'] );
-        
-        foreach ( $files as $file ) {
-            $file = trim( $file );
-            
-            if ( empty( $file ) ) {
-                continue;
-            }
-            
-            // Construir la URL completa
-            // Si ya es una URL completa (order again), usarla directamente
-            if ( strpos( $file, 'http://' ) === 0 || strpos( $file, 'https://' ) === 0 ) {
-                $file_url = $file;
-            } else {
-                $file_url = trailingslashit( $upload_dir['baseurl'] ) . 'wapf/' . $file;
-            }
-            
-            // Verificar si es una imagen
-            $image_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
-            $file_extension = strtolower( pathinfo( $file_url, PATHINFO_EXTENSION ) );
-            
-            if ( in_array( $file_extension, $image_extensions ) ) {
-                // Encontramos una imagen - usarla como thumbnail del carrito
-                
-                // Obtener el producto para las dimensiones
-                $product = $cart_item['data'];
-                $thumbnail_size = apply_filters( 'woocommerce_cart_item_thumbnail_size', 'woocommerce_thumbnail' );
-                
-                // Crear el HTML de la imagen
-                $custom_image = sprintf(
-                    '<a href="%s"><img src="%s" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="%s" loading="lazy" /></a>',
-                    esc_url( wc_get_cart_url() ),
-                    esc_url( $file_url ),
-                    esc_attr( $product->get_name() )
-                );
-                
-                // Retornar la imagen personalizada en lugar de la imagen base
-                return $custom_image;
-            }
-        }
-    }
-    
-    // Si no se encontró ninguna imagen personalizada, retornar la imagen por defecto
+    // Si no hay vista previa LCP, retornar imagen original
     return $product_image;
 }
 add_filter( 'woocommerce_cart_item_thumbnail', 'wapf_change_cart_item_thumbnail', 10, 3 );
