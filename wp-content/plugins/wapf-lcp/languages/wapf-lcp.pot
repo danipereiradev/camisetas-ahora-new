@@ -1,0 +1,330 @@
+# Copyright (C) 2025 wapf-lcp
+# This file is distributed under the same license as the wapf-lcp package.
+msgid ""
+msgstr ""
+"Project-Id-Version: wapf-lcp\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Econdig: 8bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"MIME-Version: 1.0\n"
+"Project-Id-Version: undefined\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Live Content Preview"
+msgstr ""
+
+msgid "License key"
+msgstr ""
+
+msgid "Live Content Preview settings"
+msgstr ""
+
+msgid "Auto scroll"
+msgstr ""
+
+msgid "Auto scroll to live preview"
+msgstr ""
+
+msgid "If your product gallery contains multiple images, auto scroll to the slide containing the live preview when the user makes a change."
+msgstr ""
+
+msgid "Custom fonts"
+msgstr ""
+
+msgid "Add custom fonts by uploading woff or woff2 files here. Fonts will only be loaded when necessary so it does not slow down your site."
+msgstr ""
+
+msgid "Font name"
+msgstr ""
+
+msgid "Font file"
+msgstr ""
+
+msgid "Uploaded fonts:"
+msgstr ""
+
+msgid "Please enter a font name before uploading a font file."
+msgstr ""
+
+msgid "Wrong file type uploaded. Only these file types are allowed: woff, woff2."
+msgstr ""
+
+msgid "Font file uploaded successfully."
+msgstr ""
+
+msgid "License activated."
+msgstr ""
+
+msgid "License deactivated"
+msgstr ""
+
+msgid "Help with Live Content Preview"
+msgstr ""
+
+msgid "Do you want customers to see a live preview of their selection? Example: you're selling custom posters and customers can add custom text to their poster. You could show that text live on the product image so your customer sees a live example of what they will purchase."
+msgstr ""
+
+msgid "Check out <a href=\"https://www.studiowombat.com/knowledge-base/everything-you-need-to-know-about-the-live-content-preview-add-on/?ref=wapf_admin\" target=\"_blank\">our step-by-step tutorial</a> on how to use the Live Content Preview addon."
+msgstr ""
+
+msgid "Display content on gallery images"
+msgstr ""
+
+msgid "Step 1: Select image"
+msgstr ""
+
+msgid "Select an image to display content on. This can be a product gallery image or an image field added by our plugin."
+msgstr ""
+
+msgid "Select gallery image"
+msgstr ""
+
+msgid "You currently have no gallery images"
+msgstr ""
+
+msgid "Or select an image field:"
+msgstr ""
+
+msgid "Select a field"
+msgstr ""
+
+msgid "Step 2: select field"
+msgstr ""
+
+msgid "Select the field which content should appear on the image."
+msgstr ""
+
+msgid "Step 3: customize"
+msgstr ""
+
+msgid "Draw the bounding box where this field should appear on the image."
+msgstr ""
+
+msgid "Rotate"
+msgstr ""
+
+msgid "Font details"
+msgstr ""
+
+msgid "Font"
+msgstr ""
+
+msgid "or"
+msgstr ""
+
+msgid "set dynamic value"
+msgstr ""
+
+msgid "Color"
+msgstr ""
+
+msgid "color value"
+msgstr ""
+
+msgid "Font sizes"
+msgstr ""
+
+msgid "Desktop & large screens"
+msgstr ""
+
+msgid "Tablet screens"
+msgstr ""
+
+msgid "Mobile (landscape)"
+msgstr ""
+
+msgid "Mobile (portrait)"
+msgstr ""
+
+msgid "Alignment"
+msgstr ""
+
+msgid "Horizontal"
+msgstr ""
+
+msgid "Left"
+msgstr ""
+
+msgid "Center"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Vertical"
+msgstr ""
+
+msgid "Top"
+msgstr ""
+
+msgid "Bottom"
+msgstr ""
+
+msgid "Characteristics"
+msgstr ""
+
+msgid "Weight"
+msgstr ""
+
+msgid "Normal"
+msgstr ""
+
+msgid "Bold"
+msgstr ""
+
+msgid "Italic"
+msgstr ""
+
+msgid "Capitalize"
+msgstr ""
+
+msgid "Fitting mode"
+msgstr ""
+
+msgid "Standard fill"
+msgstr ""
+
+msgid "Scale to fit"
+msgstr ""
+
+msgid "Cover"
+msgstr ""
+
+msgid "What is this?"
+msgstr ""
+
+msgid "Image fitting mode"
+msgstr ""
+
+msgid "This setting determines how the image should be displayed within the bounds. <ul><li><strong>Standard fill: </strong>The image will be filled within the bounds. If the uploaded image is not the same aspect ratio as the bounds, the image will be stretched or squeezed to fit within the bounds.</li><li><strong>Scale to fit: </strong>If the image is larger than the bounds, the image will be resized to fit within the bounds while maintaining aspect ratio. If the image is smaller than the bounds, it will be centered within the bounds (and whitespace around).</li><li><strong>Cover: </strong>The image is sized to maintain its aspect ratio while filling the entire bounding box. If the image's aspect ratio does not match the aspect ratio of its box, then the image will be clipped to fit (no whitespace around).</li></ul>"
+msgstr ""
+
+msgid "Shape"
+msgstr ""
+
+msgid "Rectangle"
+msgstr ""
+
+msgid "Oval"
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Advanced settings"
+msgstr ""
+
+msgid "Text mode"
+msgstr ""
+
+msgid "Multi-line + overflow"
+msgstr ""
+
+msgid "Multi-line + scale horizontally"
+msgstr ""
+
+msgid "Multi-line + scale vertically"
+msgstr ""
+
+msgid "Multi-line + auto size"
+msgstr ""
+
+msgid "Single-line + overflow"
+msgstr ""
+
+msgid "Single-line + scale horizontally"
+msgstr ""
+
+msgid "This setting determines how text is rendered in the container you defined. <ul><li><strong>Multi-line + overflow: </strong>the text wraps onto multiple lines. If there's too much text, it will extend beyond the container's height, overflowing vertically.</li><li><strong>Single-line + overflow: </strong>the text stays on one line. If it's longer than the container, it overflows horizontally.</li><li><strong>Single-line + scale horizontally: </strong>The text stays on one line, and if it's too long, the font size automatically shrinks to fit within the container.</li><li><strong>Multi-line + scale horizontally/vertically: </strong>text can display on multiple lines, and if it's too long, the font size decreases automatically to fit within the container (either horizontally or vertically).</li></ul>"
+msgstr ""
+
+msgid "Line height"
+msgstr ""
+
+msgid "Leave blank to auto calculate line height (recommended)."
+msgstr ""
+
+msgid "Set a value for \"{activeValueSelector.for}\""
+msgstr ""
+
+msgid "Default value"
+msgstr ""
+
+msgid "The default value can dynamically change when a product field value changes. In the case of a variable product, the value can also change when a variation or attribute is selected. You can define those rules by adding conditions below."
+msgstr ""
+
+msgid "Delete rule"
+msgstr ""
+
+msgid "Condition type"
+msgstr ""
+
+msgid "When should the value change?"
+msgstr ""
+
+msgid "If product field value changes"
+msgstr ""
+
+msgid "If a variation is selected"
+msgstr ""
+
+msgid "If a variation attribute is selected"
+msgstr ""
+
+msgid "Field"
+msgstr ""
+
+msgid "Select a field ID"
+msgstr ""
+
+msgid "Field value"
+msgstr ""
+
+msgid "Select a value"
+msgstr ""
+
+msgid "Variation"
+msgstr ""
+
+msgid "Select a variation"
+msgstr ""
+
+msgid "Select a variation ID"
+msgstr ""
+
+msgid "Attribute"
+msgstr ""
+
+msgid "Select an attribute"
+msgstr ""
+
+msgid "New value"
+msgstr ""
+
+msgid "When the above condition is met, what should the new value be?"
+msgstr ""
+
+msgid "Add new condition"
+msgstr ""
+
+msgid "Image"
+msgstr ""
+
+msgid "Configure"
+msgstr ""
+
+msgid "Delete this row"
+msgstr ""
+
+msgid "Add new"
+msgstr ""
+
+msgid "Make sure your product has at least one product or gallery image or you've added image fields with our plugin. Also make sure to create some fields of type 'text', 'textarea' or 'file' first."
+msgstr ""

@@ -1,0 +1,99 @@
+# WordPress Core
+/wp-admin/
+/wp-includes/
+/wp-*.php
+/xmlrpc.php
+/readme.html
+/license.txt
+
+# Excepciones - Archivos importantes de WordPress
+!/wp-content/
+
+# WordPress Configuration
+wp-config.php
+wp-config-sample.php
+local-xdebuginfo.php
+
+# Uploads y Caché
+/wp-content/uploads/
+/wp-content/cache/
+/wp-content/upgrade/
+/wp-content/upgrade-temp-backup/
+/wp-content/ai1wm-backups/
+/wp-content/htaccess-editor-backups/
+
+# Plugins - Incluir solo los personalizados/modificados
+/wp-content/plugins/*
+!/wp-content/plugins/wapf-aiu/
+!/wp-content/plugins/wapf-lcp/
+
+# Incluir el tema hijo (nuestras personalizaciones)
+/wp-content/themes/*
+!/wp-content/themes/astra-child-camisetas/
+
+# MU Plugins
+/wp-content/mu-plugins/
+
+# Node y dependencias
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Composer
+/vendor/
+composer.lock
+
+# Sistema Operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDEs y Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+error_log
+debug.log
+
+# Backups
+*.sql
+*.sql.gz
+*.tar.gz
+*.zip
+backup/
+backups/
+
+# Temporales
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Seguridad
+.htaccess
+.htpasswd
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Certificados SSL
+*.pem
+*.crt
+*.key
+
