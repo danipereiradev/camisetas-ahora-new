@@ -3,3 +3,24 @@ CTC Separate Stylesheet
 Updated: 2025-11-10 12:32:37
 */
 
+/* Eliminar el margen de 4em del elemento #primary */
+#primary,
+#primary.content-area,
+div#primary.content-area.primary,
+.yes-js.js_active .ast-plain-container.ast-single-post #primary {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Padding en el header solo en escritorio */
+@media (min-width: 769px) {
+  #masthead,
+  .site-header,
+  header#masthead.site-header {
+    padding: 1rem 0 !important;
+  }
+}
+
+.site-primary-footer-wrap {
+  display: none !important;
+}
