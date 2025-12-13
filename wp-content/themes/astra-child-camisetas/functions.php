@@ -1071,3 +1071,263 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
     <?php
 }
 add_action('wp_footer', 'prevent_wapf_upload_clear_on_add_to_cart', 1001);
+
+/**
+ * Añadir meta boxes para imágenes de fondo de secciones en plantilla RealThread
+ */
+function realthread_add_background_metaboxes() {
+    add_meta_box(
+        'realthread_backgrounds',
+        'Imágenes de Fondo - Plantilla RealThread',
+        'realthread_backgrounds_callback',
+        'page',
+        'normal',
+        'high'
+    );
+}
+add_action('add_meta_boxes', 'realthread_add_background_metaboxes');
+
+function realthread_backgrounds_callback($post) {
+    wp_nonce_field('realthread_backgrounds_nonce', 'realthread_backgrounds_nonce_field');
+    
+    $sections = array(
+        'hero_background_image' => 'Hero Principal',
+        'steps_background_image' => 'Cómo Funciona',
+        'categories_background_image' => 'Categorías',
+        'products_background_image' => 'Productos Destacados',
+        'design_background_image' => 'Herramienta de Diseño',
+        'customer_background_image' => 'Creaciones de Clientes',
+        'testimonials_background_image' => 'Testimonios',
+        'trust_background_image' => 'Badges de Confianza',
+        'faq_background_image' => 'Preguntas Frecuentes'
+    );
+    
+    echo '<div class="realthread-backgrounds-container">';
+    echo '<p><strong>Sube imágenes de fondo para cada sección de la plantilla RealThread</strong></p>';
+    echo '<p><em>Las imágenes aparecerán como fondo con un overlay semitransparente para mantener la legibilidad del texto.</em></p>';
+    echo '<hr style="margin: 20px 0;">';
+    
+    foreach ($sections as $meta_key => $label) {
+        $image_url = get_post_meta($post->ID, $meta_key, true);
+        
+        echo '<div class="realthread-bg-section" style="margin-bottom: 30px; padding: 15px; background: #f5f5f5; border-radius: 5px;">';
+        echo '<h4 style="margin-top: 0;">' . esc_html($label) . '</h4>';
+        
+        echo '<div class="bg-image-container">';
+        if ($image_url) {
+            echo '<img src="' . esc_url($image_url) . '" style="max-width: 300px; height: auto; display: block; margin-bottom: 10px; border: 2px solid #ddd; border-radius: 4px;" />';
+        }
+        echo '</div>';
+        
+        echo '<input type="hidden" name="' . esc_attr($meta_key) . '" id="' . esc_attr($meta_key) . '" value="' . esc_attr($image_url) . '" />';
+        echo '<button type="button" class="button realthread-upload-btn" data-target="' . esc_attr($meta_key) . '">Seleccionar Imagen</button> ';
+        if ($image_url) {
+            echo '<button type="button" class="button realthread-remove-btn" data-target="' . esc_attr($meta_key) . '">Eliminar Imagen</button>';
+        }
+        echo '</div>';
+    }
+    
+    echo '</div>';
+    
+    // Sección de Carousel de Productos
+    echo '<hr style="margin: 30px 0;"><h3>Carousel de Productos en Hero</h3>';
+    echo '<p><strong>Configura los 4 productos que aparecerán en el carousel del hero banner</strong></p>';
+    
+    for ($i = 1; $i <= 4; $i++) {
+        $product_image = get_post_meta($post->ID, "carousel_product_{$i}_image", true);
+        $product_title = get_post_meta($post->ID, "carousel_product_{$i}_title", true);
+        $product_link = get_post_meta($post->ID, "carousel_product_{$i}_link", true);
+        
+        echo '<div class="carousel-product-section" style="margin-bottom: 30px; padding: 20px; background: #f9f9f9; border-radius: 5px; border: 1px solid #ddd;">';
+        echo '<h4 style="margin-top: 0; color: #50c1c1;">Producto ' . $i . '</h4>';
+        
+        // Imagen
+        echo '<div style="margin-bottom: 15px;">';
+        echo '<label style="display: block; font-weight: 600; margin-bottom: 5px;">Imagen del Producto:</label>';
+        echo '<div class="carousel-image-container">';
+        if ($product_image) {
+            echo '<img src="' . esc_url($product_image) . '" style="max-width: 200px; height: auto; display: block; margin-bottom: 10px; border: 2px solid #ddd; border-radius: 4px;" />';
+        }
+        echo '</div>';
+        echo '<input type="hidden" name="carousel_product_' . $i . '_image" id="carousel_product_' . $i . '_image" value="' . esc_attr($product_image) . '" />';
+        echo '<button type="button" class="button carousel-upload-btn" data-target="carousel_product_' . $i . '_image" data-container="carousel">Seleccionar Imagen</button> ';
+        if ($product_image) {
+            echo '<button type="button" class="button carousel-remove-btn" data-target="carousel_product_' . $i . '_image">Eliminar</button>';
+        }
+        echo '</div>';
+        
+        // Título
+        echo '<div style="margin-bottom: 15px;">';
+        echo '<label style="display: block; font-weight: 600; margin-bottom: 5px;">Título del Producto:</label>';
+        echo '<input type="text" name="carousel_product_' . $i . '_title" value="' . esc_attr($product_title) . '" style="width: 100%; padding: 8px;" placeholder="Ej: Camiseta Una Impresión" />';
+        echo '</div>';
+        
+        // Enlace
+        echo '<div style="margin-bottom: 15px;">';
+        echo '<label style="display: block; font-weight: 600; margin-bottom: 5px;">Enlace del Producto:</label>';
+        echo '<input type="text" name="carousel_product_' . $i . '_link" value="' . esc_attr($product_link) . '" style="width: 100%; padding: 8px;" placeholder="/producto/camiseta-personalizada/" />';
+        echo '</div>';
+        
+        echo '</div>';
+    }
+    
+    // JavaScript para el media uploader
+    ?>
+    <script>
+    jQuery(document).ready(function($) {
+        var mediaUploader;
+        
+        // Upload para backgrounds
+        $('.realthread-upload-btn').on('click', function(e) {
+            e.preventDefault();
+            var button = $(this);
+            var targetField = button.data('target');
+            var container = button.closest('.realthread-bg-section');
+            
+            if (mediaUploader) {
+                mediaUploader.open();
+                return;
+            }
+            
+            mediaUploader = wp.media({
+                title: 'Seleccionar Imagen de Fondo',
+                button: {
+                    text: 'Usar esta imagen'
+                },
+                multiple: false
+            });
+            
+            mediaUploader.on('select', function() {
+                var attachment = mediaUploader.state().get('selection').first().toJSON();
+                $('#' + targetField).val(attachment.url);
+                
+                var imgContainer = container.find('.bg-image-container');
+                imgContainer.html('<img src="' + attachment.url + '" style="max-width: 300px; height: auto; display: block; margin-bottom: 10px; border: 2px solid #ddd; border-radius: 4px;" />');
+                
+                if (container.find('.realthread-remove-btn').length === 0) {
+                    button.after(' <button type="button" class="button realthread-remove-btn" data-target="' + targetField + '">Eliminar Imagen</button>');
+                }
+            });
+            
+            mediaUploader.open();
+        });
+        
+        // Upload para carousel
+        $('.carousel-upload-btn').on('click', function(e) {
+            e.preventDefault();
+            var button = $(this);
+            var targetField = button.data('target');
+            var container = button.closest('.carousel-product-section');
+            
+            var carouselUploader = wp.media({
+                title: 'Seleccionar Imagen del Producto',
+                button: {
+                    text: 'Usar esta imagen'
+                },
+                multiple: false
+            });
+            
+            carouselUploader.on('select', function() {
+                var attachment = carouselUploader.state().get('selection').first().toJSON();
+                $('#' + targetField).val(attachment.url);
+                
+                var imgContainer = container.find('.carousel-image-container');
+                imgContainer.html('<img src="' + attachment.url + '" style="max-width: 200px; height: auto; display: block; margin-bottom: 10px; border: 2px solid #ddd; border-radius: 4px;" />');
+                
+                if (container.find('.carousel-remove-btn[data-target="' + targetField + '"]').length === 0) {
+                    button.after(' <button type="button" class="button carousel-remove-btn" data-target="' + targetField + '">Eliminar</button>');
+                }
+            });
+            
+            carouselUploader.open();
+        });
+        
+        // Remove background
+        $(document).on('click', '.realthread-remove-btn', function(e) {
+            e.preventDefault();
+            var button = $(this);
+            var targetField = button.data('target');
+            var container = button.closest('.realthread-bg-section');
+            
+            $('#' + targetField).val('');
+            container.find('.bg-image-container').html('');
+            button.remove();
+        });
+        
+        // Remove carousel
+        $(document).on('click', '.carousel-remove-btn', function(e) {
+            e.preventDefault();
+            var button = $(this);
+            var targetField = button.data('target');
+            var container = button.closest('.carousel-product-section');
+            
+            $('#' + targetField).val('');
+            container.find('.carousel-image-container').html('');
+            button.remove();
+        });
+    });
+    </script>
+    <?php
+}
+
+function realthread_save_backgrounds($post_id) {
+    if (!isset($_POST['realthread_backgrounds_nonce_field']) || 
+        !wp_verify_nonce($_POST['realthread_backgrounds_nonce_field'], 'realthread_backgrounds_nonce')) {
+        return;
+    }
+    
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+    
+    $sections = array(
+        'hero_background_image',
+        'steps_background_image',
+        'categories_background_image',
+        'products_background_image',
+        'design_background_image',
+        'customer_background_image',
+        'testimonials_background_image',
+        'trust_background_image',
+        'faq_background_image'
+    );
+    
+    foreach ($sections as $meta_key) {
+        if (isset($_POST[$meta_key])) {
+            update_post_meta($post_id, $meta_key, esc_url_raw($_POST[$meta_key]));
+        } else {
+            delete_post_meta($post_id, $meta_key);
+        }
+    }
+    
+    // Guardar productos del carousel
+    for ($i = 1; $i <= 4; $i++) {
+        $image_key = "carousel_product_{$i}_image";
+        $title_key = "carousel_product_{$i}_title";
+        $link_key = "carousel_product_{$i}_link";
+        
+        if (isset($_POST[$image_key])) {
+            update_post_meta($post_id, $image_key, esc_url_raw($_POST[$image_key]));
+        } else {
+            delete_post_meta($post_id, $image_key);
+        }
+        
+        if (isset($_POST[$title_key])) {
+            update_post_meta($post_id, $title_key, sanitize_text_field($_POST[$title_key]));
+        } else {
+            delete_post_meta($post_id, $title_key);
+        }
+        
+        if (isset($_POST[$link_key])) {
+            update_post_meta($post_id, $link_key, esc_url_raw($_POST[$link_key]));
+        } else {
+            delete_post_meta($post_id, $link_key);
+        }
+    }
+}
+add_action('save_post', 'realthread_save_backgrounds');
+

@@ -1,0 +1,168 @@
+<!-- Estilos del Grid de Servicios - Una Fila -->
+<style>
+.servicios-flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding: 3rem 1rem;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.servicio-card-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 15px;
+    padding: 1.5rem 1.5rem 1.2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    min-width: 180px;
+    max-width: 200px;
+}
+
+.servicio-card-flex:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.servicio-icon-flex {
+    width: 140px;
+    height: 140px;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.servicio-card-flex:hover .servicio-icon-flex {
+    transform: scale(1.05);
+}
+
+.servicio-icon-flex img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+}
+
+.servicio-title-flex {
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #000;
+    margin: 0;
+    text-align: center;
+    letter-spacing: 1px;
+    line-height: 1.2;
+}
+
+.servicio-card-flex:hover .servicio-title-flex {
+    color: #00BCD4;
+}
+
+@media (max-width: 1200px) {
+    .servicios-flex-container {
+        gap: 1.5rem;
+    }
+    
+    .servicio-icon-flex {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .servicio-card-flex {
+        min-width: 150px;
+        max-width: 170px;
+        padding: 1.2rem 1rem 1rem;
+    }
+    
+    .servicio-title-flex {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .servicios-flex-container {
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+    
+    .servicio-icon-flex {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .servicio-card-flex {
+        min-width: 140px;
+        max-width: 150px;
+    }
+    
+    .servicio-title-flex {
+        font-size: 0.9rem;
+    }
+}
+</style>
+
+<!-- Fila de Servicios -->
+<div class="servicios-flex-container">
+    
+    <!-- Servicio 1: Serigrafía -->
+    <a href="#" class="servicio-card-flex">
+        <div class="servicio-icon-flex">
+            <img src="/wp-content/uploads/2024/08/SERIGRAFIA.png" alt="Serigrafía" loading="lazy">
+        </div>
+        <h3 class="servicio-title-flex">SERIGRAFÍA</h3>
+    </a>
+
+    <!-- Servicio 2: Diseño Gráfico -->
+    <a href="#" class="servicio-card-flex">
+        <div class="servicio-icon-flex">
+            <img src="/wp-content/uploads/2024/08/DISE令-GRAFICO.png" alt="Diseño Gráfico" loading="lazy">
+        </div>
+        <h3 class="servicio-title-flex">GRÁFICO</h3>
+    </a>
+
+    <!-- Servicio 3: Impresión Digital -->
+    <a href="#" class="servicio-card-flex">
+        <div class="servicio-icon-flex">
+            <img src="/wp-content/uploads/2024/08/IMPRESION-DIGITAL.png" alt="Impresión Digital" loading="lazy">
+        </div>
+        <h3 class="servicio-title-flex">IMPRESIÓN DIGITAL</h3>
+    </a>
+
+    <!-- Servicio 4: Promociones -->
+    <a href="#" class="servicio-card-flex">
+        <div class="servicio-icon-flex">
+            <img src="/wp-content/uploads/2024/08/REGALO-PROMOCIONAL.png" alt="Promociones" loading="lazy">
+        </div>
+        <h3 class="servicio-title-flex">PROMOCIONES</h3>
+    </a>
+
+    <!-- Servicio 5: Ropa Laboral -->
+    <a href="#" class="servicio-card-flex">
+        <div class="servicio-icon-flex">
+            <img src="/wp-content/uploads/2024/08/ROPA-LABORAL.png" alt="Ropa Laboral" loading="lazy">
+        </div>
+        <h3 class="servicio-title-flex">ROPA LABORAL</h3>
+    </a>
+
+    <!-- Servicio 6: Regalos -->
+    <a href="#" class="servicio-card-flex">
+        <div class="servicio-icon-flex">
+            <img src="/wp-content/uploads/2024/08/REGALOS.png" alt="Regalos" loading="lazy">
+        </div>
+        <h3 class="servicio-title-flex">REGALOS</h3>
+    </a>
+
+</div>
+
+
+

@@ -1,0 +1,157 @@
+<!-- Estilos del Grid de Servicios -->
+<style>
+.servicios-grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 3rem 2rem;
+    padding: 3rem 0;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+@media (max-width: 991px) {
+    .servicios-grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 2.5rem 2rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .servicios-grid-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 2rem;
+        padding: 2rem 1rem;
+    }
+}
+
+.servicio-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 15px;
+    padding: 2.5rem 2rem 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    min-height: 320px;
+}
+
+.servicio-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.servicio-icon {
+    width: 180px;
+    height: 180px;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.servicio-card:hover .servicio-icon {
+    transform: scale(1.05);
+}
+
+.servicio-icon img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+}
+
+.servicio-title {
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #000;
+    margin: 0;
+    text-align: center;
+    letter-spacing: 1px;
+    line-height: 1.2;
+}
+
+.servicio-card:hover .servicio-title {
+    color: #00BCD4;
+}
+
+@media (max-width: 768px) {
+    .servicio-icon {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .servicio-title {
+        font-size: 1.3rem;
+    }
+    
+    .servicio-card {
+        min-height: 280px;
+        padding: 2rem 1.5rem 1.5rem;
+    }
+}
+</style>
+
+<!-- Grid de Servicios -->
+<div class="servicios-grid-container">
+    
+    <!-- Servicio 1: Serigrafía -->
+    <a href="#" class="servicio-card">
+        <div class="servicio-icon">
+            <img src="/wp-content/uploads/2024/08/SERIGRAFIA.png" alt="Serigrafía" loading="lazy">
+        </div>
+        <h3 class="servicio-title">SERIGRAFÍA</h3>
+    </a>
+
+    <!-- Servicio 2: Diseño Gráfico -->
+    <a href="#" class="servicio-card">
+        <div class="servicio-icon">
+            <img src="/wp-content/uploads/2024/08/DISE令-GRAFICO.png" alt="Diseño Gráfico" loading="lazy">
+        </div>
+        <h3 class="servicio-title">GRÁFICO</h3>
+    </a>
+
+    <!-- Servicio 3: Impresión Digital -->
+    <a href="#" class="servicio-card">
+        <div class="servicio-icon">
+            <img src="/wp-content/uploads/2024/08/IMPRESION-DIGITAL.png" alt="Impresión Digital" loading="lazy">
+        </div>
+        <h3 class="servicio-title">IMPRESIÓN DIGITAL</h3>
+    </a>
+
+    <!-- Servicio 4: Promociones -->
+    <a href="#" class="servicio-card">
+        <div class="servicio-icon">
+            <img src="/wp-content/uploads/2024/08/REGALO-PROMOCIONAL.png" alt="Promociones" loading="lazy">
+        </div>
+        <h3 class="servicio-title">PROMOCIONES</h3>
+    </a>
+
+    <!-- Servicio 5: Ropa Laboral -->
+    <a href="#" class="servicio-card">
+        <div class="servicio-icon">
+            <img src="/wp-content/uploads/2024/08/ROPA-LABORAL.png" alt="Ropa Laboral" loading="lazy">
+        </div>
+        <h3 class="servicio-title">ROPA LABORAL</h3>
+    </a>
+
+    <!-- Servicio 6: Regalos -->
+    <a href="#" class="servicio-card">
+        <div class="servicio-icon">
+            <img src="/wp-content/uploads/2024/08/REGALOS.png" alt="Regalos" loading="lazy">
+        </div>
+        <h3 class="servicio-title">REGALOS</h3>
+    </a>
+
+</div>
+
+
+
