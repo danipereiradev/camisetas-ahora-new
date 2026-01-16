@@ -259,31 +259,110 @@ function wapf_lcp_save_preview_to_cart($cart_item_data, $product_id, $variation_
 add_filter('woocommerce_add_cart_item_data', 'wapf_lcp_save_preview_to_cart', 10, 4);
 
 function wapf_change_cart_item_thumbnail($product_image, $cart_item, $cart_item_key) {
-    $product = $cart_item['data'];
-    $preview_url = '';
-    
-    // Prioridad 1: Preview del producto personalizado
-    if (isset($cart_item['wapf_product_preview']) && !empty($cart_item['wapf_product_preview'])) {
-        $preview_url = $cart_item['wapf_product_preview'];
-    }
-    // Prioridad 2: Preview de LCP
-    elseif (isset($cart_item['wapf_lcp_preview']) && !empty($cart_item['wapf_lcp_preview'])) {
-        $preview_url = $cart_item['wapf_lcp_preview'];
-    }
-    
-    if ($preview_url) {
-        $custom_image = sprintf(
-            '<a href="%s"><img src="%s" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="%s" loading="lazy" style="object-fit: cover;" /></a>',
-            esc_url(wc_get_cart_url()),
-            esc_url($preview_url),
-            esc_attr($product->get_name())
-        );
-        return $custom_image;
+    // En la página del carrito, si hay un diseño WAPF, NO mostrar la imagen del producto
+    if (is_cart()) {
+        // Verificar si hay diseño personalizado
+        $has_design = false;
+        if (isset($cart_item['wapf']) && is_array($cart_item['wapf'])) {
+            foreach ($cart_item['wapf'] as $field) {
+                if (isset($field['type']) && $field['type'] === 'file' && !empty($field['values'])) {
+                    $has_design = true;
+                    break;
+                }
+            }
+        }
+        
+        // Si hay diseño, retornar vacío para que WAPF maneje la imagen
+        if ($has_design) {
+            return '';
+        }
     }
     
+    // Para mini-cart o productos sin diseño, devolver la imagen original
     return $product_image;
 }
 add_filter('woocommerce_cart_item_thumbnail', 'wapf_change_cart_item_thumbnail', 10, 3);
+
+
+
+
+// Forzar la visualización de campos WAPF en el mini-cart
+add_action('init', function() {
+    update_option('wapf_settings_show_in_mini_cart', 'yes');
+}, 1);
+
+// FORZAR que WAPF muestre TODOS los campos en el mini-cart, sin importar la configuración
+add_filter('option_wapf_settings_show_in_mini_cart', function($value) {
+    return 'yes';
+}, 999);
+
+// También forzar en las otras páginas para asegurar consistencia
+add_filter('option_wapf_settings_show_in_cart', function($value) {
+    return 'yes';
+}, 999);
+
+add_filter('option_wapf_settings_show_in_checkout', function($value) {
+    return 'yes';
+}, 999);
+
+// CSS para que los campos se vean bien en el mini-cart y carrito
+add_action('wp_head', function() {
+    ?>
+    <style>
+        /* Mini-cart: Mostrar variaciones/campos personalizados */
+        .woocommerce-mini-cart-item .variation {
+            display: block !important;
+            margin: 5px 0 0 !important;
+            font-size: 0.9em;
+        }
+        .woocommerce-mini-cart-item .variation dt,
+        .woocommerce-mini-cart-item .variation dd {
+            display: inline-block !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .woocommerce-mini-cart-item .variation dt {
+            font-weight: 600;
+            color: #666;
+        }
+        .woocommerce-mini-cart-item .variation dt::after {
+            content: ' ';
+        }
+        .woocommerce-mini-cart-item .variation dd {
+            color: #00a0d2;
+            margin-bottom: 3px !important;
+        }
+        .woocommerce-mini-cart-item .variation dd p {
+            display: inline !important;
+            margin: 0 !important;
+        }
+        .woocommerce-mini-cart-item .variation dd::after {
+            content: '';
+            display: block;
+        }
+        
+        /* Thumbnails del carrito y mini-cart: Mostrar solo el diseño con buen formato */
+        .woocommerce-cart-form .product-thumbnail img,
+        .woocommerce-mini-cart-item img.attachment-woocommerce_thumbnail {
+            object-fit: contain !important;
+            background: #f9f9f9 !important;
+            padding: 10px !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+        }
+        
+        /* Asegurar que los thumbnails tengan un tamaño consistente */
+        .woocommerce-cart-form .product-thumbnail a {
+            display: block;
+            width: 100%;
+            max-width: 120px;
+        }
+    </style>
+    <?php
+});
+
+
+
 
 function preserve_variation_selections() {
     if (!is_product()) return;
@@ -535,10 +614,30 @@ function wapf_preserve_uploads_on_variation_change() {
         $('form.variations_form').on('reset_data', function() {});
         $(window).on('load', function() { setTimeout(function() { saveUploadedFiles(); }, 1500); });
         $(document).on('wapf/file_uploaded', function(e, data) {
-            if (!isRestoringFiles) { setTimeout(function() { saveUploadedFiles(); }, 200); }
+            if (!isRestoringFiles) {
+                // El usuario subió un archivo, limpiar el flag de "manualmente borrado"
+                if (data && data.fieldId) {
+                    var dzId = 'wapf-dz-' + data.fieldId;
+                    delete manuallyCleared[dzId];
+                }
+                setTimeout(function() { saveUploadedFiles(); }, 200);
+            }
         });
         $(document).on('wapf/file_deleted', function(e, data) {
-            if (!isRestoringFiles) { setTimeout(function() { saveUploadedFiles(); }, 200); }
+            if (!isRestoringFiles) {
+                // El usuario eliminó el archivo manualmente
+                if (data && data.fieldId) {
+                    var dzId = 'wapf-dz-' + data.fieldId;
+                    manuallyCleared[dzId] = true;
+                    
+                    // Limpiar los archivos persistentes para este dropzone
+                    delete persistentFiles[dzId];
+                    delete persistentInputs[data.fieldId];
+                    
+                    console.log('Archivo eliminado manualmente:', dzId);
+                }
+                setTimeout(function() { saveUploadedFiles(); }, 200);
+            }
         });
         
         setTimeout(preventImageClear, 100);
@@ -553,51 +652,40 @@ function wapf_preserve_uploads_on_variation_change() {
 add_action('wp_footer', 'wapf_preserve_uploads_on_variation_change', 999);
 
 /**
- * Prevenir que el uploader se vacíe cuando se añade al carrito
- * Permite añadir múltiples variaciones con el mismo diseño
+ * AJAX add-to-cart simplificado
+ * Miniatura del carrito = imagen base + diseño (sin variaciones de color)
  */
 function prevent_wapf_upload_clear_on_add_to_cart() {
     if (!is_product()) return;
     ?>
     <script type="text/javascript">
     jQuery(document).ready(function($) {
-        // Variables de control global
         var isAddingToCart = false;
-        var isCapturingPreview = false;
         var lastAddToCartTime = 0;
+        var isRestoringFiles = false;
         
-        // Función optimizada para habilitar el botón
+        // Habilitar botón de añadir al carrito
         var forceEnableButton = function() {
-            // No interferir si estamos añadiendo al carrito
             if (isAddingToCart) return;
-            
-            var $button = $('form.cart .single_add_to_cart_button, .single_add_to_cart_button');
-            
+            var $button = $('.single_add_to_cart_button');
             if ($button.length > 0) {
-                $button.prop('disabled', false);
-                $button.removeAttr('disabled');
-                $button.removeClass('disabled wc-variation-selection-needed');
+                $button.prop('disabled', false).removeAttr('disabled').removeClass('disabled wc-variation-selection-needed');
             }
         };
-        
-        // Ejecutar solo cada 200ms para evitar sobrecarga
         setInterval(forceEnableButton, 200);
-        // Variables para almacenar archivos de todos los dropzones
-        var persistentUploads = {};
-        var persistentFiles = {};
         
-        // Función para guardar todos los archivos de todos los dropzones
-        var saveAllDropzoneFiles = function() {
+        // Variables para protección de Dropzone (solo en memoria)
+        var persistentFiles = {};
+        var persistentInputs = {};
+        var manuallyCleared = {}; // Flag para saber si el usuario borró manualmente
+        
+        // Guardar archivos de Dropzone
+        var saveDropzoneFiles = function() {
             if (typeof Dropzone === 'undefined' || !Dropzone.instances.length) return;
-            
-            console.log('💾 Guardando archivos de ' + Dropzone.instances.length + ' dropzones...');
             
             Dropzone.instances.forEach(function(dz) {
                 var dzId = dz.element.id;
-                
                 if (dz.files && dz.files.length > 0) {
-                    console.log('Guardando ' + dz.files.length + ' archivos del dropzone: ' + dzId);
-                    
                     persistentFiles[dzId] = dz.files.map(function(file) {
                         return {
                             name: file.name,
@@ -608,103 +696,145 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                             upload: file.upload ? {
                                 uuid: file.upload.uuid,
                                 filename: file.upload.filename
-                            } : null,
-                            accepted: file.accepted,
-                            processing: false,
-                            previewElement: file.previewElement ? file.previewElement.outerHTML : null
+                            } : null
                         };
                     });
                     
-                    // Guardar también el input value
+                    // Guardar también el valor del input asociado
                     var fieldId = dzId.replace('wapf-dz-', '');
                     var $input = $('input[data-field-id="' + fieldId + '"]');
-                    if ($input.length) {
-                        persistentUploads[fieldId] = $input.val();
-                        console.log('Valor guardado del campo ' + fieldId + ': ' + $input.val());
+                    if ($input.length && $input.val()) {
+                        persistentInputs[fieldId] = $input.val();
                     }
                 }
             });
         };
         
-        // Función para restaurar todos los archivos
-        var restoreAllDropzoneFiles = function() {
-            if (typeof Dropzone === 'undefined' || !Dropzone.instances.length) {
-                console.log('⚠️ No hay dropzones disponibles para restaurar');
-                return;
-            }
+        // Restaurar archivos de Dropzone
+        var restoreDropzoneFiles = function() {
+            if (typeof Dropzone === 'undefined' || !Dropzone.instances.length) return;
             
-            console.log('📂 Restaurando archivos en ' + Dropzone.instances.length + ' dropzones...');
-            var filesRestored = 0;
+            isRestoringFiles = true;
             
             Dropzone.instances.forEach(function(dz) {
                 var dzId = dz.element.id;
                 
-                if (persistentFiles[dzId] && persistentFiles[dzId].length > 0) {
-                    console.log('Restaurando ' + persistentFiles[dzId].length + ' archivos en: ' + dzId);
-                    
-                    var $dzElement = $('#' + dzId);
-                    
-                    // Restaurar archivos
+                // NO restaurar si el usuario borró manualmente
+                if (manuallyCleared[dzId]) {
+                    return;
+                }
+                
+                if (persistentFiles[dzId] && persistentFiles[dzId].length > 0 && dz.files.length === 0) {
                     persistentFiles[dzId].forEach(function(fileData) {
-                        // Verificar si el archivo ya existe
-                        var exists = dz.files.some(function(f) {
-                            return f.upload && fileData.upload && 
-                                   f.upload.uuid === fileData.upload.uuid;
-                        });
+                        var mockFile = {
+                            name: fileData.name,
+                            size: fileData.size,
+                            type: fileData.type,
+                            status: Dropzone.SUCCESS,
+                            accepted: true,
+                            dataURL: fileData.dataURL,
+                            upload: fileData.upload
+                        };
                         
-                        if (!exists) {
-                            var mockFile = {
-                                name: fileData.name,
-                                size: fileData.size,
-                                type: fileData.type,
-                                status: Dropzone.SUCCESS,
-                                accepted: true,
-                                processing: false,
-                                dataURL: fileData.dataURL,
-                                upload: fileData.upload
-                            };
-                            
-                            dz.files.push(mockFile);
-                            dz.emit("addedfile", mockFile);
-                            
-                            if (fileData.dataURL && fileData.type && fileData.type.indexOf('image') !== -1) {
-                                dz.emit("thumbnail", mockFile, fileData.dataURL);
-                            }
-                            
-                            dz.emit("complete", mockFile);
-                            filesRestored++;
+                        dz.files.push(mockFile);
+                        dz.emit("addedfile", mockFile);
+                        
+                        if (fileData.dataURL && fileData.type && fileData.type.indexOf('image') !== -1) {
+                            dz.emit("thumbnail", mockFile, fileData.dataURL);
                         }
+                        
+                        dz.emit("complete", mockFile);
                     });
                     
-                    // Restaurar el valor del input
+                    // Restaurar el valor del input asociado
                     var fieldId = dzId.replace('wapf-dz-', '');
-                    if (persistentUploads[fieldId]) {
+                    if (persistentInputs[fieldId]) {
                         var $input = $('input[data-field-id="' + fieldId + '"]');
                         if ($input.length) {
-                            $input.val(persistentUploads[fieldId]).trigger('change');
-                            console.log('✅ Input restaurado: ' + persistentUploads[fieldId]);
+                            $input.val(persistentInputs[fieldId]).trigger('change');
                         }
                     }
                     
-                    // Ocultar el mensaje de "arrastrar archivos"
                     if (dz.files.length > 0) {
-                        $dzElement.find('.dz-message').hide();
+                        $('#' + dzId).find('.dz-message').hide();
                     }
-                } else {
-                    console.log('⚠️ No hay archivos guardados para: ' + dzId);
                 }
             });
             
-            console.log('✅ Restauración completa: ' + filesRestored + ' archivos restaurados');
+            setTimeout(function() {
+                isRestoringFiles = false;
+            }, 100);
         };
         
-        // Guardar archivos cuando se suben
-        $(document).on('wapf/file_uploaded', function(e, data) {
-            setTimeout(saveAllDropzoneFiles, 100);
-            setTimeout(forceEnableButton, 150);
-        });
+        // Proteger Dropzone de limpieza
+        var setupDropzoneProtection = function() {
+            if (typeof Dropzone === 'undefined' || !Dropzone.instances.length) {
+                setTimeout(setupDropzoneProtection, 500);
+                return;
+            }
+            
+            Dropzone.instances.forEach(function(dz) {
+                var dzId = dz.element.id;
+                var originalRemoveAll = dz.removeAllFiles.bind(dz);
+                
+                // Detectar cuando el usuario hace clic en la X para borrar un archivo
+                dz.on('removedfile', function(file) {
+                    if (!isRestoringFiles) {
+                        console.log('Usuario eliminó archivo de:', dzId);
+                        manuallyCleared[dzId] = true;
+                        
+                        // Limpiar los archivos persistentes
+                        delete persistentFiles[dzId];
+                        var fieldId = dzId.replace('wapf-dz-', '');
+                        delete persistentInputs[fieldId];
+                    }
+                });
+                
+                dz.removeAllFiles = function(cancelIfNecessary) {
+                    // Si el usuario borró manualmente, permitir la eliminación
+                    if (manuallyCleared[dzId]) {
+                        return originalRemoveAll(cancelIfNecessary);
+                    }
+                    
+                    if (persistentFiles[dzId] && persistentFiles[dzId].length > 0) {
+                        // Asegurar que el input mantenga su valor antes de restaurar
+                        var fieldId = dzId.replace('wapf-dz-', '');
+                        if (persistentInputs[fieldId]) {
+                            var $input = $('input[data-field-id="' + fieldId + '"]');
+                            if ($input.length) {
+                                $input.val(persistentInputs[fieldId]);
+                            }
+                        }
+                        setTimeout(restoreDropzoneFiles, 50);
+                        return;
+                    }
+                    return originalRemoveAll(cancelIfNecessary);
+                };
+            });
+        };
         
-        // Cargar html2canvas si no está disponible
+        // Notificación visual
+        var showNotification = function(message, type) {
+            type = type || 'success';
+            var $notification = $('<div class="wapf-notification ' + type + '">' +
+                '<span>' + message + '</span>' +
+                '<button class="close">&times;</button>' +
+            '</div>');
+            
+            $('body').append($notification);
+            setTimeout(function() { $notification.addClass('show'); }, 10);
+            setTimeout(function() {
+                $notification.removeClass('show');
+                setTimeout(function() { $notification.remove(); }, 300);
+            }, 5000);
+            
+            $notification.find('.close').on('click', function() {
+                $notification.removeClass('show');
+                setTimeout(function() { $notification.remove(); }, 300);
+            });
+        };
+        
+        // Cargar html2canvas
         var loadHtml2Canvas = function(callback) {
             if (typeof html2canvas !== 'undefined') {
                 callback();
@@ -715,32 +845,31 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
             script.src = '<?php echo get_stylesheet_directory_uri(); ?>/html2canvas.min.js';
             script.onload = callback;
             script.onerror = function() {
-                console.log('Error cargando html2canvas');
+                console.error('Error cargando html2canvas');
                 callback();
             };
             document.head.appendChild(script);
         };
         
-        // Capturar preview del producto antes de añadir al carrito
+        // Capturar preview UNA VEZ (imagen base + diseño)
         var captureProductPreview = function(callback) {
-            var $activeImage = $('.woocommerce-product-gallery__image.flex-active-slide img, .woocommerce-product-gallery__image:first img').first();
+            var $activeImage = $('.woocommerce-product-gallery__image.flex-active-slide img').first();
+            if (!$activeImage.length) {
+                $activeImage = $('.woocommerce-product-gallery img').first();
+            }
             
             if (!$activeImage.length) {
-                console.log('No se encontró imagen del producto para capturar');
                 if (callback) callback();
                 return;
             }
             
-            // Verificar si hay overlay LCP
             var $container = $activeImage.closest('.woocommerce-product-gallery__image');
             var $lcpWrap = $container.find('.lcp-wrap');
             
+            // Si hay overlay LCP, capturar con html2canvas
             if ($lcpWrap.length > 0) {
-                console.log('Capturando preview con LCP...');
-                // Cargar y usar html2canvas para capturar el contenedor completo con LCP
                 loadHtml2Canvas(function() {
                     if (typeof html2canvas === 'undefined') {
-                        console.log('html2canvas no disponible después de cargar');
                         if (callback) callback();
                         return;
                     }
@@ -757,8 +886,12 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                             formData.append('action', 'wapf_save_product_preview');
                             formData.append('nonce', wapf_lcp_nonce);
                             formData.append('preview_image', blob, 'product-preview.png');
-                            formData.append('product_id', $('input[name=product_id], input[name=add-to-cart]').val());
-                            formData.append('variation_id', $('input[name=variation_id]').val() || '');
+                            
+                            var $form = $('form.cart');
+                            var productId = $form.find('button[name="add-to-cart"]').val();
+                            
+                            formData.append('product_id', productId || '');
+                            formData.append('variation_id', '0');
                             
                             $.ajax({
                                 url: wapf_config.ajax,
@@ -767,7 +900,6 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                                 processData: false,
                                 contentType: false,
                                 success: function(response) {
-                                    console.log('Preview guardada:', response);
                                     if (response.success) {
                                         var $input = $('input[name=wapf_product_preview_url]');
                                         if (!$input.length) {
@@ -779,298 +911,320 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                                     if (callback) callback();
                                 },
                                 error: function() {
-                                    console.log('Error guardando preview');
                                     if (callback) callback();
                                 }
                             });
                         }, 'image/png', 0.95);
                     }).catch(function(error) {
-                        console.log('Error en html2canvas:', error);
                         if (callback) callback();
                     });
                 });
             } else {
-                // No hay LCP, usar la imagen del producto directamente
-                console.log('No hay LCP, usando imagen del producto');
-                var imageUrl = $activeImage.attr('src') || $activeImage.attr('data-large_image') || $activeImage.attr('data-src');
-                if (imageUrl) {
-                    var $input = $('input[name=wapf_product_preview_url]');
-                    if (!$input.length) {
-                        $input = $('<input type="hidden" name="wapf_product_preview_url">');
-                        $('form.cart').append($input);
-                    }
-                    $input.val(imageUrl);
-                }
+                // Sin LCP, solo proceder
                 if (callback) callback();
             }
         };
         
-        // Guardar antes de añadir al carrito y capturar preview
+        // Cuando se sube un archivo, capturar preview UNA VEZ
+        $(document).on('wapf/file_uploaded', function(e, data) {
+            setTimeout(saveDropzoneFiles, 100);
+            setTimeout(forceEnableButton, 150);
+            
+            // Capturar preview solo la primera vez
+            if (!$('input[name=wapf_product_preview_url]').val()) {
+                setTimeout(function() {
+                    captureProductPreview();
+                }, 800);
+            }
+        });
+        
+        // Guardar cuando cambia el input de archivo WAPF
+        $(document).on('change', 'input[data-is-file="1"]', function() {
+            setTimeout(saveDropzoneFiles, 100);
+        });
+        
+        // AJAX add-to-cart
         $(document).on('click', '.single_add_to_cart_button', function(e) {
             var now = Date.now();
             
-            // Prevenir clicks múltiples en menos de 1 segundo
             if (now - lastAddToCartTime < 1000) {
-                console.log('Click ignorado - demasiado rápido');
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 return false;
             }
             
-            console.log('Click en añadir al carrito - guardando archivos');
-            
-            // CRÍTICO: Marcar INMEDIATAMENTE que debe preservar
-            window.wapf_preserve_files = true;
-            
-            // IMPORTANTE: Guardar archivos ANTES de cualquier otra cosa
-            saveAllDropzoneFiles();
-            
-            // Si hay archivos subidos, capturar preview
-            if (typeof Dropzone !== 'undefined') {
-                var hasFiles = Dropzone.instances.some(function(dz) {
-                    return dz.files && dz.files.length > 0;
-                });
-                
-                if (hasFiles && !isCapturingPreview && !$(this).data('preview-captured')) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.stopImmediatePropagation();
+            // IMPORTANTE: Restaurar valores de inputs ANTES de validar el formulario
+            if (typeof Dropzone !== 'undefined' && Dropzone.instances.length > 0) {
+                Dropzone.instances.forEach(function(dz) {
+                    var dzId = dz.element.id;
+                    var fieldId = dzId.replace('wapf-dz-', '');
                     
-                    isCapturingPreview = true;
-                    isAddingToCart = true;
-                    lastAddToCartTime = now;
+                    // Limpiar el flag de "manualmente borrado" al añadir al carrito
+                    // para que el archivo se mantenga para el siguiente producto
+                    delete manuallyCleared[dzId];
                     
-                    var $btn = $(this);
-                    var originalText = $btn.text();
-                    $btn.text('Preparando...');
-                    $btn.data('preview-captured', true);
-                    
-                    console.log('Capturando preview antes de añadir...');
-                    captureProductPreview(function() {
-                        isCapturingPreview = false;
-                        $btn.text(originalText);
-                        
-                        console.log('Preview capturada, enviando formulario...');
-                        
-                        // Guardar una última vez antes de enviar
-                        saveAllDropzoneFiles();
-                        
-                        // Permitir que el formulario se envíe normalmente
-                        $btn.closest('form.cart').trigger('submit');
-                        
-                        // Resetear después de 2 segundos
-                        setTimeout(function() {
-                            isAddingToCart = false;
-                            $btn.removeData('preview-captured');
-                        }, 2000);
-                    });
-                    
-                    return false;
-                } else {
-                    // No hay archivos o ya se capturó
-                    lastAddToCartTime = now;
-                    isAddingToCart = true;
-                    
-                    setTimeout(function() {
-                        isAddingToCart = false;
-                    }, 2000);
-                }
-            }
-        });
-        
-        // Cuando se encuentra una variación, forzar botón habilitado
-        $('form.variations_form').on('found_variation', function() {
-            setTimeout(forceEnableButton, 300);
-        });
-        
-        // Cuando cambia una variación
-        $('form.variations_form').on('woocommerce_variation_select_change', function() {
-            setTimeout(forceEnableButton, 300);
-        });
-        
-        // IMPORTANTE: Interceptar el evento added_to_cart ANTES que el plugin WAPF
-        // Usar captura de eventos (useCapture = true) para ejecutar primero
-        document.body.addEventListener('added_to_cart', function(event) {
-            console.log('Producto añadido al carrito - PRESERVANDO archivos');
-            
-            // Marcar globalmente que debe preservar
-            window.wapf_preserve_files = true;
-            
-            // Guardar una última vez antes de que el plugin intente limpiar
-            saveAllDropzoneFiles();
-            
-        }, true); // useCapture = true para ejecutar ANTES que otros listeners
-        
-        // Nuestro event listener principal que restaura
-        $(document.body).on('added_to_cart', function(event, fragments, cart_hash, button) {
-            console.log('Restaurando archivos después de añadir al carrito');
-            
-            // Resetear flags para permitir nueva captura
-            $('.single_add_to_cart_button').removeData('preview-captured');
-            $('input[name=wapf_product_preview_url]').remove();
-            
-            // Resetear control de tiempo
-            isAddingToCart = false;
-            lastAddToCartTime = Date.now();
-            
-            // Restaurar archivos inmediatamente y múltiples veces
-            restoreAllDropzoneFiles();
-            
-            setTimeout(function() {
-                console.log('Segunda restauración de archivos...');
-                restoreAllDropzoneFiles();
-                forceEnableButton();
-                
-                // Asegurar que se mantengan visibles
-                if (typeof Dropzone !== 'undefined') {
-                    Dropzone.instances.forEach(function(dz) {
-                        if (dz.files.length > 0) {
-                            $('#' + dz.element.id).find('.dz-message').hide();
+                    if (persistentInputs[fieldId]) {
+                        var $input = $('input[data-field-id="' + fieldId + '"]');
+                        if ($input.length && !$input.val()) {
+                            $input.val(persistentInputs[fieldId]);
                         }
-                    });
-                }
-            }, 300);
-            
-            setTimeout(function() {
-                console.log('Tercera restauración de archivos...');
-                restoreAllDropzoneFiles();
-                
-                // Resetear flag después de completar todas las restauraciones
-                setTimeout(function() {
-                    window.wapf_preserve_files = false;
-                    console.log('✅ Flag de preservación reseteado - limpieza manual permitida');
-                }, 2000); // Esperar 2 segundos adicionales
-            }, 1000); // Cambiar a 1 segundo
-            
-            // Restauración adicional después de más tiempo por si acaso
-            setTimeout(function() {
-                if (persistentFiles && Object.keys(persistentFiles).length > 0) {
-                    console.log('Cuarta restauración de seguridad...');
-                    restoreAllDropzoneFiles();
-                }
-            }, 1500);
-        });
-        
-        // Guardar archivos periódicamente
-        setInterval(saveAllDropzoneFiles, 2000);
-        
-        // Guardar al cargar
-        $(window).on('load', function() {
-            setTimeout(saveAllDropzoneFiles, 1000);
-        });
-        
-        // Prevenir que se limpien los archivos - VERSIÓN SUPER AGRESIVA
-        var setupDropzoneProtection = function() {
-            if (typeof Dropzone === 'undefined' || !Dropzone.instances.length) {
-                setTimeout(setupDropzoneProtection, 500);
-                return;
+                    }
+                });
             }
             
-            Dropzone.instances.forEach(function(dz) {
-                var dzId = dz.element.id;
-                
-                // Interceptar la función removeAllFiles - BLOQUEAR SIEMPRE si hay archivos guardados
-                var originalRemoveAll = dz.removeAllFiles.bind(dz);
-                dz.removeAllFiles = function(cancelIfNecessary) {
-                    // Si hay archivos guardados, NUNCA permitir limpiar
-                    if (persistentFiles[dzId] && persistentFiles[dzId].length > 0) {
-                        console.log('🛡️ BLOQUEADO removeAllFiles() en ' + dzId + ' - hay archivos guardados');
-                        // Restaurar inmediatamente
-                        setTimeout(function() {
-                            console.log('Restaurando inmediatamente después de intento de limpieza...');
-                            restoreAllDropzoneFiles();
-                        }, 50);
-                        return; // NO ejecutar la limpieza
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            
+            var $btn = $(this);
+            var $form = $btn.closest('form.cart');
+            
+            var originalText = $btn.text();
+            $btn.prop('disabled', true).addClass('loading').text('Añadiendo...');
+            
+            lastAddToCartTime = now;
+            isAddingToCart = true;
+            
+            var formData = new FormData($form[0]);
+            formData.append('action', 'woocommerce_ajax_add_to_cart');
+            
+            $.ajax({
+                type: 'POST',
+                url: wc_add_to_cart_params.wc_ajax_url.toString().replace('%%endpoint%%', 'add_to_cart'),
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.error && response.product_url) {
+                        window.location = response.product_url;
+                        return;
                     }
-                    // Solo si NO hay archivos guardados, permitir
-                    console.log('Limpieza permitida en ' + dzId + ' - no hay archivos guardados');
-                    return originalRemoveAll(cancelIfNecessary);
-                };
-                
-                // Permitir eliminar archivos individuales solo si no está preservando
-                dz.on('removedfile', function(file) {
-                    if (!window.wapf_preserve_files) {
-                        saveAllDropzoneFiles();
-                    } else {
-                        // Si está preservando y alguien eliminó un archivo, restaurar
-                        console.log('Archivo eliminado durante preservación - restaurando...');
-                        setTimeout(restoreAllDropzoneFiles, 100);
+                    
+                    if (response.fragments) {
+                        $.each(response.fragments, function(key, value) {
+                            $(key).replaceWith(value);
+                        });
                     }
-                });
-                
-                // Sobrescribir eventos que deshabilitan el botón
-                dz.off('sending');
-                dz.off('complete');
-                
-                // Asegurar que el botón esté habilitado después de subir
-                dz.on('complete', function() {
-                    setTimeout(forceEnableButton, 200);
-                });
+                    
+                    $(document.body).trigger('added_to_cart', [response.fragments, response.cart_hash, $btn]);
+                    
+                    showNotification('Producto añadido al carrito', 'success');
+                    
+                    // Guardar archivos para mantener el input sincronizado
+                    setTimeout(saveDropzoneFiles, 100);
+                    
+                    $btn.prop('disabled', false).removeClass('loading').text(originalText);
+                    isAddingToCart = false;
+                },
+                error: function() {
+                    showNotification('Error al añadir el producto', 'error');
+                    $btn.prop('disabled', false).removeClass('loading').text(originalText);
+                    isAddingToCart = false;
+                }
             });
             
-            console.log('✅ Protección de Dropzone activada');
-        };
+            return false;
+        });
+        
+        // Setup inicial
+        $(window).on('load', function() {
+            setTimeout(saveDropzoneFiles, 1000);
+        });
         
         setupDropzoneProtection();
         
-        // MONITOR CONTINUO: Detectar si los archivos desaparecen y restaurarlos inmediatamente
-        var monitorFiles = function() {
-            if (typeof Dropzone === 'undefined' || !Dropzone.instances.length) return;
-            
-            Dropzone.instances.forEach(function(dz) {
-                var dzId = dz.element.id;
-                
-                // Si tenemos archivos guardados pero el dropzone está vacío, restaurar
-                if (persistentFiles[dzId] && persistentFiles[dzId].length > 0 && dz.files.length === 0) {
-                    console.log('⚠️ ALERTA: Archivos desaparecidos de ' + dzId + ' - RESTAURANDO...');
-                    restoreAllDropzoneFiles();
-                }
-            });
-        };
-        
-        // Monitorear cada 500ms
-        setInterval(monitorFiles, 500);
-        
-        // Observador simplificado para mantener el botón habilitado
-        var observeButton = function() {
-            var $button = $('form.cart .single_add_to_cart_button, .single_add_to_cart_button');
-            
-            if ($button.length > 0 && typeof MutationObserver !== 'undefined') {
-                var observer = new MutationObserver(function(mutations) {
-                    if (isAddingToCart) return; // No interferir durante el proceso
+        // Monitor para restaurar archivos si desaparecen Y mantener inputs sincronizados
+        setInterval(function() {
+            if (typeof Dropzone !== 'undefined' && Dropzone.instances.length) {
+                Dropzone.instances.forEach(function(dz) {
+                    var dzId = dz.element.id;
                     
-                    mutations.forEach(function(mutation) {
-                        if (mutation.type === 'attributes' && mutation.attributeName === 'disabled') {
-                            // Solo revertir si hay archivos subidos
-                            if (typeof Dropzone !== 'undefined') {
-                                var hasFiles = Dropzone.instances.some(function(dz) {
-                                    return dz.files && dz.files.length > 0;
-                                });
-                                
-                                if (hasFiles) {
-                                    setTimeout(forceEnableButton, 100);
-                                }
-                            }
+                    // NO restaurar si el usuario borró manualmente
+                    if (manuallyCleared[dzId]) {
+                        return;
+                    }
+                    
+                    // Restaurar archivos si desaparecieron
+                    if (persistentFiles[dzId] && persistentFiles[dzId].length > 0 && dz.files.length === 0) {
+                        restoreDropzoneFiles();
+                    }
+                    
+                    // Asegurar que el input tenga valor si hay archivos
+                    if (dz.files.length > 0) {
+                        var fieldId = dzId.replace('wapf-dz-', '');
+                        var $input = $('input[data-field-id="' + fieldId + '"]');
+                        
+                        if ($input.length && !$input.val() && persistentInputs[fieldId]) {
+                            $input.val(persistentInputs[fieldId]);
                         }
-                    });
-                });
-                
-                $button.each(function() {
-                    observer.observe(this, {
-                        attributes: true,
-                        attributeFilter: ['disabled']
-                    });
+                    }
                 });
             }
-        };
-        
-        // Iniciar observador una sola vez
-        setTimeout(observeButton, 1000);
+        }, 200);
     });
     </script>
+    
+    <style>
+    .wapf-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #fff;
+        padding: 15px 45px 15px 20px;
+        border-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 999999;
+        min-width: 300px;
+        opacity: 0;
+        transform: translateX(400px);
+        transition: all 0.3s ease;
+    }
+    
+    .wapf-notification.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    .wapf-notification.success {
+        border-left: 4px solid #46b450;
+    }
+    
+    .wapf-notification.success span::before {
+        content: '✓ ';
+        color: #46b450;
+        font-weight: bold;
+    }
+    
+    .wapf-notification.error {
+        border-left: 4px solid #dc3232;
+    }
+    
+    .wapf-notification.error span::before {
+        content: '✕ ';
+        color: #dc3232;
+        font-weight: bold;
+    }
+    
+    .wapf-notification .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #999;
+        cursor: pointer;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+    }
+    
+    .wapf-notification .close:hover {
+        color: #333;
+    }
+    </style>
     <?php
 }
 add_action('wp_footer', 'prevent_wapf_upload_clear_on_add_to_cart', 1001);
+
+/**
+ * Handler AJAX para añadir al carrito sin recargar la página
+ * Compatible con Advanced Product Fields
+ */
+function wapf_ajax_add_to_cart_handler() {
+    // Verificar que sea una petición AJAX
+    if (!defined('DOING_AJAX') || !DOING_AJAX) {
+        return;
+    }
+    
+    // Obtener datos del producto
+    $product_id = apply_filters('woocommerce_add_to_cart_product_id', absint($_POST['product_id'] ?? $_POST['add-to-cart'] ?? 0));
+    $quantity = empty($_POST['quantity']) ? 1 : wc_stock_amount(wp_unslash($_POST['quantity']));
+    $variation_id = absint($_POST['variation_id'] ?? 0);
+    $variation = array();
+    
+    // Si es un producto variable, obtener los atributos de variación
+    if ($variation_id) {
+        $product = wc_get_product($variation_id);
+        
+        // Obtener atributos de variación del POST
+        foreach ($_POST as $key => $value) {
+            if (strpos($key, 'attribute_') === 0) {
+                $variation[sanitize_title($key)] = sanitize_text_field($value);
+            }
+        }
+    } else {
+        $product = wc_get_product($product_id);
+    }
+    
+    // Verificar que el producto existe
+    if (!$product) {
+        wp_send_json_error(array(
+            'error' => true,
+            'message' => 'Producto no encontrado'
+        ));
+        return;
+    }
+    
+    // Preparar cart_item_data para incluir campos personalizados de WAPF
+    $cart_item_data = array();
+    
+    // Guardar preview del producto personalizado si existe en el POST
+    if (isset($_POST['wapf_product_preview_url']) && !empty($_POST['wapf_product_preview_url'])) {
+        $cart_item_data['wapf_product_preview'] = esc_url_raw($_POST['wapf_product_preview_url']);
+    }
+    
+    // Guardar preview de LCP si existe en el POST
+    if (isset($_POST['wapf_lcp_preview_url']) && !empty($_POST['wapf_lcp_preview_url'])) {
+        $cart_item_data['wapf_lcp_preview'] = esc_url_raw($_POST['wapf_lcp_preview_url']);
+    }
+    
+    // WAPF guarda sus datos en el POST, dejar que WAPF los procese
+    // Los hooks de WAPF capturarán automáticamente los datos de campos personalizados
+    
+    // Añadir al carrito
+    $passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variation);
+    
+    if ($passed_validation) {
+        $cart_item_key = WC()->cart->add_to_cart($product_id, $quantity, $variation_id, $variation, $cart_item_data);
+        
+        if ($cart_item_key) {
+            do_action('woocommerce_ajax_added_to_cart', $product_id);
+            
+            // Obtener fragmentos actualizados del carrito
+            WC_AJAX::get_refreshed_fragments();
+        } else {
+            wp_send_json_error(array(
+                'error' => true,
+                'message' => 'No se pudo añadir el producto al carrito'
+            ));
+        }
+    } else {
+        wp_send_json_error(array(
+            'error' => true,
+            'message' => 'La validación del producto falló'
+        ));
+    }
+}
+
+// Registrar el handler AJAX para usuarios logueados y no logueados
+add_action('wp_ajax_woocommerce_ajax_add_to_cart', 'wapf_ajax_add_to_cart_handler');
+add_action('wp_ajax_nopriv_woocommerce_ajax_add_to_cart', 'wapf_ajax_add_to_cart_handler');
+
+/**
+ * Habilitar soporte para añadir al carrito via AJAX en productos simples y variables
+ */
+function wapf_enable_ajax_add_to_cart_params() {
+    if (!is_product()) {
+        return;
+    }
+    
+    // Asegurar que los parámetros de WooCommerce AJAX estén disponibles
+    if (!wp_script_is('wc-add-to-cart', 'enqueued')) {
+        wp_enqueue_script('wc-add-to-cart');
+    }
+}
+add_action('wp_enqueue_scripts', 'wapf_enable_ajax_add_to_cart_params');
 
 /**
  * Añadir meta boxes para imágenes de fondo de secciones en plantilla RealThread
