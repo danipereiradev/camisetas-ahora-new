@@ -4,6 +4,14 @@ Updated: 2025-11-10 12:32:37
 */
 
 /* ================================================
+   VARIABLES CSS GLOBALES
+   ================================================ */
+:root {
+  --secondary-color: #50c1c1;
+  --secondary-color-dark: #3da8a8;
+}
+
+/* ================================================
    FULL WIDTH - Eliminar márgenes y paddings
    ================================================ */
 
@@ -876,12 +884,12 @@ div#primary.content-area.primary,
 }
 
 .feature-icon {
-  color: #50c1c1;
+  color: var(--secondary-color);
   font-weight: 700;
 }
 
 .btn-hero-realthread {
-  background: #50c1c1;
+  background: var(--secondary-color);
   color: #fff;
   padding: 1rem 2.5rem;
   border-radius: 8px;
@@ -893,7 +901,7 @@ div#primary.content-area.primary,
 }
 
 .btn-hero-realthread:hover {
-  background: #3da8a8;
+  background: var(--secondary-color-dark);
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(80, 193, 193, 0.3);
 }
@@ -968,7 +976,7 @@ div#primary.content-area.primary,
   top: -15px;
   left: 50%;
   transform: translateX(-50%);
-  background: #50c1c1;
+  background: var(--secondary-color);
   color: #fff;
   width: 40px;
   height: 40px;
@@ -1147,7 +1155,7 @@ div#primary.content-area.primary,
 .product-price-info .price {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #50c1c1;
+  color: var(--secondary-color);
 }
 
 /* Design Tools Section */
@@ -1203,12 +1211,12 @@ div#primary.content-area.primary,
   content: '✓';
   position: absolute;
   left: 0;
-  color: #50c1c1;
+  color: var(--secondary-color);
   font-weight: 700;
 }
 
 .btn-design {
-  background: #50c1c1;
+  background: var(--secondary-color);
   color: #fff;
   padding: 1rem 2.5rem;
   border-radius: 8px;
@@ -1219,7 +1227,7 @@ div#primary.content-area.primary,
 }
 
 .btn-design:hover {
-  background: #3da8a8;
+  background: var(--secondary-color-dark);
   transform: translateY(-2px);
 }
 
@@ -1623,7 +1631,7 @@ div#primary.content-area.primary,
 }
 
 .btn-load-more {
-  background: #50c1c1;
+  background: var(--secondary-color);
   color: #fff;
   padding: 1rem 3rem;
   border-radius: 8px;
@@ -1635,7 +1643,7 @@ div#primary.content-area.primary,
 }
 
 .btn-load-more:hover {
-  background: #3da8a8;
+  background: var(--secondary-color-dark);
   transform: translateY(-2px);
 }
 
@@ -1700,7 +1708,7 @@ div#primary.content-area.primary,
 }
 
 .btn-learn-more {
-  background: #50c1c1;
+  background: var(--secondary-color);
   color: #fff;
   padding: 0.9rem 2rem;
   border-radius: 8px;
@@ -1711,7 +1719,7 @@ div#primary.content-area.primary,
 }
 
 .btn-learn-more:hover {
-  background: #3da8a8;
+  background: var(--secondary-color-dark);
   transform: translateY(-2px);
 }
 
@@ -1950,7 +1958,7 @@ div#primary.content-area.primary,
 /* Bottom CTA */
 .bottom-cta {
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, #50c1c1 0%, #3da8a8 100%);
+  background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-color-dark) 100%);
 }
 
 .cta-content {
@@ -1974,7 +1982,7 @@ div#primary.content-area.primary,
 
 .btn-cta-large {
   background: #fff;
-  color: #50c1c1;
+  color: var(--secondary-color);
   padding: 1.2rem 3rem;
   border-radius: 8px;
   text-decoration: none;
