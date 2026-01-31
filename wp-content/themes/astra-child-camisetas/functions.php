@@ -141,7 +141,171 @@ function override_old_woocommerce_colors() {
 }
 add_action('wp_head', 'override_old_woocommerce_colors', 9999);
 
-// Sistema de imágenes de catálogo eliminado - usando comportamiento por defecto de WooCommerce
+// ===== SISTEMA DE IMAGEN DE CATÁLOGO =====
+// Permite tener una imagen diferente solo para páginas de catálogo (shop, archivo, categorías)
+// NO afecta al carrito, mini-cart, checkout ni single product
+
+// 1. Añadir metabox en el editor de productos
+function add_catalog_image_metabox() {
+    add_meta_box(
+        'catalog_image_metabox',
+        'Imagen de Catálogo (Shop/Archivo)',
+        'render_catalog_image_metabox',
+        'product',
+        'side',
+        'low'
+    );
+}
+add_action('add_meta_boxes', 'add_catalog_image_metabox');
+
+// 2. Renderizar el metabox
+function render_catalog_image_metabox($post) {
+    wp_nonce_field('save_catalog_image', 'catalog_image_nonce');
+    
+    $catalog_image_id = get_post_meta($post->ID, '_catalog_image_id', true);
+    $catalog_image_url = $catalog_image_id ? wp_get_attachment_image_url($catalog_image_id, 'thumbnail') : '';
+    ?>
+    <div class="catalog-image-wrapper">
+        <div class="catalog-image-preview" style="margin-bottom: 10px;">
+            <?php if ($catalog_image_url): ?>
+                <img src="<?php echo esc_url($catalog_image_url); ?>" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px;" />
+            <?php else: ?>
+                <p style="color: #999; font-style: italic;">No se ha seleccionado imagen de catálogo</p>
+            <?php endif; ?>
+        </div>
+        
+        <input type="hidden" id="catalog_image_id" name="catalog_image_id" value="<?php echo esc_attr($catalog_image_id); ?>" />
+        
+        <button type="button" class="button button-secondary" id="select_catalog_image_button">
+            <?php echo $catalog_image_id ? 'Cambiar imagen' : 'Seleccionar imagen'; ?>
+        </button>
+        
+        <?php if ($catalog_image_id): ?>
+            <button type="button" class="button button-link-delete" id="remove_catalog_image_button" style="color: #a00; margin-left: 5px;">
+                Eliminar
+            </button>
+        <?php endif; ?>
+        
+        <p class="description" style="margin-top: 10px;">
+            Esta imagen se mostrará SOLO en páginas de catálogo (shop, categorías).<br>
+            <strong>NO afecta al carrito, mini-cart ni checkout.</strong>
+        </p>
+    </div>
+    
+    <script type="text/javascript">
+    jQuery(document).ready(function($) {
+        var frame;
+        
+        // Abrir media uploader
+        $('#select_catalog_image_button').on('click', function(e) {
+            e.preventDefault();
+            
+            if (frame) {
+                frame.open();
+                return;
+            }
+            
+            frame = wp.media({
+                title: 'Seleccionar Imagen de Catálogo',
+                button: {
+                    text: 'Usar esta imagen'
+                },
+                multiple: false
+            });
+            
+            frame.on('select', function() {
+                var attachment = frame.state().get('selection').first().toJSON();
+                $('#catalog_image_id').val(attachment.id);
+                $('.catalog-image-preview').html('<img src="' + attachment.url + '" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px;" />');
+                
+                // Mostrar botón de eliminar
+                if (!$('#remove_catalog_image_button').length) {
+                    $('#select_catalog_image_button').after('<button type="button" class="button button-link-delete" id="remove_catalog_image_button" style="color: #a00; margin-left: 5px;">Eliminar</button>');
+                    bindRemoveButton();
+                }
+                
+                $('#select_catalog_image_button').text('Cambiar imagen');
+            });
+            
+            frame.open();
+        });
+        
+        // Función para bind el botón de eliminar
+        function bindRemoveButton() {
+            $('#remove_catalog_image_button').on('click', function(e) {
+                e.preventDefault();
+                $('#catalog_image_id').val('');
+                $('.catalog-image-preview').html('<p style="color: #999; font-style: italic;">No se ha seleccionado imagen de catálogo</p>');
+                $('#select_catalog_image_button').text('Seleccionar imagen');
+                $(this).remove();
+            });
+        }
+        
+        // Bind inicial si existe el botón
+        bindRemoveButton();
+    });
+    </script>
+    <?php
+}
+
+// 3. Guardar el metabox
+function save_catalog_image_metabox($post_id) {
+    // Verificar nonce
+    if (!isset($_POST['catalog_image_nonce']) || !wp_verify_nonce($_POST['catalog_image_nonce'], 'save_catalog_image')) {
+        return;
+    }
+    
+    // Verificar autosave
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    
+    // Verificar permisos
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+    
+    // Guardar o eliminar
+    if (isset($_POST['catalog_image_id']) && !empty($_POST['catalog_image_id'])) {
+        update_post_meta($post_id, '_catalog_image_id', absint($_POST['catalog_image_id']));
+    } else {
+        delete_post_meta($post_id, '_catalog_image_id');
+    }
+}
+add_action('save_post_product', 'save_catalog_image_metabox');
+
+// 4. Cambiar la imagen SOLO en páginas de archivo (shop, categorías)
+// IMPORTANTE: NO afecta a carrito, mini-cart, checkout ni single product
+function use_catalog_image_in_archive($image, $product, $size, $attr, $placeholder, $image_context) {
+    // EXCLUIR explícitamente: single product, carrito, mini-cart, checkout
+    if (is_product() || is_cart() || is_checkout() || is_account_page()) {
+        return $image;
+    }
+    
+    // EXCLUIR también si estamos en un contexto de carrito (AJAX)
+    if (did_action('woocommerce_before_cart') || did_action('woocommerce_before_mini_cart')) {
+        return $image;
+    }
+    
+    // Solo aplicar en páginas de shop/categorías/archivo
+    if (!is_shop() && !is_product_category() && !is_product_tag() && !is_archive()) {
+        return $image;
+    }
+    
+    $catalog_image_id = get_post_meta($product->get_id(), '_catalog_image_id', true);
+    
+    if ($catalog_image_id) {
+        $catalog_image = wp_get_attachment_image($catalog_image_id, $size, false, $attr);
+        if ($catalog_image) {
+            return $catalog_image;
+        }
+    }
+    
+    return $image;
+}
+add_filter('woocommerce_product_get_image', 'use_catalog_image_in_archive', 10, 6);
+
+// ===== FIN SISTEMA DE IMAGEN DE CATÁLOGO =====
 
 function wapf_lcp_capture_preview_script() {
     if (!is_product()) return;
@@ -406,6 +570,52 @@ function wapf_show_custom_preview_in_cart($product_image, $cart_item, $cart_item
 }
 add_filter('woocommerce_cart_item_thumbnail', 'wapf_show_custom_preview_in_cart', 10, 3);
 
+// Mostrar la imagen en el checkout dentro del nombre del producto
+function wapf_show_preview_in_checkout_name($product_name, $cart_item, $cart_item_key) {
+    // Solo aplicar en checkout
+    if (!is_checkout()) {
+        return $product_name;
+    }
+    
+    $preview_url = '';
+    
+    // Verificar si existe un preview personalizado
+    if (isset($cart_item['wapf_product_preview']) && !empty($cart_item['wapf_product_preview'])) {
+        $preview_url = esc_url($cart_item['wapf_product_preview']);
+    } elseif (isset($cart_item['wapf_lcp_preview']) && !empty($cart_item['wapf_lcp_preview'])) {
+        $preview_url = esc_url($cart_item['wapf_lcp_preview']);
+    }
+    
+    // Si hay preview, agregarlo al nombre
+    if ($preview_url) {
+        $product = $cart_item['data'];
+        $thumbnail = sprintf(
+            '<img src="%s" class="attachment-woocommerce_thumbnail" alt="%s" />',
+            $preview_url,
+            esc_attr($product->get_name())
+        );
+        
+        // Agregar la imagen antes del nombre
+        return $thumbnail . ' ' . $product_name;
+    }
+    
+    return $product_name;
+}
+add_filter('woocommerce_cart_item_name', 'wapf_show_preview_in_checkout_name', 10, 3);
+
+// Eliminar el enlace del nombre del producto en la página del carrito
+function remove_cart_product_link($product_name, $cart_item, $cart_item_key) {
+    // Solo aplicar en la página del carrito
+    if (is_cart()) {
+        $product = $cart_item['data'];
+        // Devolver solo el nombre sin enlace
+        return $product->get_name();
+    }
+    
+    return $product_name;
+}
+add_filter('woocommerce_cart_item_name', 'remove_cart_product_link', 20, 3);
+
 
 
 
@@ -479,6 +689,51 @@ add_action('wp_head', function() {
             display: block;
             width: 100%;
             max-width: 120px;
+        }
+        
+        
+        /* Eliminar margen inferior del nombre del producto */
+        .product-name {
+            margin-bottom: 0px !important;
+        }
+        
+        /* Convertir ast-product-name en flex column */
+        .ast-product-name {
+            display: flex !important;
+            flex-direction: column !important;
+            margin-bottom:1.5rem;
+            font-size:1rem;
+            
+        }
+        
+        /* Thumbnails en el checkout dentro de la columna de producto */
+        .woocommerce-checkout-review-order-table .product-name a img {
+            display: inline-block !important;
+            width: 100px !important;
+            height: auto !important;
+            object-fit: contain !important;
+            background: #f9f9f9 !important;
+            padding: 5px !important;
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 4px !important;
+            margin-right: 10px !important;
+            vertical-align: middle !important;
+        }
+        
+        /* Alinear imágenes a la izquierda en checkout moderno de Astra */
+        .ast-modern-checkout .woocommerce #ast-order-review-content .woocommerce-checkout-review-order-table tbody tr td.product-name .ast-product-image,
+        .ast-modern-checkout .woocommerce #order_review .woocommerce-checkout-review-order-table tbody tr td.product-name .ast-product-image {
+            justify-content: flex-start !important;
+        }
+        
+        /* Ocultar thumbnails duplicados de Astra en checkout */
+        .woocommerce-checkout-review-order-table tbody tr td.product-name .ast-product-image .ast-product-thumbnail img {
+            display: none !important;
+        }
+        
+        /* Ocultar imágenes duplicadas que WAPF pueda agregar FUERA del link en mini-cart */
+        .woocommerce-mini-cart-item .product-name > img:not(.attachment-woocommerce_thumbnail) {
+            display: none !important;
         }
     </style>
     <?php
