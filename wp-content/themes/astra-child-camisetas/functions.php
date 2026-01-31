@@ -521,26 +521,26 @@ function wapf_lcp_save_preview_to_cart($cart_item_data, $product_id, $variation_
 add_filter('woocommerce_add_cart_item_data', 'wapf_lcp_save_preview_to_cart', 10, 4);
 
 function wapf_change_cart_item_thumbnail($product_image, $cart_item, $cart_item_key) {
-    // En la página del carrito, si hay un diseño WAPF, NO mostrar la imagen del producto
-    if (is_cart()) {
-        // Verificar si hay diseño personalizado
-        $has_design = false;
-        if (isset($cart_item['wapf']) && is_array($cart_item['wapf'])) {
-            foreach ($cart_item['wapf'] as $field) {
-                if (isset($field['type']) && $field['type'] === 'file' && !empty($field['values'])) {
-                    $has_design = true;
-                    break;
-                }
-            }
-        }
-        
-        // Si hay diseño, retornar vacío para que WAPF maneje la imagen
-        if ($has_design) {
-            return '';
+    $product = $cart_item['data'];
+    $product_id = $product->get_parent_id() ? $product->get_parent_id() : $product->get_id();
+    
+    // Buscar imagen de catálogo personalizada
+    $catalog_image_id = get_post_meta($product_id, '_catalog_image_id', true);
+    
+    if ($catalog_image_id) {
+        $catalog_image_url = wp_get_attachment_image_url($catalog_image_id, 'woocommerce_thumbnail');
+        if ($catalog_image_url) {
+            $custom_image = sprintf(
+                '<a href="%s"><img src="%s" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="%s" loading="lazy" /></a>',
+                esc_url(wc_get_cart_url()),
+                esc_url($catalog_image_url),
+                esc_attr($product->get_name())
+            );
+            return $custom_image;
         }
     }
     
-    // Para mini-cart o productos sin diseño, devolver la imagen original
+    // Si no hay imagen de catálogo, devolver la imagen por defecto
     return $product_image;
 }
 add_filter('woocommerce_cart_item_thumbnail', 'wapf_change_cart_item_thumbnail', 10, 3);
