@@ -1047,10 +1047,7 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
             if (isAddingToCart) return;
             var $button = $('.single_add_to_cart_button');
             if ($button.length > 0) {
-                // NO habilitar si se está capturando el preview
-                if (!$button.hasClass('wapf-capturing-preview')) {
-                    $button.prop('disabled', false).removeAttr('disabled').removeClass('disabled wc-variation-selection-needed');
-                }
+                $button.prop('disabled', false).removeAttr('disabled').removeClass('disabled wc-variation-selection-needed');
             }
         };
         setInterval(forceEnableButton, 200);
@@ -1319,13 +1316,7 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
         
         // IMPORTANTE: Recapturar preview cuando cambia la variación (color/talla)
         $('form.variations_form').on('found_variation', function(event, variation) {
-            // Deshabilitar el botón mientras se captura el preview
-            var $button = $('.single_add_to_cart_button');
-            $button.prop('disabled', true).addClass('wapf-capturing-preview').text('Preparando imagen...');
-            
-            // Esperar a que la imagen de la variación se cargue completamente
             setTimeout(function() {
-                // Solo recapturar si ya hay un diseño subido
                 if (typeof Dropzone !== 'undefined' && Dropzone.instances.length > 0) {
                     var hasFiles = false;
                     Dropzone.instances.forEach(function(dz) {
@@ -1335,31 +1326,15 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                     });
                     
                     if (hasFiles) {
-                        // Limpiar el preview anterior y capturar uno nuevo con la nueva variación
                         $('input[name=wapf_product_preview_url]').remove();
-                        captureProductPreview(function() {
-                            // Callback: habilitar el botón cuando termine la captura
-                            $button.prop('disabled', false).removeClass('wapf-capturing-preview').text($button.data('original-text') || 'Añadir al carrito');
-                        });
-                    } else {
-                        // No hay archivos, habilitar el botón inmediatamente
-                        $button.prop('disabled', false).removeClass('wapf-capturing-preview').text($button.data('original-text') || 'Añadir al carrito');
+                        captureProductPreview();
                     }
-                } else {
-                    // No hay Dropzone, habilitar el botón inmediatamente
-                    $button.prop('disabled', false).removeClass('wapf-capturing-preview').text($button.data('original-text') || 'Añadir al carrito');
                 }
-            }, 600); // Dar tiempo a que la imagen de variación se cargue
+            }, 600);
         });
         
-        // También recapturar cuando se cambia un campo WAPF (color/talla)
         $(document).on('change', 'input[name^="wapf[field_"]', function() {
-            // Deshabilitar el botón mientras se captura el preview
-            var $button = $('.single_add_to_cart_button');
-            $button.prop('disabled', true).addClass('wapf-capturing-preview').text('Preparando imagen...');
-            
             setTimeout(function() {
-                // Solo recapturar si ya hay un diseño subido
                 if (typeof Dropzone !== 'undefined' && Dropzone.instances.length > 0) {
                     var hasFiles = false;
                     Dropzone.instances.forEach(function(dz) {
@@ -1369,19 +1344,9 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                     });
                     
                     if (hasFiles) {
-                        // Limpiar el preview anterior y capturar uno nuevo
                         $('input[name=wapf_product_preview_url]').remove();
-                        captureProductPreview(function() {
-                            // Callback: habilitar el botón cuando termine la captura
-                            $button.prop('disabled', false).removeClass('wapf-capturing-preview').text($button.data('original-text') || 'Añadir al carrito');
-                        });
-                    } else {
-                        // No hay archivos, habilitar el botón inmediatamente
-                        $button.prop('disabled', false).removeClass('wapf-capturing-preview').text($button.data('original-text') || 'Añadir al carrito');
+                        captureProductPreview();
                     }
-                } else {
-                    // No hay Dropzone, habilitar el botón inmediatamente
-                    $button.prop('disabled', false).removeClass('wapf-capturing-preview').text($button.data('original-text') || 'Añadir al carrito');
                 }
             }, 600);
         });
@@ -1477,12 +1442,6 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
         // Setup inicial
         $(window).on('load', function() {
             setTimeout(saveDropzoneFiles, 1000);
-            
-            // Guardar el texto original del botón
-            var $button = $('.single_add_to_cart_button');
-            if ($button.length && !$button.data('original-text')) {
-                $button.data('original-text', $button.text());
-            }
         });
         
         setupDropzoneProtection();
