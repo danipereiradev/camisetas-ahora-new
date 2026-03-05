@@ -20,7 +20,7 @@ get_header(); ?>
             <div class="container">
                 <div class="hero-inner">
                     <div class="hero-text-realthread">
-                        <h1>Diseña y pide camisetas<br>personalizadas online</h1>
+                        <h1>Diseña y pide artículos<br>personalizados online</h1>
                         <p class="hero-subtitle">Crea ropa personalizada de alta calidad con tu logo o diseño</p>
                         <div class="hero-features">
                             <div class="feature-item">
@@ -95,7 +95,7 @@ get_header(); ?>
                     <div class="step-card">
                         <div class="step-number">1</div>
                         <div class="step-icon">
-                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/icon-choose.svg" alt="Elegir">
+                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-1.jpg'); ?>" alt="Elegir">
                         </div>
                         <h3>Elige tus productos</h3>
                         <p>Selecciona de nuestra amplia gama de ropa de alta calidad</p>
@@ -103,7 +103,7 @@ get_header(); ?>
                     <div class="step-card">
                         <div class="step-number">2</div>
                         <div class="step-icon">
-                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/icon-design.svg" alt="Diseñar">
+                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-2.jpg'); ?>" alt="Diseñar">
                         </div>
                         <h3>Sube tu diseño</h3>
                         <p>Añade tu logo, ilustración o usa nuestras herramientas de diseño</p>
@@ -111,7 +111,7 @@ get_header(); ?>
                     <div class="step-card">
                         <div class="step-number">3</div>
                         <div class="step-icon">
-                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/icon-approve.svg" alt="Aprobar">
+                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-3-1.jpg'); ?>" alt="Aprobar">
                         </div>
                         <h3>Aprueba y pide</h3>
                         <p>Revisa tu diseño y realiza tu pedido</p>
@@ -119,10 +119,10 @@ get_header(); ?>
                     <div class="step-card">
                         <div class="step-number">4</div>
                         <div class="step-icon">
-                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/icon-receive.svg" alt="Recibir">
+                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-4.jpg'); ?>" alt="Recibir">
                         </div>
                         <h3>Recibe y disfruta</h3>
-                        <p>Te entregamos tus camisetas personalizadas en tu domicilio</p>
+                        <p>Te entregamos tus artículos personalizados en tu domicilio</p>
                     </div>
                 </div>
             </div>
@@ -143,7 +143,7 @@ get_header(); ?>
                             <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/category-tshirts.jpg" alt="Camisetas">
                         </div>
                         <div class="category-overlay">
-                            <h3>Camisetas</h3>
+                            <h3>Artículos</h3>
                             <a href="/categoria/camisetas" class="btn-category">Comprar Ahora</a>
                         </div>
                     </div>
@@ -177,7 +177,7 @@ get_header(); ?>
         <section class="featured-products-realthread section-with-bg" <?php echo $products_bg_style; ?>>
             <div class="section-overlay"></div>
             <div class="container">
-                <h2 class="section-title-center">Camisetas y productos personalizados de alta calidad</h2>
+                <h2 class="section-title-center">Artículos y productos personalizados de alta calidad</h2>
                 <div class="products-grid-realthread">
                     <?php
                     $args = array(
@@ -234,7 +234,7 @@ get_header(); ?>
                         <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/design-tool-preview.jpg" alt="Herramienta de diseño">
                     </div>
                     <div class="design-text">
-                        <h2>Crea camisetas personalizadas con tu propio diseño</h2>
+                        <h2>Crea artículos personalizados con tu propio diseño</h2>
                         <p>Usa nuestra herramienta de diseño fácil de usar para dar vida a tus ideas. Sube tu logo, añade texto o elige entre miles de elementos de diseño.</p>
                         <ul class="design-features">
                             <li>Interfaz de diseño fácil de usar</li>
@@ -303,7 +303,7 @@ get_header(); ?>
                     </div>
                     <div class="testimonial-card">
                         <div class="stars-large">★★★★★</div>
-                        <p class="testimonial-text">"La mejor calidad en camisetas personalizadas que he encontrado. Los colores son vibrantes y el ajuste es perfecto."</p>
+                        <p class="testimonial-text">"La mejor calidad en artículos personalizados que he encontrado. Los colores son vibrantes y el ajuste es perfecto."</p>
                         <div class="testimonial-author">
                             <strong>Laura Rodríguez</strong>
                             <span>Manager de Equipo</span>
