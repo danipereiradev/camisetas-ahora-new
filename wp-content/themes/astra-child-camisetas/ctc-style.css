@@ -15,7 +15,6 @@ Updated: 2025-11-10 12:32:37
    FULL WIDTH - Eliminar márgenes y paddings
    ================================================ */
 
-/* Eliminar el margen de 4em del elemento #primary */
 #primary,
 #primary.content-area,
 div#primary.content-area.primary,
@@ -24,7 +23,6 @@ div#primary.content-area.primary,
   margin-bottom: 0 !important;
 }
 
-/* Hacer las plantillas HOME full width */
 .home-spreadshirt,
 .home-realthread,
 .home-vistaprint {
@@ -34,7 +32,6 @@ div#primary.content-area.primary,
   width: 100% !important;
 }
 
-/* Eliminar padding del contenedor padre para full width */
 .home-spreadshirt .site-main,
 .home-realthread .site-main,
 .home-vistaprint .site-main {
@@ -42,7 +39,6 @@ div#primary.content-area.primary,
   margin: 0 !important;
 }
 
-/* Eliminar padding del contenedor del contenido */
 .home-spreadshirt .entry-content,
 .home-realthread .entry-content,
 .home-vistaprint .entry-content {
@@ -51,7 +47,6 @@ div#primary.content-area.primary,
   max-width: 100% !important;
 }
 
-/* Asegurar que el contenedor principal sea full width */
 .home-spreadshirt #primary,
 .home-realthread #primary,
 .home-vistaprint #primary {
@@ -60,12 +55,112 @@ div#primary.content-area.primary,
   max-width: 100% !important;
 }
 
-/* Eliminar contenedor del tema */
-.home-spreadshirt .ast-container,
-.home-realthread .ast-container,
-.home-vistaprint .ast-container {
+.page-template-template-home-spreadshirt #primary .ast-container,
+.page-template-template-home-realthread #primary .ast-container,
+.page-template-template-home-vistaprint #primary .ast-container,
+body.home-spreadshirt #primary .ast-container,
+body.home-realthread #primary .ast-container,
+body.home-vistaprint #primary .ast-container {
   max-width: 100% !important;
   padding: 0 !important;
+}
+
+.page-template-template-home-spreadshirt .site-header .ast-container,
+.page-template-template-home-realthread .site-header .ast-container,
+.page-template-template-home-vistaprint .site-header .ast-container,
+body.home-spreadshirt .site-header .ast-container,
+body.home-realthread .site-header .ast-container,
+body.home-vistaprint .site-header .ast-container {
+  max-width: 1240px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* ================================================
+   EFECTO BOXED - Hero Full Width, Contenido 1240px
+   ================================================ */
+
+.hero-spreadshirt,
+.hero-realthread,
+.hero-vistaprint {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+@media (min-width: 769px) {
+  .hero-spreadshirt .container,
+  .hero-realthread .container,
+  .hero-vistaprint .container,
+  .hero-spreadshirt .hero-content,
+  .hero-realthread .hero-content,
+  .hero-vistaprint .hero-content,
+  .hero-content-vistaprint {
+    max-width: 1240px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+  }
+  
+  .hero-overlay {
+    max-width: 100vw !important;
+    width: 100vw !important;
+  }
+}
+
+.featured-categories,
+.products-grid-section,
+.gender-section,
+.reviews-section,
+.info-section,
+.steps-section,
+.categories-showcase,
+.featured-products-realthread,
+.design-tools-section,
+.customer-showcase,
+.testimonials-realthread,
+.testimonials-vistaprint,
+.trust-section,
+.faq-section,
+.faq-vistaprint,
+.quick-categories,
+.main-title-section,
+.products-compact-grid,
+.custom-banner-section,
+.inspiration-section,
+.benefits-section {
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+}
+
+.featured-categories > *,
+.products-grid-section > *,
+.gender-section > *,
+.reviews-section > *,
+.info-section > *,
+.steps-section > *,
+.categories-showcase > *,
+.featured-products-realthread > *,
+.design-tools-section > *,
+.customer-showcase > *,
+.testimonials-realthread > *,
+.testimonials-vistaprint > *,
+.trust-section > *,
+.faq-section > *,
+.faq-vistaprint > *,
+.quick-categories > *,
+.main-title-section > *,
+.products-compact-grid > *,
+.custom-banner-section > *,
+.inspiration-section > *,
+.benefits-section > * {
+  max-width: 1240px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 /* Padding en el header solo en escritorio */
@@ -661,7 +756,7 @@ div#primary.content-area.primary,
 
 /* Hero RealThread */
 .hero-realthread {
-  background: linear-gradient(to bottom, #f7f9fc 0%, #fff 100%);
+  background: linear-gradient(to bottom, #ffffff 0%, #fff 100%);
   padding: 5rem 2rem 4rem;
   position: relative;
 }
@@ -670,7 +765,7 @@ div#primary.content-area.primary,
 .hero-realthread.hero-with-bg {
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat !important;
   position: relative;
 }
 
@@ -681,6 +776,8 @@ div#primary.content-area.primary,
   left: 0;
   right: 0;
   bottom: 0;
+  width: 100% !important;
+  height: 100% !important;
   background: rgba(0, 0, 0, 0.4);
   z-index: 1;
 }
@@ -712,7 +809,7 @@ div#primary.content-area.primary,
   position: relative;
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat !important;
   background-attachment: fixed;
 }
 
@@ -1019,7 +1116,7 @@ div#primary.content-area.primary,
 /* Categories Showcase */
 .categories-showcase {
   padding: 4rem 2rem;
-  background: #f7f9fc;
+  background: #ffffff;
 }
 
 .categories-large-grid {
@@ -1161,7 +1258,7 @@ div#primary.content-area.primary,
 /* Design Tools Section */
 .design-tools-section {
   padding: 5rem 2rem;
-  background: #f7f9fc;
+  background: #ffffff;
 }
 
 .design-content {
@@ -1264,7 +1361,7 @@ div#primary.content-area.primary,
 /* Testimonials RealThread */
 .testimonials-realthread {
   padding: 5rem 2rem;
-  background: #f7f9fc;
+  background: #ffffff;
 }
 
 .testimonials-grid {
@@ -1650,7 +1747,7 @@ div#primary.content-area.primary,
 /* Custom Banner */
 .custom-banner-section {
   padding: 4rem 2rem;
-  background: #f7f9fc;
+  background: #ffffff;
 }
 
 .custom-banner {
@@ -1814,7 +1911,7 @@ div#primary.content-area.primary,
 /* Benefits Section */
 .benefits-section {
   padding: 5rem 2rem;
-  background: #f7f9fc;
+  background: #ffffff;
 }
 
 .benefits-grid {
@@ -1918,7 +2015,7 @@ div#primary.content-area.primary,
 /* FAQ Vistaprint */
 .faq-vistaprint {
   padding: 5rem 2rem;
-  background: #f7f9fc;
+  background: #ffffff;
 }
 
 .faq-columns {
@@ -1958,7 +2055,11 @@ div#primary.content-area.primary,
 /* Bottom CTA */
 .bottom-cta {
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-color-dark) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--secondary-color) 0%,
+    var(--secondary-color-dark) 100%
+  );
 }
 
 .cta-content {
