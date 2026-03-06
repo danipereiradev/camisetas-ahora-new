@@ -103,7 +103,7 @@ get_header(); ?>
                     <div class="step-card">
                         <div class="step-number">2</div>
                         <div class="step-icon">
-                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-2.jpg'); ?>" alt="Diseñar">
+                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-2.png'); ?>" alt="Diseñar">
                         </div>
                         <h3>Sube tu diseño</h3>
                         <p>Añade tu logo, ilustración o usa nuestras herramientas de diseño</p>
@@ -111,7 +111,7 @@ get_header(); ?>
                     <div class="step-card">
                         <div class="step-number">3</div>
                         <div class="step-icon">
-                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-3-1.jpg'); ?>" alt="Aprobar">
+                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-3.png'); ?>" alt="Aprobar">
                         </div>
                         <h3>Aprueba y pide</h3>
                         <p>Revisa tu diseño y realiza tu pedido</p>
@@ -119,7 +119,7 @@ get_header(); ?>
                     <div class="step-card">
                         <div class="step-number">4</div>
                         <div class="step-icon">
-                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-4.jpg'); ?>" alt="Recibir">
+                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-4.png'); ?>" alt="Recibir">
                         </div>
                         <h3>Recibe y disfruta</h3>
                         <p>Te entregamos tus artículos personalizados en tu domicilio</p>
@@ -137,6 +137,16 @@ get_header(); ?>
             <div class="section-overlay"></div>
             <div class="container">
                 <h2 class="section-title-center">Elige entre nuestras categorias</h2>
+                <?php
+                $category_colors = [
+                    '#e63232', '#2a52be', '#ffffff', '#f5c000', '#1a2744',
+                    '#00aacc', '#6b1020', '#a8a8a8', '#7b2d8b', '#e87722',
+                    '#f4a7b9', '#e8004d', '#2e8b2e', '#1a5c2a', '#111111'
+                ];
+                $color_borders = [
+                    '', '', '1px solid #ccc', '', '', '', '', '', '', '', '', '', '', '', ''
+                ];
+                ?>
                 <div class="categories-large-grid">
                     <div class="category-large-card">
                         <div class="category-image-wrapper">
@@ -144,6 +154,11 @@ get_header(); ?>
                         </div>
                         <div class="category-overlay">
                             <h3>Camisetas</h3>
+                            <div class="category-color-swatches">
+                                <?php foreach ($category_colors as $i => $color): ?>
+                                    <span class="color-swatch" style="background-color: <?php echo $color; ?>;<?php echo $color_borders[$i] ? ' border: ' . $color_borders[$i] . ';' : ''; ?>"></span>
+                                <?php endforeach; ?>
+                            </div>
                             <a href="/categoria/camisetas" class="btn-category">Comprar Ahora</a>
                         </div>
                     </div>
@@ -153,6 +168,14 @@ get_header(); ?>
                         </div>
                         <div class="category-overlay">
                             <h3>Sudaderas</h3>
+                            <div class="category-color-swatches">
+                                <span class="color-swatch" style="background-color: #111111;"></span>
+                                <span class="color-swatch" style="background-color: #a8a8a8;"></span>
+                                <span class="color-swatch" style="background-color: #2a52be;"></span>
+                                <span class="color-swatch" style="background-color: #ffffff; border: 1px solid #ccc;"></span>
+                                <span class="color-swatch" style="background-color: #e63232;"></span>
+                                <span class="color-swatch" style="background-color: #1a2744;"></span>
+                            </div>
                             <a href="/categoria/sudaderas" class="btn-category">Comprar Ahora</a>
                         </div>
                     </div>
@@ -162,6 +185,16 @@ get_header(); ?>
                         </div>
                         <div class="category-overlay">
                             <h3>Totebags</h3>
+                            <div class="category-color-swatches">
+                                <span class="color-swatch" style="background-color: #f5e6c8; border: 1px solid #ccc;"></span>
+                                <span class="color-swatch" style="background-color: #f5c000;"></span>
+                                <span class="color-swatch" style="background-color: #e63232;"></span>
+                                <span class="color-swatch" style="background-color: #2e8b2e;"></span>
+                                <span class="color-swatch" style="background-color: #2a52be;"></span>
+                                <span class="color-swatch" style="background-color: #c8bfb0; border: 1px solid #ccc;"></span>
+                                <span class="color-swatch" style="background-color: #111111;"></span>
+                                <span class="color-swatch" style="background-color: #4a2d6b;"></span>
+                            </div>
                             <a href="/categoria/gorras" class="btn-category">Comprar Ahora</a>
                         </div>
                     </div>
