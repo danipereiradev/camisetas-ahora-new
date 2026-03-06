@@ -36,7 +36,7 @@ get_header(); ?>
                                 <span>Envío a toda la península</span>
                             </div>
                         </div>
-                        <a href="/shop" class="btn-hero-realthread">Empieza a Diseñar</a>
+                        <a href="/shop" class="btn-hero-realthread">Personalizar ahora</a>
                     </div>
                     <div class="hero-products-realthread">
                         <div class="product-showcase product-showcase-single">
@@ -155,7 +155,7 @@ get_header(); ?>
                             </div>
                             <div class="category-overlay">
                                 <h3>Camisetas</h3>
-                                <a href="/categoria/camisetas" class="btn-category">Comprar Ahora</a>
+                                <a href="/shop" class="btn-category">Personalizar ahora</a>
                             </div>
                         </div>
                         
@@ -167,7 +167,7 @@ get_header(); ?>
                             </div>
                             <div class="category-overlay">
                                 <h3>Sudaderas</h3>
-                                <a href="/categoria/sudaderas" class="btn-category">Comprar Ahora</a>
+                                <a href="/shop" class="btn-category">Personalizar ahora</a>
                             </div>
                         </div>
                         
@@ -179,7 +179,7 @@ get_header(); ?>
                             </div>
                             <div class="category-overlay">
                                 <h3>Totebags</h3>
-                                <a href="/categoria/gorras" class="btn-category">Comprar Ahora</a>
+                                <a href="/shop" class="btn-category">Personalizar ahora</a>
                             </div>
                         </div>
                        
@@ -248,20 +248,32 @@ get_header(); ?>
         <section class="design-tools-section section-with-bg" <?php echo $design_bg_style; ?>>
             <div class="section-overlay"></div>
             <div class="container">
+                <h2 class="section-title-center">Crea artículos personalizados con tu propio diseño</h2>
                 <div class="design-content">
                     <div class="design-image">
-                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/design-tool-preview.jpg" alt="Herramienta de diseño">
+                        <div class="video-wrapper" id="videoWrapper">
+                            <video id="designVideo" preload="metadata" playsinline>
+                                <source src="<?php echo home_url('/horultoo/2026/03/video-disenando-chicxs.mov'); ?>" type="video/mp4">
+                            </video>
+                            <div class="video-overlay" id="videoOverlay">
+                                <button class="video-play-btn" id="videoPlayBtn" aria-label="Reproducir video">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="12" cy="12" r="12" fill="var(--secondary-color)"/>
+                                        <polygon points="9.5,7 18,12 9.5,17" fill="#ffffff"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <div class="design-text">
-                        <h2>Crea artículos personalizados con tu propio diseño</h2>
-                        <p>Usa nuestra herramienta de diseño fácil de usar para dar vida a tus ideas. Sube tu logo, añade texto o elige entre miles de elementos de diseño.</p>
+                        <p>Te mostramos lo facil que es personalizar y comprar cualquiera de nuestros productos</p>
                         <ul class="design-features">
                             <li>Interfaz de diseño fácil de usar</li>
                             <li>Precios y mockups instantáneos</li>
                             <li>Impresión de calidad profesional</li>
                             <li>No necesitas experiencia en diseño</li>
                         </ul>
-                        <a href="/design-tool" class="btn-design">Prueba la Herramienta</a>
+                        <a href="/shop" class="btn-design">Personalizar ahora</a>
                     </div>
                 </div>
             </div>
@@ -347,41 +359,7 @@ get_header(); ?>
         $trust_bg_image = get_post_meta(get_the_ID(), 'trust_background_image', true);
         $trust_bg_style = $trust_bg_image ? 'style="background-image: url(' . esc_url($trust_bg_image) . ');"' : '';
         ?>
-        <section class="trust-section section-with-bg" <?php echo $trust_bg_style; ?>>
-            <div class="section-overlay"></div>
-            <div class="container">
-                <div class="trust-grid">
-                    <div class="trust-item">
-                        <div class="trust-icon">🏆</div>
-                        <div class="trust-content">
-                            <h4>Calidad Premium</h4>
-                            <p>Materiales de primera</p>
-                        </div>
-                    </div>
-                    <div class="trust-item">
-                        <div class="trust-icon">⚡</div>
-                        <div class="trust-content">
-                            <h4>Producción Rápida</h4>
-                            <p>Entrega en 3-5 días</p>
-                        </div>
-                    </div>
-                    <div class="trust-item">
-                        <div class="trust-icon">💯</div>
-                        <div class="trust-content">
-                            <h4>Satisfacción Garantizada</h4>
-                            <p>Devolución del 100%</p>
-                        </div>
-                    </div>
-                    <div class="trust-item">
-                        <div class="trust-icon">🌍</div>
-                        <div class="trust-content">
-                            <h4>Eco-Friendly</h4>
-                            <p>Impresión sostenible</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        
 
         <!-- FAQ Section -->
         <?php
@@ -392,23 +370,75 @@ get_header(); ?>
             <div class="section-overlay"></div>
             <div class="container">
                 <h2 class="section-title-center">Preguntas Frecuentes</h2>
-                <div class="faq-grid">
-                    <div class="faq-item">
-                        <h4>¿Cuál es la cantidad mínima de pedido?</h4>
-                        <p>¡Sin mínimos! Pide desde 1 camiseta o las que necesites.</p>
+                <div class="faq-accordion">
+
+                    <div class="faq-accordion-item">
+                        <button class="faq-accordion-trigger">¿Cuál es la cantidad mínima de pedido?<span class="faq-icon">+</span></button>
+                        <div class="faq-accordion-body"><p>¡Sin mínimos! Puedes pedir desde 1 artículo. No es necesario hacer grandes pedidos para obtener ropa de calidad personalizada.</p></div>
                     </div>
-                    <div class="faq-item">
-                        <h4>¿Cuánto tarda la producción?</h4>
-                        <p>La mayoría de pedidos se envían en 3-5 días laborables tras la aprobación.</p>
+
+                    <div class="faq-accordion-item">
+                        <button class="faq-accordion-trigger">¿Cuánto tarda la producción y el envío?<span class="faq-icon">+</span></button>
+                        <div class="faq-accordion-body"><p>La producción tarda entre 3 y 5 días laborables. Una vez listo, el envío estándar tarda 24-48h en toda la península. Te avisamos por email cuando tu pedido esté en camino.</p></div>
                     </div>
-                    <div class="faq-item">
-                        <h4>¿Ofrecéis envío gratis?</h4>
-                        <p>¡Sí! Envío gratis en pedidos superiores a 50€ en toda España.</p>
+
+                    <div class="faq-accordion-item">
+                        <button class="faq-accordion-trigger">¿Qué técnicas de impresión usáis?<span class="faq-icon">+</span></button>
+                        <div class="faq-accordion-body"><p>Usamos serigrafía, DTG (impresión directa sobre tela), transfer digital y bordado. La técnica más adecuada depende del tipo de diseño, la cantidad y el tejido. Te asesoramos sin compromiso para que obtengas el mejor resultado.</p></div>
                     </div>
-                    <div class="faq-item">
-                        <h4>¿Y si necesito ayuda con mi diseño?</h4>
-                        <p>¡Nuestro equipo de diseño está aquí para ayudarte! Contáctanos para asistencia gratuita.</p>
+
+                    <div class="faq-accordion-item">
+                        <button class="faq-accordion-trigger">¿Qué formatos de archivo aceptáis para el diseño?<span class="faq-icon">+</span></button>
+                        <div class="faq-accordion-body"><p>Aceptamos archivos jpg, jpeg, png, pdf. (5MB máximo) Si no tienes el archivo adecuado, nuestro equipo puede ayudarte a prepararlo o adaptarlo.</p></div>
                     </div>
+
+                    <div class="faq-accordion-item">
+                        <button class="faq-accordion-trigger">¿Podéis ayudarme si no tengo diseño?<span class="faq-icon">+</span></button>
+                        <div class="faq-accordion-body"><p>¡Por supuesto! Contamos con un equipo de diseño que puede crear o adaptar tu logo o idea desde cero. Contáctanos y te enviamos presupuesto sin compromiso.</p></div>
+                    </div>
+
+                    <div class="faq-accordion-item">
+                        <button class="faq-accordion-trigger">¿Los colores impresos son exactamente iguales al diseño digital?<span class="faq-icon">+</span></button>
+                        <div class="faq-accordion-body"><p>Nos esforzamos por reproducir los colores con la máxima fidelidad. Sin embargo, puede haber ligeras variaciones entre pantalla e impresión debido a la naturaleza del proceso. Si necesitas colores muy específicos, indicanos el código Pantone y hacemos lo posible por ajustarnos.</p></div>
+                    </div>
+
+                    <div class="faq-accordion-item">
+                        <button class="faq-accordion-trigger">¿Ofrecéis envío gratis?<span class="faq-icon">+</span></button>
+                        <div class="faq-accordion-body"><p>Sí, el envío es gratuito en pedidos superiores a 50€ en toda la península. Para Baleares, Canarias, Ceuta y Melilla consulta las condiciones específicas de envío.</p></div>
+                    </div>
+
+                    
+
+                    <div class="faq-accordion-item">
+                        <button class="faq-accordion-trigger">¿Qué pasa si el pedido llega con algún defecto?<span class="faq-icon">+</span></button>
+                        <div class="faq-accordion-body"><p>Tu satisfacción es nuestra prioridad. Si recibes un artículo defectuoso o con un error de producción por nuestra parte, lo reponemos sin coste adicional. Contáctanos en un plazo de 7 días con fotos del problema.</p></div>
+                    </div>
+
+                    <div class="faq-accordion-item">
+                        <button class="faq-accordion-trigger">¿Cuánto dura la impresión con los lavados?<span class="faq-icon">+</span></button>
+                        <div class="faq-accordion-body"><p>Con un cuidado adecuado (lavar del revés a 30°C, sin secadora, sin planchar directamente sobre el diseño) la impresión puede durar muchos años. Incluimos instrucciones de cuidado con cada pedido.</p></div>
+                    </div>
+
+                    <div class="faq-accordion-item">
+                        <button class="faq-accordion-trigger">¿Puedo personalizar diferentes tallas y colores en el mismo pedido?<span class="faq-icon">+</span></button>
+                        <div class="faq-accordion-body"><p>Sí, puedes combinar tallas y colores en un mismo pedido sin problema. Indícanos la cantidad de cada talla y color al realizar el pedido o escríbenos para que te ayudemos a gestionarlo.</p></div>
+                    </div>
+
+                    <div class="faq-accordion-item">
+                        <button class="faq-accordion-trigger">¿Ofrecéis descuentos por volumen?<span class="faq-icon">+</span></button>
+                        <div class="faq-accordion-body"><p>Sí, a mayor cantidad el precio por unidad baja. Consulta nuestra tabla de precios o contáctanos con la cantidad que necesitas y te preparamos un presupuesto personalizado.</p></div>
+                    </div>
+
+                    <div class="faq-accordion-item">
+                        <button class="faq-accordion-trigger">¿Podéis hacer envíos a empresas o asociaciones?<span class="faq-icon">+</span></button>
+                        <div class="faq-accordion-body"><p>Por supuesto. Trabajamos con empresas, clubs deportivos, asociaciones, colegios y particulares. Podemos emitir factura con IVA desglosado y gestionar envíos a múltiples direcciones si lo necesitas.</p></div>
+                    </div>
+
+                    <div class="faq-accordion-item">
+                        <button class="faq-accordion-trigger">¿Aceptáis devoluciones?<span class="faq-icon">+</span></button>
+                        <div class="faq-accordion-body"><p>Al ser productos personalizados, no admitimos devoluciones por cambio de opinión. Sin embargo, si hay un error de producción o defecto del producto, lo solucionamos sin coste para ti.</p></div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -446,6 +476,50 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     if (pages.length > 1) startAutoplay();
+
+    // Video play button
+    const playBtn    = document.getElementById('videoPlayBtn');
+    const videoOverlay = document.getElementById('videoOverlay');
+    const video      = document.getElementById('designVideo');
+
+    if (playBtn && video) {
+        playBtn.addEventListener('click', function() {
+            videoOverlay.style.opacity = '0';
+            videoOverlay.style.pointerEvents = 'none';
+            video.controls = true;
+            video.play();
+        });
+
+        video.addEventListener('pause', function() {
+            videoOverlay.style.opacity = '1';
+            videoOverlay.style.pointerEvents = 'auto';
+            video.controls = false;
+        });
+
+        video.addEventListener('ended', function() {
+            videoOverlay.style.opacity = '1';
+            videoOverlay.style.pointerEvents = 'auto';
+            video.controls = false;
+        });
+    }
+
+    // Acordeón FAQ
+    document.querySelectorAll('.faq-accordion-trigger').forEach(function(trigger) {
+        trigger.addEventListener('click', function() {
+            const body    = this.nextElementSibling;
+            const isOpen  = this.classList.contains('open');
+
+            document.querySelectorAll('.faq-accordion-trigger.open').forEach(function(t) {
+                t.classList.remove('open');
+                t.nextElementSibling.classList.remove('open');
+            });
+
+            if (!isOpen) {
+                this.classList.add('open');
+                body.classList.add('open');
+            }
+        });
+    });
 
     // Carousel de productos
     const carousel = document.querySelector('.product-carousel');
