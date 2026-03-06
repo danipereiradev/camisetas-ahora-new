@@ -13,6 +13,16 @@ add_filter('locale_stylesheet_uri', 'chld_thm_cfg_locale_css');
 if (!function_exists('child_theme_configurator_css')):
     function child_theme_configurator_css() {
         wp_enqueue_style('chld_thm_cfg_separate', trailingslashit(get_stylesheet_directory_uri()) . 'ctc-style.css', array());
+
+        if (is_product()) {
+            wp_enqueue_script(
+                'html2canvas',
+                trailingslashit(get_stylesheet_directory_uri()) . 'html2canvas.min.js',
+                array(),
+                null,
+                true
+            );
+        }
     }
 endif;
 add_action('wp_enqueue_scripts', 'child_theme_configurator_css', 10);
@@ -315,6 +325,66 @@ function wapf_lcp_capture_preview_script() {
     
     ?>
     <script type="text/javascript">
+    (function($) {
+        <?php
+        $logo_id  = get_theme_mod('custom_logo');
+        $logo_url = $logo_id ? wp_get_attachment_image_url($logo_id, 'medium') : '';
+        ?>
+        var cartOverlayLogoUrl = '<?php echo esc_js($logo_url); ?>';
+        var $cartOverlay = null;
+
+        var spinnerSVG = '<svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="#e8e8e8" stroke-width="3"/><circle cx="20" cy="20" r="17" stroke="var(--secondary-color)" stroke-width="3" stroke-dasharray="80" stroke-dashoffset="60" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="0.85s" repeatCount="indefinite"/></circle></svg>';
+
+        var overlayMessages = {
+            preparando: { icon: spinnerSVG, title: 'Preparando tu diseño', text: 'Estamos capturando una vista previa de tu pedido...' },
+            anadiendo:  { icon: spinnerSVG, title: 'Añadiendo al carrito',  text: 'Un momento, estamos guardando tu pedido...' },
+            success: {
+                icon: '<svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="var(--secondary-color)" stroke-width="3"/><path d="M12 20.5l5.5 5.5 10-11" stroke="var(--secondary-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                title: '¡Añadido al carrito!', text: 'Tu producto personalizado ha sido añadido correctamente.'
+            },
+            error: {
+                icon: '<svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="#e53e3e" stroke-width="3"/><path d="M13 13l14 14M27 13l-14 14" stroke="#e53e3e" stroke-width="3" stroke-linecap="round"/></svg>',
+                title: 'Error al añadir', text: 'No hemos podido añadir el producto. Inténtalo de nuevo.'
+            }
+        };
+
+        function ensureOverlay() {
+            if (!$cartOverlay) {
+                var logoHtml = cartOverlayLogoUrl
+                    ? '<div class="cart-status-logo"><img src="' + cartOverlayLogoUrl + '" alt="Logo"></div>'
+                    : '';
+                $cartOverlay = $('<div id="cart-status-overlay"><div class="cart-status-box">' + logoHtml + '<div class="cart-status-icon"></div><h3 class="cart-status-title"></h3><p class="cart-status-text"></p></div></div>');
+                $('body').append($cartOverlay);
+            }
+        }
+
+        window.showCartOverlay = function(state) {
+            var msg = overlayMessages[state];
+            if (!msg) return;
+            ensureOverlay();
+            $cartOverlay.find('.cart-status-icon').html(msg.icon);
+            $cartOverlay.find('.cart-status-title').text(msg.title);
+            $cartOverlay.find('.cart-status-text').text(msg.text);
+            $cartOverlay.addClass('visible');
+        };
+
+        window.updateCartOverlay = function(state) {
+            var msg = overlayMessages[state];
+            if (!msg || !$cartOverlay) return;
+            $cartOverlay.find('.cart-status-icon').html(msg.icon);
+            $cartOverlay.find('.cart-status-title').text(msg.title);
+            $cartOverlay.find('.cart-status-text').text(msg.text);
+        };
+
+        window.hideCartOverlay = function(delay) {
+            if (!$cartOverlay) return;
+            delay = delay || 0;
+            setTimeout(function() {
+                $cartOverlay.removeClass('visible');
+            }, delay);
+        };
+    })(jQuery);
+
     jQuery(document).ready(function($) {
         var loadHtml2Canvas = function(callback) {
             if (typeof html2canvas !== 'undefined') {
@@ -355,7 +425,7 @@ function wapf_lcp_capture_preview_script() {
             loadHtml2Canvas(function() {
                 html2canvas(preview.$container[0], {
                     backgroundColor: null,
-                    scale: 2,
+                    scale: 1,
                     logging: false,
                     useCORS: true,
                     allowTaint: true
@@ -411,12 +481,19 @@ function wapf_lcp_capture_preview_script() {
             e.stopImmediatePropagation();
             
             var $button = $(button);
-            var originalText = $button.text();
-            $button.prop('disabled', true).text('Preparando...');
-            
-            generateAndSavePreview(function() {
+
+            window.showCartOverlay('preparando');
+
+            var safetyTimeout = setTimeout(function() {
+                window.updateCartOverlay('anadiendo');
                 $form.data('lcp-captured', true);
-                $button.prop('disabled', false).text(originalText);
+                button.click();
+            }, 6000);
+
+            generateAndSavePreview(function() {
+                clearTimeout(safetyTimeout);
+                $form.data('lcp-captured', true);
+                window.updateCartOverlay('anadiendo');
                 setTimeout(function() {
                     button.click();
                 }, 100);
@@ -1085,25 +1162,11 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
             });
         };
         
-        // Notificación visual
+        // Overlay de estado del carrito
         var showNotification = function(message, type) {
-            type = type || 'success';
-            var $notification = $('<div class="wapf-notification ' + type + '">' +
-                '<span>' + message + '</span>' +
-                '<button class="close">&times;</button>' +
-            '</div>');
-            
-            $('body').append($notification);
-            setTimeout(function() { $notification.addClass('show'); }, 10);
-            setTimeout(function() {
-                $notification.removeClass('show');
-                setTimeout(function() { $notification.remove(); }, 300);
-            }, 5000);
-            
-            $notification.find('.close').on('click', function() {
-                $notification.removeClass('show');
-                setTimeout(function() { $notification.remove(); }, 300);
-            });
+            var state = (type === 'error') ? 'error' : 'success';
+            window.updateCartOverlay(state);
+            window.hideCartOverlay(2800);
         };
         
         // Cargar html2canvas
@@ -1148,7 +1211,7 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                     
                     html2canvas($container[0], {
                         backgroundColor: null,
-                        scale: 2,
+                        scale: 1,
                         logging: false,
                         useCORS: true,
                         allowTaint: true
@@ -1285,10 +1348,9 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
             
             var $btn = $(this);
             var $form = $btn.closest('form.cart');
-            
-            var originalText = $btn.text();
-            $btn.prop('disabled', true).addClass('loading').text('Añadiendo...');
-            
+
+            window.updateCartOverlay('anadiendo');
+
             lastAddToCartTime = now;
             isAddingToCart = true;
             
@@ -1316,16 +1378,12 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                     $(document.body).trigger('added_to_cart', [response.fragments, response.cart_hash, $btn]);
                     
                     showNotification('Producto añadido al carrito', 'success');
-                    
-                    // Guardar archivos para mantener el input sincronizado
+
                     setTimeout(saveDropzoneFiles, 100);
-                    
-                    $btn.prop('disabled', false).removeClass('loading').text(originalText);
                     isAddingToCart = false;
                 },
                 error: function() {
                     showNotification('Error al añadir el producto', 'error');
-                    $btn.prop('disabled', false).removeClass('loading').text(originalText);
                     isAddingToCart = false;
                 }
             });

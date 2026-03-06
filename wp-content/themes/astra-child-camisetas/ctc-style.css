@@ -2679,3 +2679,83 @@ body.home-vistaprint .site-header .ast-container {
 .woocommerce-mini-cart-item .product-name > img:not(.attachment-woocommerce_thumbnail) {
     display: none !important;
 }
+
+/* ================================================
+   OVERLAY DE ESTADO DEL CARRITO
+   ================================================ */
+
+#cart-status-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    backdrop-filter: blur(3px);
+}
+
+#cart-status-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.cart-status-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2.5rem 3rem;
+    text-align: center;
+    max-width: 360px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    transform: translateY(10px);
+    transition: transform 0.25s ease;
+}
+
+#cart-status-overlay.visible .cart-status-box {
+    transform: translateY(0);
+}
+
+.cart-status-logo {
+    margin-bottom: 1.25rem;
+    display: flex;
+    justify-content: center;
+}
+
+.cart-status-logo img {
+    max-height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+.cart-status-icon {
+    margin-bottom: 1.25rem;
+    display: flex;
+    justify-content: center;
+    min-height: 40px;
+    align-items: center;
+}
+
+.cart-status-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 0.5rem 0;
+}
+
+.cart-status-text {
+    font-size: 0.95rem;
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Imagen de galería en página de producto simple */
+.single-product .woocommerce-product-gallery__image img,
+.single-product .woocommerce-product-gallery__wrapper img {
+    border: 1px solid #ebebeb !important;
+    border-radius: 6px;
+}
