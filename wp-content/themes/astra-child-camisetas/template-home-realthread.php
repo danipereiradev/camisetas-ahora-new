@@ -11,8 +11,12 @@ get_header(); ?>
         
         <!-- Hero Section Clean -->
         <?php
-        // Obtener imagen de fondo personalizada desde campos personalizados o usar default
-        $hero_bg_image = get_post_meta(get_the_ID(), 'hero_background_image', true);
+        $page_meta = get_post_custom(get_the_ID());
+        $meta = function($key) use ($page_meta) {
+            return isset($page_meta[$key][0]) ? $page_meta[$key][0] : '';
+        };
+
+        $hero_bg_image = $meta('hero_background_image');
         $hero_bg_style = $hero_bg_image ? 'style="background-image: url(' . esc_url($hero_bg_image) . ');"' : '';
         ?>
         <section class="hero-realthread hero-with-bg" <?php echo $hero_bg_style; ?>>
@@ -46,9 +50,9 @@ get_header(); ?>
                                 $has_products = false;
                                 
                                 for ($i = 1; $i <= 4; $i++) {
-                                    $product_image = get_post_meta(get_the_ID(), "carousel_product_{$i}_image", true);
-                                    $product_title = get_post_meta(get_the_ID(), "carousel_product_{$i}_title", true);
-                                    $product_link = get_post_meta(get_the_ID(), "carousel_product_{$i}_link", true);
+                                    $product_image = $meta("carousel_product_{$i}_image");
+                                    $product_title = $meta("carousel_product_{$i}_title");
+                                    $product_link  = $meta("carousel_product_{$i}_link");
                                     
                                     // Solo mostrar si hay imagen configurada
                                     if (!empty($product_image)) {
@@ -84,7 +88,7 @@ get_header(); ?>
 
         <!-- How It Works Steps -->
         <?php
-        $steps_bg_image = get_post_meta(get_the_ID(), 'steps_background_image', true);
+        $steps_bg_image = $meta('steps_background_image');
         $steps_bg_style = $steps_bg_image ? 'style="background-image: url(' . esc_url($steps_bg_image) . ');"' : '';
         ?>
         <section class="steps-section section-with-bg" <?php echo $steps_bg_style; ?>>
@@ -95,7 +99,7 @@ get_header(); ?>
                     <div class="step-card">
                         <div class="step-number">1</div>
                         <div class="step-icon">
-                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-1.jpg'); ?>" alt="Elegir">
+                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-1.jpg'); ?>" alt="Elegir" loading="lazy">
                         </div>
                         <h3>Elige tus productos</h3>
                         <p>Selecciona de nuestra amplia gama de ropa de alta calidad</p>
@@ -103,7 +107,7 @@ get_header(); ?>
                     <div class="step-card">
                         <div class="step-number">2</div>
                         <div class="step-icon">
-                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-2.png'); ?>" alt="Diseñar">
+                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-2.png'); ?>" alt="Diseñar" loading="lazy">
                         </div>
                         <h3>Sube tu diseño</h3>
                         <p>Añade tu logo, ilustración o usa nuestras herramientas de diseño</p>
@@ -111,7 +115,7 @@ get_header(); ?>
                     <div class="step-card">
                         <div class="step-number">3</div>
                         <div class="step-icon">
-                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-3.png'); ?>" alt="Aprobar">
+                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-3.png'); ?>" alt="Aprobar" loading="lazy">
                         </div>
                         <h3>Aprueba y pide</h3>
                         <p>Revisa tu diseño y realiza tu pedido</p>
@@ -119,7 +123,7 @@ get_header(); ?>
                     <div class="step-card">
                         <div class="step-number">4</div>
                         <div class="step-icon">
-                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-4.png'); ?>" alt="Recibir">
+                            <img src="<?php echo home_url('/horultoo/2026/03/camisetas-4.png'); ?>" alt="Recibir" loading="lazy">
                         </div>
                         <h3>Recibe y disfruta</h3>
                         <p>Te entregamos tus artículos personalizados en tu domicilio</p>
@@ -130,7 +134,7 @@ get_header(); ?>
 
         <!-- Product Categories with Images -->
         <?php
-        $categories_bg_image = get_post_meta(get_the_ID(), 'categories_background_image', true);
+        $categories_bg_image = $meta('categories_background_image');
         $categories_bg_style = $categories_bg_image ? 'style="background-image: url(' . esc_url($categories_bg_image) . ');"' : '';
         ?>
         <section class="categories-showcase section-with-bg" <?php echo $categories_bg_style; ?>>
@@ -151,7 +155,7 @@ get_header(); ?>
                     <div class="category-card-wrapper">
                         <div class="category-large-card">
                             <div class="category-image-wrapper">
-                                <img src="<?php echo home_url('/horultoo/2026/03/categoria-camisetas-chica-skatepark.png'); ?>" alt="Camisetas">
+                                <img src="<?php echo home_url('/horultoo/2026/03/categoria-camisetas-chica-skatepark.png'); ?>" alt="Camisetas" loading="lazy">
                             </div>
                             <div class="category-overlay">
                                 <h3>Camisetas</h3>
@@ -163,7 +167,7 @@ get_header(); ?>
                     <div class="category-card-wrapper">
                         <div class="category-large-card">
                             <div class="category-image-wrapper">
-                                <img src="<?php echo home_url('horultoo/2026/03/categoria-sudaderas-pareja-bici.png'); ?>" alt="Sudaderas">
+                                <img src="<?php echo home_url('horultoo/2026/03/categoria-sudaderas-pareja-bici.png'); ?>" alt="Sudaderas" loading="lazy">
                             </div>
                             <div class="category-overlay">
                                 <h3>Sudaderas</h3>
@@ -175,7 +179,7 @@ get_header(); ?>
                     <div class="category-card-wrapper">
                         <div class="category-large-card">
                             <div class="category-image-wrapper">
-                                <img src="<?php echo home_url('/horultoo/2026/03/categoria-tote.png'); ?>" alt="Gorras">
+                                <img src="<?php echo home_url('/horultoo/2026/03/categoria-tote.png'); ?>" alt="Gorras" loading="lazy">
                             </div>
                             <div class="category-overlay">
                                 <h3>Totebags</h3>
@@ -190,7 +194,7 @@ get_header(); ?>
 
         <!-- Featured Products Grid -->
         <?php
-        $products_bg_image = get_post_meta(get_the_ID(), 'products_background_image', true);
+        $products_bg_image = $meta('products_background_image');
         $products_bg_style = $products_bg_image ? 'style="background-image: url(' . esc_url($products_bg_image) . ');"' : '';
         ?>
         <section class="featured-products-realthread section-with-bg" <?php echo $products_bg_style; ?>>
@@ -199,14 +203,20 @@ get_header(); ?>
                 <h2 class="section-title-center">Nuestros productos mas solicitados</h2>
                 <div class="products-grid-realthread">
                     <?php
-                    $args = array(
-                        'post_type' => 'product',
-                        'posts_per_page' => 8,
-                        'meta_key' => 'total_sales',
-                        'orderby' => 'meta_value_num',
-                        'order' => 'DESC',
-                    );
-                    $products = new WP_Query($args);
+                    $products = get_transient('home_featured_products_rt');
+                    if (false === $products) {
+                        $args = array(
+                            'post_type'           => 'product',
+                            'posts_per_page'      => 8,
+                            'meta_key'            => 'total_sales',
+                            'orderby'             => 'meta_value_num',
+                            'order'               => 'DESC',
+                            'no_found_rows'       => true,
+                            'update_post_term_cache' => false,
+                        );
+                        $products = new WP_Query($args);
+                        set_transient('home_featured_products_rt', $products, 6 * HOUR_IN_SECONDS);
+                    }
                     
                     if ($products->have_posts()) :
                         while ($products->have_posts()) : $products->the_post();
@@ -242,7 +252,7 @@ get_header(); ?>
 
         <!-- Design Tools Section -->
         <?php
-        $design_bg_image = get_post_meta(get_the_ID(), 'design_background_image', true);
+        $design_bg_image = $meta('design_background_image');
         $design_bg_style = $design_bg_image ? 'style="background-image: url(' . esc_url($design_bg_image) . ');"' : '';
         ?>
         <section class="design-tools-section section-with-bg" <?php echo $design_bg_style; ?>>
@@ -281,7 +291,7 @@ get_header(); ?>
 
         <!-- Customer Showcase -->
         <?php
-        $customer_bg_image = get_post_meta(get_the_ID(), 'customer_background_image', true);
+        $customer_bg_image = $meta('customer_background_image');
         $customer_bg_style = $customer_bg_image ? 'style="background-image: url(' . esc_url($customer_bg_image) . ');"' : '';
         ?>
         <section class="customer-showcase section-with-bg" <?php echo $customer_bg_style; ?>>
@@ -291,13 +301,13 @@ get_header(); ?>
                 <p class="section-subtitle">Mira lo que nuestros clientes han creado</p>
                 <div class="showcase-grid">
                     <div class="showcase-item">
-                        <img src="<?php echo home_url('/horultoo/2026/03/clientes-disenos-1.png'); ?>" alt="Cliente 1">
+                        <img src="<?php echo home_url('/horultoo/2026/03/clientes-disenos-1.png'); ?>" alt="Cliente 1" loading="lazy">
                     </div>
                     <div class="showcase-item">
-                        <img src="<?php echo home_url('/horultoo/2026/03/clientes-disenos-2.png'); ?>" alt="Cliente 2">
+                        <img src="<?php echo home_url('/horultoo/2026/03/clientes-disenos-2.png'); ?>" alt="Cliente 2" loading="lazy">
                     </div>
                     <div class="showcase-item">
-                        <img src="<?php echo home_url('/horultoo/2026/03/clientes-disenos-3.png'); ?>" alt="Cliente 3">
+                        <img src="<?php echo home_url('/horultoo/2026/03/clientes-disenos-3.png'); ?>" alt="Cliente 3" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -305,7 +315,7 @@ get_header(); ?>
 
         <!-- Testimonials -->
         <?php
-        $testimonials_bg_image = get_post_meta(get_the_ID(), 'testimonials_background_image', true);
+        $testimonials_bg_image = $meta('testimonials_background_image');
         $testimonials_bg_style = $testimonials_bg_image ? 'style="background-image: url(' . esc_url($testimonials_bg_image) . ');"' : '';
         ?>
         <section class="testimonials-realthread section-with-bg" <?php echo $testimonials_bg_style; ?>>
@@ -315,7 +325,6 @@ get_header(); ?>
                 
                 <?php
                 require_once get_stylesheet_directory() . '/data/resenas.php';
-                $resenas_json = json_encode($resenas, JSON_UNESCAPED_UNICODE);
                 ?>
                 <?php
                 $per_page = 3;
@@ -356,14 +365,14 @@ get_header(); ?>
 
         <!-- Trust Badges -->
         <?php
-        $trust_bg_image = get_post_meta(get_the_ID(), 'trust_background_image', true);
+        $trust_bg_image = $meta('trust_background_image');
         $trust_bg_style = $trust_bg_image ? 'style="background-image: url(' . esc_url($trust_bg_image) . ');"' : '';
         ?>
         
 
         <!-- FAQ Section -->
         <?php
-        $faq_bg_image = get_post_meta(get_the_ID(), 'faq_background_image', true);
+        $faq_bg_image = $meta('faq_background_image');
         $faq_bg_style = $faq_bg_image ? 'style="background-image: url(' . esc_url($faq_bg_image) . ');"' : '';
         ?>
         <section class="faq-section section-with-bg" <?php echo $faq_bg_style; ?>>

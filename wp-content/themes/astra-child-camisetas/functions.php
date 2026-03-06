@@ -619,10 +619,7 @@ add_filter('woocommerce_cart_item_name', 'remove_cart_product_link', 20, 3);
 
 
 
-// Forzar la visualización de campos WAPF en el mini-cart
-add_action('init', function() {
-    update_option('wapf_settings_show_in_mini_cart', 'yes');
-}, 1);
+// Forzar la visualización de campos WAPF en el mini-cart (solo filtro en memoria, sin escritura a BD)
 
 // FORZAR que WAPF muestre TODOS los campos en el mini-cart, sin importar la configuración
 add_filter('option_wapf_settings_show_in_mini_cart', function($value) {
@@ -638,106 +635,7 @@ add_filter('option_wapf_settings_show_in_checkout', function($value) {
     return 'yes';
 }, 999);
 
-// CSS para que los campos se vean bien en el mini-cart y carrito
-add_action('wp_head', function() {
-    ?>
-    <style>
-        /* Mini-cart: Mostrar variaciones/campos personalizados */
-        .woocommerce-mini-cart-item .variation {
-            display: block !important;
-            margin: 5px 0 0 !important;
-            font-size: 0.9em;
-        }
-        .woocommerce-mini-cart-item .variation dt,
-        .woocommerce-mini-cart-item .variation dd {
-            display: inline-block !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        .woocommerce-mini-cart-item .variation dt {
-            font-weight: 600;
-            color: #666;
-        }
-        .woocommerce-mini-cart-item .variation dt::after {
-            content: ' ';
-        }
-        .woocommerce-mini-cart-item .variation dd {
-            color: #00a0d2;
-            margin-bottom: 3px !important;
-        }
-        .woocommerce-mini-cart-item .variation dd p {
-            display: inline !important;
-            margin: 0 !important;
-        }
-        .woocommerce-mini-cart-item .variation dd::after {
-            content: '';
-            display: block;
-        }
-        
-        /* Thumbnails del carrito y mini-cart: Mostrar solo el diseño con buen formato */
-        .woocommerce-cart-form .product-thumbnail img,
-        .woocommerce-mini-cart-item img.attachment-woocommerce_thumbnail {
-            object-fit: contain !important;
-            background: #f9f9f9 !important;
-            padding: 10px !important;
-            border: 1px solid #e0e0e0 !important;
-            border-radius: 4px !important;
-        }
-        
-        /* Asegurar que los thumbnails tengan un tamaño consistente */
-        .woocommerce-cart-form .product-thumbnail a {
-            display: block;
-            width: 100%;
-            max-width: 120px;
-        }
-        
-        
-        /* Eliminar margen inferior del nombre del producto */
-        .product-name {
-            margin-bottom: 0px !important;
-        }
-        
-        /* Convertir ast-product-name en flex column */
-        .ast-product-name {
-            display: flex !important;
-            flex-direction: column !important;
-            margin-bottom:1.5rem;
-            font-size:1rem;
-            
-        }
-        
-        /* Thumbnails en el checkout dentro de la columna de producto */
-        .woocommerce-checkout-review-order-table .product-name a img {
-            display: inline-block !important;
-            width: 100px !important;
-            height: auto !important;
-            object-fit: contain !important;
-            background: #f9f9f9 !important;
-            padding: 5px !important;
-            border: 1px solid #e0e0e0 !important;
-            border-radius: 4px !important;
-            margin-right: 10px !important;
-            vertical-align: middle !important;
-        }
-        
-        /* Alinear imágenes a la izquierda en checkout moderno de Astra */
-        .ast-modern-checkout .woocommerce #ast-order-review-content .woocommerce-checkout-review-order-table tbody tr td.product-name .ast-product-image,
-        .ast-modern-checkout .woocommerce #order_review .woocommerce-checkout-review-order-table tbody tr td.product-name .ast-product-image {
-            justify-content: flex-start !important;
-        }
-        
-        /* Ocultar thumbnails duplicados de Astra en checkout */
-        .woocommerce-checkout-review-order-table tbody tr td.product-name .ast-product-image .ast-product-thumbnail img {
-            display: none !important;
-        }
-        
-        /* Ocultar imágenes duplicadas que WAPF pueda agregar FUERA del link en mini-cart */
-        .woocommerce-mini-cart-item .product-name > img:not(.attachment-woocommerce_thumbnail) {
-            display: none !important;
-        }
-    </style>
-    <?php
-});
+// Estilos de mini-cart/carrito/checkout movidos a ctc-style.css
 
 
 
@@ -1018,11 +916,7 @@ function wapf_preserve_uploads_on_variation_change() {
             }
         });
         
-        setTimeout(preventImageClear, 100);
-        setTimeout(preventImageClear, 1000);
-        setTimeout(preventImageClear, 2000);
-        $(window).on('load', function() { setTimeout(preventImageClear, 500); });
-        $(document).on('wapf/init_dropzone', function() { setTimeout(preventImageClear, 100); });
+        $(document).on('wapf/init_dropzone', function() { preventImageClear(); });
     });
     </script>
     <?php
@@ -1050,8 +944,8 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                 $button.prop('disabled', false).removeAttr('disabled').removeClass('disabled wc-variation-selection-needed');
             }
         };
-        setInterval(forceEnableButton, 200);
-        
+        $(document.body).on('woocommerce_variation_has_changed updated_checkout', forceEnableButton);
+
         // Variables para protección de Dropzone (solo en memoria)
         var persistentFiles = {};
         var persistentInputs = {};
@@ -1446,34 +1340,25 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
         
         setupDropzoneProtection();
         
-        // Monitor para restaurar archivos si desaparecen Y mantener inputs sincronizados
-        setInterval(function() {
-            if (typeof Dropzone !== 'undefined' && Dropzone.instances.length) {
-                Dropzone.instances.forEach(function(dz) {
-                    var dzId = dz.element.id;
-                    
-                    // NO restaurar si el usuario borró manualmente
-                    if (manuallyCleared[dzId]) {
-                        return;
+        // Restaurar archivos y sincronizar inputs por eventos en lugar de polling
+        function syncDropzoneInputs() {
+            if (typeof Dropzone === 'undefined' || !Dropzone.instances.length) return;
+            Dropzone.instances.forEach(function(dz) {
+                var dzId = dz.element.id;
+                if (manuallyCleared[dzId]) return;
+                if (persistentFiles[dzId] && persistentFiles[dzId].length > 0 && dz.files.length === 0) {
+                    restoreDropzoneFiles();
+                }
+                if (dz.files.length > 0) {
+                    var fieldId = dzId.replace('wapf-dz-', '');
+                    var $input = $('input[data-field-id="' + fieldId + '"]');
+                    if ($input.length && !$input.val() && persistentInputs[fieldId]) {
+                        $input.val(persistentInputs[fieldId]);
                     }
-                    
-                    // Restaurar archivos si desaparecieron
-                    if (persistentFiles[dzId] && persistentFiles[dzId].length > 0 && dz.files.length === 0) {
-                        restoreDropzoneFiles();
-                    }
-                    
-                    // Asegurar que el input tenga valor si hay archivos
-                    if (dz.files.length > 0) {
-                        var fieldId = dzId.replace('wapf-dz-', '');
-                        var $input = $('input[data-field-id="' + fieldId + '"]');
-                        
-                        if ($input.length && !$input.val() && persistentInputs[fieldId]) {
-                            $input.val(persistentInputs[fieldId]);
-                        }
-                    }
-                });
-            }
-        }, 200);
+                }
+            });
+        }
+        $(document).on('wapf/file_uploaded wapf/init_dropzone added_to_cart', syncDropzoneInputs);
     });
     </script>
     
