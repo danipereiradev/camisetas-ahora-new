@@ -136,20 +136,20 @@ get_header(); ?>
         <section class="categories-showcase section-with-bg" <?php echo $categories_bg_style; ?>>
             <div class="section-overlay"></div>
             <div class="container">
-                <h2 class="section-title-center">Compra por categoría</h2>
+                <h2 class="section-title-center">Elige entre nuestras categorias</h2>
                 <div class="categories-large-grid">
                     <div class="category-large-card">
                         <div class="category-image-wrapper">
-                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/category-tshirts.jpg" alt="Camisetas">
+                            <img src="<?php echo home_url('/horultoo/2026/03/categoria-camisetas-chica-skatepark.png'); ?>" alt="Camisetas">
                         </div>
                         <div class="category-overlay">
-                            <h3>Artículos</h3>
+                            <h3>Camisetas</h3>
                             <a href="/categoria/camisetas" class="btn-category">Comprar Ahora</a>
                         </div>
                     </div>
                     <div class="category-large-card">
                         <div class="category-image-wrapper">
-                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/category-hoodies.jpg" alt="Sudaderas">
+                            <img src="<?php echo home_url('horultoo/2026/03/categoria-sudaderas-pareja-bici.png'); ?>" alt="Sudaderas">
                         </div>
                         <div class="category-overlay">
                             <h3>Sudaderas</h3>
@@ -158,10 +158,10 @@ get_header(); ?>
                     </div>
                     <div class="category-large-card">
                         <div class="category-image-wrapper">
-                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/images/category-caps.jpg" alt="Gorras">
+                            <img src="<?php echo home_url('/horultoo/2026/03/categoria-tote.png'); ?>" alt="Gorras">
                         </div>
                         <div class="category-overlay">
-                            <h3>Gorras</h3>
+                            <h3>Totebags</h3>
                             <a href="/categoria/gorras" class="btn-category">Comprar Ahora</a>
                         </div>
                     </div>
@@ -177,7 +177,7 @@ get_header(); ?>
         <section class="featured-products-realthread section-with-bg" <?php echo $products_bg_style; ?>>
             <div class="section-overlay"></div>
             <div class="container">
-                <h2 class="section-title-center">Artículos y productos personalizados de alta calidad</h2>
+                <h2 class="section-title-center">Nuestros productos mas solicitados</h2>
                 <div class="products-grid-realthread">
                     <?php
                     $args = array(
