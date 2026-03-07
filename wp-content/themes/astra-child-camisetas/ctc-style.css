@@ -59,6 +59,10 @@ h1, h2, h3, h4, h5, h6,
   font-family: "Franklin Gothic Condensed", "Franklin Gothic Book", "ITC Franklin Gothic", Arial, sans-serif !important;
   font-weight: bold !important;
   text-transform: uppercase !important;
+}
+
+h1, .h1,
+h2, .h2 {
   color: #000000 !important;
 }
 
