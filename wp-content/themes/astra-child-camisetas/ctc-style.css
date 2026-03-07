@@ -195,10 +195,14 @@ body.home-vistaprint .site-header .ast-container {
 }
 
 /* Prevenir overflow horizontal global */
-html,
-body {
+html {
   overflow-x: hidden;
   max-width: 100%;
+}
+
+body {
+  max-width: 100%;
+  position: relative;
 }
 
 .hero-spreadshirt,
@@ -3048,14 +3052,15 @@ body {
   line-height: 1.5;
 }
 
-/* Galería de producto: sticky hasta la descripción */
 .single-product div.product {
+  display: flex !important;
+  flex-wrap: wrap !important;
   align-items: flex-start !important;
 }
 
 .single-product .woocommerce-product-gallery {
   position: sticky;
-  top: 80px;
+  top: 20px;
   align-self: flex-start;
 }
 
@@ -3065,10 +3070,10 @@ body {
   border-radius: 6px;
 }
 
-@media (max-width: 768px) {
-  .single-product .woocommerce-product-gallery {
-    position: static;
-  }
+.single-product #primary,
+.single-product .site-main,
+.single-product .entry-content {
+  overflow: visible !important;
 }
 
 /* ================================================
