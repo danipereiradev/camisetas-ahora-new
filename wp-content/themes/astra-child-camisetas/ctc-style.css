@@ -127,7 +127,6 @@ h6,
 :root {
   --secondary-color: #50c1c1;
   --secondary-color-dark: #3da8a8;
-  --tertiary-color: #ffffff;
 }
 
 /* ================================================
@@ -3100,7 +3099,7 @@ body.home-vistaprint .site-header .ast-container {
   font-weight: bold !important;
   text-transform: uppercase !important;
   letter-spacing: 0.12em !important;
-  color: var(--tertiary-color) !important;
+  color: #fff !important;
   margin-bottom: 1.2rem !important;
   margin-top: 0 !important;
 }
@@ -3223,6 +3222,13 @@ body.home-vistaprint .site-header .ast-container {
 .ctc-footer-bottom-payments img {
   height: 28px;
   width: auto;
+  opacity: 0.6;
+  filter: brightness(0) invert(1);
+  transition: opacity 0.2s ease;
+}
+
+.ctc-footer-bottom-payments img:hover {
+  opacity: 0.9;
 }
 
 .ctc-footer-bottom-links {
