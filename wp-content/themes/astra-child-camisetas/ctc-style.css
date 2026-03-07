@@ -3269,8 +3269,8 @@ body.home-vistaprint .site-header .ast-container {
 .woocommerce-loop-product__link .price,
 .wc-block-grid__product-price,
 .wc-block-components-product-price {
-  color: #fff !important;
-  font-size: 1.05rem !important;
+  color: var(--secondary-color) !important;
+  font-size: 2rem !important;
   font-weight: 800 !important;
   line-height: 1.3 !important;
   display: inline-flex !important;
