@@ -56,7 +56,7 @@ h1, h2, h3, h4, h5, h6,
 #ast-mobile-popup .menu-item > a,
 .ast-primary-nav > ul > li > a,
 .ast-nav-menu > li > a {
-  font-family: "Franklin Gothic Book", "ITC Franklin Gothic", "Franklin Gothic Medium", Arial, sans-serif !important;
+  font-family: "Franklin Gothic Condensed", "Franklin Gothic Book", "ITC Franklin Gothic", Arial, sans-serif !important;
   font-weight: bold !important;
   text-transform: uppercase !important;
   color: #000000 !important;
