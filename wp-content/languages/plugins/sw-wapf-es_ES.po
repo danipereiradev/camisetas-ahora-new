@@ -1,0 +1,196 @@
+# Translation of sw-wapf (Advanced Product Fields) to Spanish (Spain)
+# Copyright (C) sw-wapf
+msgid ""
+msgstr ""
+"Project-Id-Version: sw-wapf\n"
+"PO-Revision-Date: 2026-01-31 12:00+0100\n"
+"Last-Translator: \n"
+"Language-Team: Spanish (Spain)\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Product Field Groups"
+msgstr "Grupos de campos de producto"
+
+msgid "Field Group"
+msgstr "Grupo de campos"
+
+msgid "Add New"
+msgstr "Añadir nuevo"
+
+msgid "Add New Product Field Group"
+msgstr "Añadir nuevo grupo de campos de producto"
+
+msgid "Edit Product Field Group"
+msgstr "Editar grupo de campos de producto"
+
+msgid "New Field Group"
+msgstr "Nuevo grupo de campos"
+
+msgid "View Field Group"
+msgstr "Ver grupo de campos"
+
+msgid "Search Field Groups"
+msgstr "Buscar grupos de campos"
+
+msgid "No Field Groups found"
+msgstr "No se encontraron grupos de campos"
+
+msgid "No Field Groups found in Trash"
+msgstr "No se encontraron grupos de campos en la papelera"
+
+msgid "The field \"%s\" contains a disallowed date."
+msgstr "El campo \"%s\" contiene una fecha no permitida."
+
+msgid "The field \"%s\" has an invalid date."
+msgstr "El campo \"%s\" tiene una fecha no válida."
+
+msgid "The field \"%s\" is older than the minimum allowed date."
+msgstr "El campo \"%s\" es anterior a la fecha mínima permitida."
+
+msgid "The field \"%s\" is later than the maximum allowed date."
+msgstr "El campo \"%s\" es posterior a la fecha máxima permitida."
+
+msgid "Today's date can't be selected in the field \"%s\" because it is after %s."
+msgstr "No se puede seleccionar la fecha de hoy en el campo \"%s\" porque es posterior a %s."
+
+msgid "The field \"%s\" is required."
+msgstr "El campo \"%s\" es obligatorio."
+
+msgid "The field \"%s\" has an incorrect date format."
+msgstr "El campo \"%s\" tiene un formato de fecha incorrecto."
+
+msgid "\"%s\" can't be equal to today."
+msgstr "\"%s\" no puede ser igual a hoy."
+
+msgid "\"%s\" can't be in the future."
+msgstr "\"%s\" no puede ser una fecha futura."
+
+msgid "\"%s\" can't be in the past."
+msgstr "\"%s\" no puede ser una fecha pasada."
+
+msgid "The field \"%s\" requires a minimum of %s."
+msgstr "El campo \"%s\" requiere un mínimo de %s."
+
+msgid "The field \"%s\" requires a maximum of %s."
+msgstr "El campo \"%s\" requiere un máximo de %s."
+
+msgid "\"%s\" requires a minimum of %s choices."
+msgstr "\"%s\" requiere un mínimo de %s opciones."
+
+msgid "\"%s\" requires a maximum of %s choices."
+msgstr "\"%s\" requiere un máximo de %s opciones."
+
+msgid "The item \"%s\" requires a minimum quantity of %s."
+msgstr "El artículo \"%s\" requiere una cantidad mínima de %s."
+
+msgid "The item \"%s\" requires a maximum quantity of %s."
+msgstr "El artículo \"%s\" requiere una cantidad máxima de %s."
+
+msgid "The field \"%s\" requires at minimum %s selections."
+msgstr "El campo \"%s\" requiere al menos %s selecciones."
+
+msgid "The field \"%s\" requires at maximum %s selections."
+msgstr "El campo \"%s\" requiere como máximo %s selecciones."
+
+msgid "Value is equal to"
+msgstr "El valor es igual a"
+
+msgid "Value is not equal to"
+msgstr "El valor no es igual a"
+
+msgid "Value is empty"
+msgstr "El valor está vacío"
+
+msgid "Value is any text"
+msgstr "El valor es cualquier texto"
+
+msgid "Value contains"
+msgstr "El valor contiene"
+
+msgid "Result is equal to"
+msgstr "El resultado es igual a"
+
+msgid "Result is not equal to"
+msgstr "El resultado no es igual a"
+
+msgid "Result is greater than"
+msgstr "El resultado es mayor que"
+
+msgid "Result is lesser than"
+msgstr "El resultado es menor que"
+
+msgid "Value is any email"
+msgstr "El valor es cualquier email"
+
+msgid "Value is any URL"
+msgstr "El valor es cualquier URL"
+
+msgid "Value is greater than"
+msgstr "El valor es mayor que"
+
+msgid "Value is lesser than"
+msgstr "El valor es menor que"
+
+msgid "Value is any number"
+msgstr "El valor es cualquier número"
+
+msgid "Is checked"
+msgstr "Está marcado"
+
+msgid "Is not checked"
+msgstr "No está marcado"
+
+msgid "Nothing selected"
+msgstr "Nada seleccionado"
+
+msgid "Anything selected"
+msgstr "Cualquier selección"
+
+msgid "Selection contains"
+msgstr "La selección contiene"
+
+msgid "Selection does not contain"
+msgstr "La selección no contiene"
+
+msgid "Is equal to"
+msgstr "Es igual a"
+
+msgid "Use this date format: mm-dd-yyyy"
+msgstr "Usa este formato de fecha: dd-mm-aaaa"
+
+msgid "Is not equal to"
+msgstr "No es igual a"
+
+msgid "Is later than"
+msgstr "Es posterior a"
+
+msgid "Is older than"
+msgstr "Es anterior a"
+
+msgid "Is empty"
+msgstr "Está vacío"
+
+msgid "Is any date"
+msgstr "Es cualquier fecha"
+
+msgid "Has no files selected"
+msgstr "No hay archivos seleccionados"
+
+msgid "Logical"
+msgstr "Lógico"
+
+msgid "Math"
+msgstr "Matemáticas"
+
+msgid "Other"
+msgstr "Otro"
+
+msgid "Dates"
+msgstr "Fechas"
+
+msgid "Files"
+msgstr "Archivos"

@@ -1,0 +1,122 @@
+# Translation of wapf-aiu (WAPF Image Upload Add-On) to Spanish (Spain)
+# Copyright (C) wapf-aiu
+msgid ""
+msgstr ""
+"Project-Id-Version: wapf-aiu\n"
+"PO-Revision-Date: 2026-01-31 12:00+0100\n"
+"Last-Translator: \n"
+"Language-Team: Spanish (Spain)\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Image Upload"
+msgstr "Subir imagen"
+
+msgid "Edit image"
+msgstr "Editar imagen"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "px"
+msgstr "px"
+
+msgid "Dark"
+msgstr "Oscuro"
+
+msgid "Light"
+msgstr "Claro"
+
+msgid "None (freeform)"
+msgstr "Ninguno (libre)"
+
+msgid "Square (1:1)"
+msgstr "Cuadrado (1:1)"
+
+msgid "The filesize is too small. Please upload a bigger file."
+msgstr "El archivo es demasiado pequeño. Por favor, sube un archivo más grande."
+
+msgid "The image width is %spx, but only a maximum width of %spx is allowed."
+msgstr "El ancho de la imagen es %spx, pero el máximo permitido es %spx."
+
+msgid "The image height is %spx, but only a maximum height of %spx is allowed."
+msgstr "El alto de la imagen es %spx, pero el máximo permitido es %spx."
+
+msgid "The image width is %spx, but a minimum width of %spx is required."
+msgstr "El ancho de la imagen es %spx, pero se requiere un mínimo de %spx."
+
+msgid "The image height is %spx, but a minimum height of %spx is required."
+msgstr "El alto de la imagen es %spx, pero se requiere un mínimo de %spx."
+
+msgid "The field \"%s\" requires a minimum of %s files, but %s was uploaded."
+msgid_plural "The field \"%s\" requires a minimum of %s files, but %s were uploaded."
+msgstr[0] "El campo \"%s\" requiere un mínimo de %s archivo, pero se subió %s."
+msgstr[1] "El campo \"%s\" requiere un mínimo de %s archivos, pero se subieron %s."
+
+msgid "The field \"%s\" requires a maximum of %s files, but %s was uploaded."
+msgid_plural "The field \"%s\" requires a maximum of %s files, but %s were uploaded."
+msgstr[0] "El campo \"%s\" permite un máximo de %s archivo, pero se subió %s."
+msgstr[1] "El campo \"%s\" permite un máximo de %s archivos, pero se subieron %s."
+
+msgid "License key"
+msgstr "Clave de licencia"
+
+msgid "Image editor settings"
+msgstr "Configuración del editor de imágenes"
+
+msgid "Enable image editor"
+msgstr "Activar editor de imágenes"
+
+msgid "Enable image cropper"
+msgstr "Activar recorte de imagen"
+
+msgid "Enable image rotation"
+msgstr "Activar rotación de imagen"
+
+msgid "Enable image flipping"
+msgstr "Activar volteo de imagen"
+
+msgid "Aspect ratio"
+msgstr "Proporción de aspecto"
+
+msgid "Show image thumbnails"
+msgstr "Mostrar miniaturas de imagen"
+
+msgid "Image thumbnail size"
+msgstr "Tamaño de miniatura"
+
+msgid "Minimum file count"
+msgstr "Número mínimo de archivos"
+
+msgid "Maximum file count"
+msgstr "Número máximo de archivos"
+
+msgid "Minimum file size (MB)"
+msgstr "Tamaño mínimo de archivo (MB)"
+
+msgid "Minimum width"
+msgstr "Ancho mínimo"
+
+msgid "Minimum height"
+msgstr "Alto mínimo"
+
+msgid "Maximum width"
+msgstr "Ancho máximo"
+
+msgid "Maximum height"
+msgstr "Alto máximo"
+
+msgid "Automatically resize"
+msgstr "Redimensionar automáticamente"
+
+msgid "License activated."
+msgstr "Licencia activada."
+
+msgid "License deactivated"
+msgstr "Licencia desactivada"
