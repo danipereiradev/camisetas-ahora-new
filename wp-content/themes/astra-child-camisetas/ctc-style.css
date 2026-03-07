@@ -33,7 +33,13 @@ h1, h2, h3, h4, h5, h6,
 .woocommerce-loop-product__title,
 .woocommerce-products-header__title,
 .product_title,
-.widget-title {
+.widget-title,
+.main-header-menu .menu-item > a,
+.main-header-menu .menu-item > .menu-link,
+.ast-header-break-point .main-header-menu .menu-item > a,
+#ast-mobile-popup .menu-item > a,
+.ast-primary-nav > ul > li > a,
+.ast-nav-menu > li > a {
   font-family: "Franklin Gothic Book", "ITC Franklin Gothic", "Franklin Gothic Medium", Arial, sans-serif !important;
   font-weight: bold !important;
 }
