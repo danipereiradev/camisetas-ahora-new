@@ -3053,8 +3053,6 @@ body {
 }
 
 .single-product div.product {
-  display: flex !important;
-  flex-wrap: wrap !important;
   align-items: flex-start !important;
 }
 
@@ -3068,12 +3066,6 @@ body {
 .single-product .woocommerce-product-gallery__wrapper img {
   border: 1px solid #ebebeb !important;
   border-radius: 6px;
-}
-
-.single-product #primary,
-.single-product .site-main,
-.single-product .entry-content {
-  overflow: visible !important;
 }
 
 /* ================================================
