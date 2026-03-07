@@ -72,6 +72,53 @@ h6,
   text-transform: uppercase !important;
 }
 
+/* Nav menu item font size */
+.main-header-menu .menu-item > .menu-link,
+.main-header-menu .menu-item > a,
+.ast-header-break-point .main-header-menu .menu-item > a,
+#ast-mobile-popup .menu-item > a,
+.ast-primary-nav > ul > li > a,
+.ast-nav-menu > li > a {
+  font-size: 0.9rem !important;
+}
+
+/* WooCommerce buttons */
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce #respond input#submit,
+.woocommerce .single_add_to_cart_button,
+.woocommerce .checkout-button,
+.woocommerce-cart .wc-proceed-to-checkout a.checkout-button,
+.woocommerce #place_order,
+.wc-block-components-button,
+.wp-block-woocommerce-proceed-to-checkout-block a {
+  font-family: 'Franklin Gothic Condensed', 'Franklin Gothic Book', 'ITC Franklin Gothic', Arial, sans-serif !important;
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-radius: 8px !important;
+  padding: 14px 28px !important;
+  background-color: var(--secondary-color) !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-size: 1rem !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.woocommerce a.button:hover,
+.woocommerce button.button:hover,
+.woocommerce input.button:hover,
+.woocommerce #respond input#submit:hover,
+.woocommerce .single_add_to_cart_button:hover,
+.woocommerce .checkout-button:hover,
+.woocommerce-cart .wc-proceed-to-checkout a.checkout-button:hover,
+.woocommerce #place_order:hover,
+.wc-block-components-button:hover {
+  background-color: var(--secondary-color-dark) !important;
+  color: #ffffff !important;
+}
+
 /* ================================================
    VARIABLES CSS GLOBALES
    ================================================ */
