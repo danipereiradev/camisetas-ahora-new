@@ -6,7 +6,7 @@ Updated: 2025-11-10 12:32:37
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap');
 
 @font-face {
-  font-family: "Franklin Gothic Book";
+  font-family: 'Franklin Gothic Book';
   src: url('/horultoo/2026/03/FranklinGothic-Book.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
@@ -14,7 +14,7 @@ Updated: 2025-11-10 12:32:37
 }
 
 @font-face {
-  font-family: "Franklin Gothic Condensed";
+  font-family: 'Franklin Gothic Condensed';
   src: url('/horultoo/2026/03/FranklinGothic-Condensed.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
@@ -41,8 +41,18 @@ a {
   font-family: 'Roboto', sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
 .ast-heading,
 .entry-title,
 .page-title,
@@ -56,14 +66,11 @@ h1, h2, h3, h4, h5, h6,
 #ast-mobile-popup .menu-item > a,
 .ast-primary-nav > ul > li > a,
 .ast-nav-menu > li > a {
-  font-family: "Franklin Gothic Condensed", "Franklin Gothic Book", "ITC Franklin Gothic", Arial, sans-serif !important;
+  font-family:
+    'Franklin Gothic Condensed', 'Franklin Gothic Book', 'ITC Franklin Gothic',
+    Arial, sans-serif !important;
   font-weight: bold !important;
   text-transform: uppercase !important;
-}
-
-h1, .h1,
-h2, .h2 {
-  color: #000000 !important;
 }
 
 /* ================================================
@@ -275,7 +282,12 @@ body.home-vistaprint .site-header .ast-container {
   border-radius: 15px;
   padding: 2.5rem 2rem 2rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
   text-decoration: none;
   min-height: 320px;
 }
@@ -441,7 +453,12 @@ body.home-vistaprint .site-header .ast-container {
   text-decoration: none;
   font-weight: 700;
   font-size: 1.1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
   display: inline-block;
 }
 
@@ -460,7 +477,12 @@ body.home-vistaprint .site-header .ast-container {
   text-decoration: none;
   font-weight: 700;
   font-size: 1.1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
   display: inline-block;
 }
 
@@ -507,7 +529,12 @@ body.home-vistaprint .site-header .ast-container {
   padding: 2rem;
   text-align: center;
   text-decoration: none;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
@@ -560,7 +587,12 @@ body.home-vistaprint .site-header .ast-container {
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
   border: 1px solid #eee;
 }
 
@@ -632,7 +664,12 @@ body.home-vistaprint .site-header .ast-container {
   font-weight: 700;
   font-size: 1.1rem;
   display: inline-block;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .btn-view-all:hover {
@@ -728,7 +765,12 @@ body.home-vistaprint .site-header .ast-container {
   font-weight: 700;
   font-size: 1.1rem;
   display: inline-block;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .btn-promo:hover {
@@ -976,7 +1018,12 @@ body.home-vistaprint .site-header .ast-container {
   box-shadow: none;
   display: block;
   text-decoration: none;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .product-image-container:hover {
@@ -1063,7 +1110,12 @@ body.home-vistaprint .site-header .ast-container {
   font-weight: 600;
   font-size: 1.1rem;
   display: inline-block;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .btn-hero-realthread:hover {
@@ -1093,7 +1145,12 @@ body.home-vistaprint .site-header .ast-container {
   width: 100%;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
   overflow: hidden;
   background: #f5f5f5;
 }
@@ -1281,7 +1338,12 @@ body.home-vistaprint .site-header .ast-container {
   text-decoration: none;
   font-weight: 600;
   display: inline-block;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .btn-category:hover {
@@ -1306,7 +1368,12 @@ body.home-vistaprint .site-header .ast-container {
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid #e5e7eb;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .product-card-realthread:hover {
@@ -1347,7 +1414,7 @@ body.home-vistaprint .site-header .ast-container {
 .product-details h3 {
   font-size: 1rem;
   font-weight: 600;
-  color: #1a1a1a;
+
   margin-bottom: 0.5rem;
 }
 
@@ -1475,7 +1542,12 @@ body.home-vistaprint .site-header .ast-container {
   text-decoration: none;
   font-weight: 600;
   display: inline-block;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .btn-design:hover {
@@ -1862,7 +1934,12 @@ body.home-vistaprint .site-header .ast-container {
   font-weight: 700;
   font-size: 1.1rem;
   display: inline-block;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .btn-hero-vistaprint:hover {
@@ -1893,7 +1970,12 @@ body.home-vistaprint .site-header .ast-container {
   border-radius: 10px;
   text-decoration: none;
   color: #000;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
@@ -1947,7 +2029,12 @@ body.home-vistaprint .site-header .ast-container {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .product-card-vistaprint:hover {
@@ -2039,7 +2126,12 @@ body.home-vistaprint .site-header .ast-container {
   font-weight: 600;
   font-size: 1.05rem;
   display: inline-block;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .btn-load-more:hover {
@@ -2115,7 +2207,12 @@ body.home-vistaprint .site-header .ast-container {
   text-decoration: none;
   font-weight: 600;
   display: inline-block;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .btn-learn-more:hover {
@@ -2204,7 +2301,12 @@ body.home-vistaprint .site-header .ast-container {
   text-decoration: none;
   font-weight: 600;
   display: inline-block;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .btn-view-gallery:hover {
@@ -2393,7 +2495,12 @@ body.home-vistaprint .site-header .ast-container {
   font-weight: 700;
   font-size: 1.2rem;
   display: inline-block;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .btn-cta-large:hover {
@@ -2661,86 +2768,108 @@ body.home-vistaprint .site-header .ast-container {
    ================================================ */
 
 .woocommerce-mini-cart-item .variation {
-    display: block !important;
-    margin: 5px 0 0 !important;
-    font-size: 0.9em;
+  display: block !important;
+  margin: 5px 0 0 !important;
+  font-size: 0.9em;
 }
 .woocommerce-mini-cart-item .variation dt,
 .woocommerce-mini-cart-item .variation dd {
-    display: inline-block !important;
-    margin: 0 !important;
-    padding: 0 !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 .woocommerce-mini-cart-item .variation dt {
-    font-weight: 600;
-    color: #666;
+  font-weight: 600;
+  color: #666;
 }
 .woocommerce-mini-cart-item .variation dt::after {
-    content: ' ';
+  content: ' ';
 }
 .woocommerce-mini-cart-item .variation dd {
-    color: #00a0d2;
-    margin-bottom: 3px !important;
+  color: #00a0d2;
+  margin-bottom: 3px !important;
 }
 .woocommerce-mini-cart-item .variation dd p {
-    display: inline !important;
-    margin: 0 !important;
+  display: inline !important;
+  margin: 0 !important;
 }
 .woocommerce-mini-cart-item .variation dd::after {
-    content: '';
-    display: block;
+  content: '';
+  display: block;
 }
 
 .woocommerce-cart-form .product-thumbnail img,
 .woocommerce-mini-cart-item img.attachment-woocommerce_thumbnail {
-    object-fit: contain !important;
-    background: #f9f9f9 !important;
-    padding: 10px !important;
-    border: 1px solid #e0e0e0 !important;
-    border-radius: 4px !important;
+  object-fit: contain !important;
+  background: #f9f9f9 !important;
+  padding: 10px !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 4px !important;
 }
 
 .woocommerce-cart-form .product-thumbnail a {
-    display: block;
-    width: 100%;
-    max-width: 120px;
+  display: block;
+  width: 100%;
+  max-width: 120px;
 }
 
 .product-name {
-    margin-bottom: 0px !important;
+  margin-bottom: 0px !important;
 }
 
 .ast-product-name {
-    display: flex !important;
-    flex-direction: column !important;
-    margin-bottom: 1.5rem;
-    font-size: 1rem;
+  display: flex !important;
+  flex-direction: column !important;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
 }
 
 .woocommerce-checkout-review-order-table .product-name a img {
-    display: inline-block !important;
-    width: 100px !important;
-    height: auto !important;
-    object-fit: contain !important;
-    background: #f9f9f9 !important;
-    padding: 5px !important;
-    border: 1px solid #e0e0e0 !important;
-    border-radius: 4px !important;
-    margin-right: 10px !important;
-    vertical-align: middle !important;
+  display: inline-block !important;
+  width: 100px !important;
+  height: auto !important;
+  object-fit: contain !important;
+  background: #f9f9f9 !important;
+  padding: 5px !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 4px !important;
+  margin-right: 10px !important;
+  vertical-align: middle !important;
 }
 
-.ast-modern-checkout .woocommerce #ast-order-review-content .woocommerce-checkout-review-order-table tbody tr td.product-name .ast-product-image,
-.ast-modern-checkout .woocommerce #order_review .woocommerce-checkout-review-order-table tbody tr td.product-name .ast-product-image {
-    justify-content: flex-start !important;
+.ast-modern-checkout
+  .woocommerce
+  #ast-order-review-content
+  .woocommerce-checkout-review-order-table
+  tbody
+  tr
+  td.product-name
+  .ast-product-image,
+.ast-modern-checkout
+  .woocommerce
+  #order_review
+  .woocommerce-checkout-review-order-table
+  tbody
+  tr
+  td.product-name
+  .ast-product-image {
+  justify-content: flex-start !important;
 }
 
-.woocommerce-checkout-review-order-table tbody tr td.product-name .ast-product-image .ast-product-thumbnail img {
-    display: none !important;
+.woocommerce-checkout-review-order-table
+  tbody
+  tr
+  td.product-name
+  .ast-product-image
+  .ast-product-thumbnail
+  img {
+  display: none !important;
 }
 
-.woocommerce-mini-cart-item .product-name > img:not(.attachment-woocommerce_thumbnail) {
-    display: none !important;
+.woocommerce-mini-cart-item
+  .product-name
+  > img:not(.attachment-woocommerce_thumbnail) {
+  display: none !important;
 }
 
 /* ================================================
@@ -2748,77 +2877,77 @@ body.home-vistaprint .site-header .ast-container {
    ================================================ */
 
 #cart-status-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    z-index: 99999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-    backdrop-filter: blur(3px);
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  backdrop-filter: blur(3px);
 }
 
 #cart-status-overlay.visible {
-    opacity: 1;
-    pointer-events: auto;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .cart-status-box {
-    background: #fff;
-    border-radius: 16px;
-    padding: 2.5rem 3rem;
-    text-align: center;
-    max-width: 360px;
-    width: 90%;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-    transform: translateY(10px);
-    transition: transform 0.25s ease;
+  background: #fff;
+  border-radius: 16px;
+  padding: 2.5rem 3rem;
+  text-align: center;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  transform: translateY(10px);
+  transition: transform 0.25s ease;
 }
 
 #cart-status-overlay.visible .cart-status-box {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 .cart-status-logo {
-    margin-bottom: 1.25rem;
-    display: flex;
-    justify-content: center;
+  margin-bottom: 1.25rem;
+  display: flex;
+  justify-content: center;
 }
 
 .cart-status-logo img {
-    max-height: 40px;
-    width: auto;
-    object-fit: contain;
+  max-height: 40px;
+  width: auto;
+  object-fit: contain;
 }
 
 .cart-status-icon {
-    margin-bottom: 1.25rem;
-    display: flex;
-    justify-content: center;
-    min-height: 40px;
-    align-items: center;
+  margin-bottom: 1.25rem;
+  display: flex;
+  justify-content: center;
+  min-height: 40px;
+  align-items: center;
 }
 
 .cart-status-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 0.5rem 0;
 }
 
 .cart-status-text {
-    font-size: 0.95rem;
-    color: #666;
-    margin: 0;
-    line-height: 1.5;
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
 }
 
 /* Imagen de galería en página de producto simple */
 .single-product .woocommerce-product-gallery__image img,
 .single-product .woocommerce-product-gallery__wrapper img {
-    border: 1px solid #ebebeb !important;
-    border-radius: 6px;
+  border: 1px solid #ebebeb !important;
+  border-radius: 6px;
 }
