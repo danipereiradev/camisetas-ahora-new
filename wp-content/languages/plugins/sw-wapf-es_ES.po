@@ -227,3 +227,9 @@ msgstr "Reducir"
 
 msgid "Increase"
 msgstr "Aumentar"
+
+msgid "Choose an option"
+msgstr "Elige una opción"
+
+msgid "quantity"
+msgstr "cantidad"
