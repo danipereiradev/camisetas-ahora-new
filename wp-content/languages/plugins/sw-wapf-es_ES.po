@@ -194,3 +194,36 @@ msgstr "Fechas"
 
 msgid "Files"
 msgstr "Archivos"
+
+msgid "Drag files here or <span>browse</span>"
+msgstr "Arrastra archivos aquí o <span>busca</span>"
+
+msgid "File is too big ({{filesize}}MB). Max filesize is {{maxFilesize}}MB."
+msgstr "El archivo es demasiado grande ({{filesize}}MB). El tamaño máximo es {{maxFilesize}}MB."
+
+msgid "You can't upload files of this type."
+msgstr "No puedes subir archivos de este tipo."
+
+msgid "You can't upload any more files."
+msgstr "No puedes subir más archivos."
+
+msgid "Upload canceled."
+msgstr "Subida cancelada."
+
+msgid "Remove file"
+msgstr "Eliminar archivo"
+
+msgid "Product total"
+msgstr "Total del producto"
+
+msgid "Options total"
+msgstr "Total de opciones"
+
+msgid "Grand total"
+msgstr "Total"
+
+msgid "Reduce"
+msgstr "Reducir"
+
+msgid "Increase"
+msgstr "Aumentar"
