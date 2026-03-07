@@ -3269,23 +3269,58 @@ body.home-vistaprint .site-header .ast-container {
 .woocommerce-loop-product__link .price,
 .wc-block-grid__product-price,
 .wc-block-components-product-price {
-  color: var(--secondary-color) !important;
-  font-size: 1.2rem !important;
+  color: #fff !important;
+  font-size: 1.05rem !important;
   font-weight: 800 !important;
   line-height: 1.3 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  position: relative;
+}
+
+.woocommerce ul.products li.product .price > .woocommerce-Price-amount,
+.wc-block-grid__product-price .woocommerce-Price-amount {
+  background-color: var(--secondary-color);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 4px 14px 4px 10px;
+  border-radius: 3px 0 0 3px;
+  position: relative;
+  display: inline-block;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+  padding-right: 20px;
 }
 
 .woocommerce ul.products li.product .price del,
 .wc-block-grid__product-price del {
   color: #aaa !important;
-  font-size: 0.9rem !important;
+  font-size: 0.85rem !important;
   font-weight: 400 !important;
-  margin-right: 0.3rem;
+  background: none !important;
+  clip-path: none !important;
+  padding: 0 !important;
+}
+
+.woocommerce ul.products li.product .price del .woocommerce-Price-amount,
+.wc-block-grid__product-price del .woocommerce-Price-amount {
+  background: none !important;
+  color: #aaa !important;
+  font-weight: 400 !important;
+  clip-path: none !important;
+  padding: 0 !important;
+  font-size: 0.85rem !important;
 }
 
 .woocommerce ul.products li.product .price ins,
 .wc-block-grid__product-price ins {
   text-decoration: none !important;
-  color: var(--secondary-color) !important;
+}
+
+.woocommerce ul.products li.product .price ins .woocommerce-Price-amount,
+.wc-block-grid__product-price ins .woocommerce-Price-amount {
+  background-color: var(--secondary-color) !important;
+  color: #fff !important;
   font-weight: 800 !important;
 }
