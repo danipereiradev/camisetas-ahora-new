@@ -5,6 +5,22 @@ Updated: 2025-11-10 12:32:37
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap');
 
+@font-face {
+  font-family: "Franklin Gothic Book";
+  src: url('/horultoo/2026/03/FranklinGothic-Book.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Franklin Gothic Condensed";
+  src: url('/horultoo/2026/03/FranklinGothic-Condensed.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ================================================
    TIPOGRAFÍA GLOBAL
    ================================================ */
