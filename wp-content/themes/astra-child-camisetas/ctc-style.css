@@ -194,9 +194,14 @@ body.home-vistaprint .site-header .ast-container {
   margin-right: auto !important;
 }
 
-/* ================================================
-   EFECTO BOXED - Hero Full Width, Contenido 1240px
-   ================================================ */
+/* Prevenir overflow horizontal global */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+
 
 .hero-spreadshirt,
 .hero-realthread,
@@ -410,6 +415,9 @@ body.home-vistaprint .site-header .ast-container {
 
   .product-carousel {
     padding: 2rem;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .showcase-item {
