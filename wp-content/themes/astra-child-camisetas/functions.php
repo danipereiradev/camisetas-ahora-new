@@ -42,13 +42,10 @@ function fix_woocommerce_asset_urls() {
 }
 add_action('wp_head', 'fix_woocommerce_asset_urls', 999);
 
-// Sobrescribir colores antiguos generados dinámicamente
 function override_old_woocommerce_colors() {
     ?>
     <style type="text/css">
-    /* Sobrescribir cualquier instancia del color antiguo #96598A */
-    
-    /* Tiered Pricing específico (con cualquier ID) */
+    /* Tiered Pricing */
     [id*="tiered-pricing"] .tiered-pricing--active td,
     [class*="tiered-pricing"] .tiered-pricing--active td,
     .tiered-pricing--active td,
@@ -57,7 +54,7 @@ function override_old_woocommerce_colors() {
         background-color: var(--secondary-color) !important;
     }
     
-    /* Sobrescribir TODOS los elementos con inline styles del color antiguo */
+    /* Inline styles */
     [style*="background-color: #96598A" i],
     [style*="background-color:#96598A" i],
     [style*="background: #96598A" i],
@@ -67,14 +64,14 @@ function override_old_woocommerce_colors() {
         background: var(--secondary-color) !important;
     }
     
-    /* Sobrescribir color de texto */
+    /* Text color */
     [style*="color: #96598A" i],
     [style*="color:#96598A" i],
     [style*="color: rgb(150, 89, 138)" i] {
         color: var(--secondary-color) !important;
     }
     
-    /* Sobrescribir border-color */
+    /* Border color */
     [style*="border-color: #96598A" i],
     [style*="border-color:#96598A" i],
     [style*="border: 1px solid #96598A" i],
@@ -82,14 +79,14 @@ function override_old_woocommerce_colors() {
         border-color: var(--secondary-color) !important;
     }
     
-    /* Sobrescribir cualquier ID aleatorio generado dinámicamente */
+    /* Dynamic IDs */
     [id^="#"] td,
     [id*="lx"] td.active,
     [id*="tiered"] td.active {
         background-color: var(--secondary-color) !important;
     }
     
-    /* WooCommerce botones y elementos específicos */
+    /* WooCommerce buttons */
     .woocommerce a.button.alt,
     .woocommerce button.button.alt,
     .woocommerce input.button.alt,
@@ -112,7 +109,7 @@ function override_old_woocommerce_colors() {
         background-color: var(--secondary-color-dark) !important;
     }
     
-    /* WooCommerce price, sale badge */
+    /* WooCommerce price */
     .woocommerce div.product p.price,
     .woocommerce div.product span.price,
     .woocommerce ul.products li.product .price {
@@ -151,11 +148,7 @@ function override_old_woocommerce_colors() {
 }
 add_action('wp_head', 'override_old_woocommerce_colors', 9999);
 
-// ===== SISTEMA DE IMAGEN DE CATÁLOGO =====
-// Permite tener una imagen diferente solo para páginas de catálogo (shop, archivo, categorías)
-// NO afecta al carrito, mini-cart, checkout ni single product
 
-// 1. Añadir metabox en el editor de productos
 function add_catalog_image_metabox() {
     add_meta_box(
         'catalog_image_metabox',
@@ -168,7 +161,6 @@ function add_catalog_image_metabox() {
 }
 add_action('add_meta_boxes', 'add_catalog_image_metabox');
 
-// 2. Renderizar el metabox
 function render_catalog_image_metabox($post) {
     wp_nonce_field('save_catalog_image', 'catalog_image_nonce');
     
@@ -228,7 +220,6 @@ function render_catalog_image_metabox($post) {
                 $('#catalog_image_id').val(attachment.id);
                 $('.catalog-image-preview').html('<img src="' + attachment.url + '" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px;" />');
                 
-                // Mostrar botón de eliminar
                 if (!$('#remove_catalog_image_button').length) {
                     $('#select_catalog_image_button').after('<button type="button" class="button button-link-delete" id="remove_catalog_image_button" style="color: #a00; margin-left: 5px;">Eliminar</button>');
                     bindRemoveButton();
@@ -240,7 +231,6 @@ function render_catalog_image_metabox($post) {
             frame.open();
         });
         
-        // Función para bind el botón de eliminar
         function bindRemoveButton() {
             $('#remove_catalog_image_button').on('click', function(e) {
                 e.preventDefault();
@@ -251,31 +241,25 @@ function render_catalog_image_metabox($post) {
             });
         }
         
-        // Bind inicial si existe el botón
         bindRemoveButton();
     });
     </script>
     <?php
 }
 
-// 3. Guardar el metabox
 function save_catalog_image_metabox($post_id) {
-    // Verificar nonce
     if (!isset($_POST['catalog_image_nonce']) || !wp_verify_nonce($_POST['catalog_image_nonce'], 'save_catalog_image')) {
         return;
     }
     
-    // Verificar autosave
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
         return;
     }
     
-    // Verificar permisos
     if (!current_user_can('edit_post', $post_id)) {
         return;
     }
     
-    // Guardar o eliminar
     if (isset($_POST['catalog_image_id']) && !empty($_POST['catalog_image_id'])) {
         update_post_meta($post_id, '_catalog_image_id', absint($_POST['catalog_image_id']));
     } else {
@@ -284,20 +268,15 @@ function save_catalog_image_metabox($post_id) {
 }
 add_action('save_post_product', 'save_catalog_image_metabox');
 
-// 4. Cambiar la imagen SOLO en páginas de archivo (shop, categorías)
-// IMPORTANTE: NO afecta a carrito, mini-cart, checkout ni single product
 function use_catalog_image_in_archive($image, $product, $size, $attr, $placeholder, $image_context) {
-    // EXCLUIR explícitamente: single product, carrito, mini-cart, checkout
     if (is_product() || is_cart() || is_checkout() || is_account_page()) {
         return $image;
     }
     
-    // EXCLUIR también si estamos en un contexto de carrito (AJAX)
     if (did_action('woocommerce_before_cart') || did_action('woocommerce_before_mini_cart')) {
         return $image;
     }
     
-    // Solo aplicar en páginas de shop/categorías/archivo
     if (!is_shop() && !is_product_category() && !is_product_tag() && !is_archive()) {
         return $image;
     }
@@ -314,8 +293,6 @@ function use_catalog_image_in_archive($image, $product, $size, $attr, $placehold
     return $image;
 }
 add_filter('woocommerce_product_get_image', 'use_catalog_image_in_archive', 10, 6);
-
-// ===== FIN SISTEMA DE IMAGEN DE CATÁLOGO =====
 
 function wapf_lcp_capture_preview_script() {
     if (!is_product()) return;
@@ -596,12 +573,10 @@ function wapf_lcp_add_nonce() {
 add_action('wp_head', 'wapf_lcp_add_nonce');
 
 function wapf_lcp_save_preview_to_cart($cart_item_data, $product_id, $variation_id, $quantity) {
-    // Guardar preview de LCP si existe
     if (isset($_POST['wapf_lcp_preview_url']) && !empty($_POST['wapf_lcp_preview_url'])) {
         $cart_item_data['wapf_lcp_preview'] = esc_url_raw($_POST['wapf_lcp_preview_url']);
     }
     
-    // Guardar preview del producto personalizado si existe
     if (isset($_POST['wapf_product_preview_url']) && !empty($_POST['wapf_product_preview_url'])) {
         $cart_item_data['wapf_product_preview'] = esc_url_raw($_POST['wapf_product_preview_url']);
     }
@@ -610,9 +585,7 @@ function wapf_lcp_save_preview_to_cart($cart_item_data, $product_id, $variation_
 }
 add_filter('woocommerce_add_cart_item_data', 'wapf_lcp_save_preview_to_cart', 10, 4);
 
-// Mostrar el preview personalizado (variación + diseño) en el carrito
 function wapf_show_custom_preview_in_cart($product_image, $cart_item, $cart_item_key) {
-    // Si existe un preview del producto personalizado, mostrarlo
     if (isset($cart_item['wapf_product_preview']) && !empty($cart_item['wapf_product_preview'])) {
         $preview_url = esc_url($cart_item['wapf_product_preview']);
         $product = $cart_item['data'];
@@ -627,7 +600,6 @@ function wapf_show_custom_preview_in_cart($product_image, $cart_item, $cart_item
         return $custom_image;
     }
     
-    // Si existe un preview LCP, mostrarlo
     if (isset($cart_item['wapf_lcp_preview']) && !empty($cart_item['wapf_lcp_preview'])) {
         $preview_url = esc_url($cart_item['wapf_lcp_preview']);
         $product = $cart_item['data'];
@@ -642,28 +614,23 @@ function wapf_show_custom_preview_in_cart($product_image, $cart_item, $cart_item
         return $custom_image;
     }
     
-    // Si no hay preview personalizado, devolver la imagen por defecto
     return $product_image;
 }
 add_filter('woocommerce_cart_item_thumbnail', 'wapf_show_custom_preview_in_cart', 10, 3);
 
-// Mostrar la imagen en el checkout dentro del nombre del producto
 function wapf_show_preview_in_checkout_name($product_name, $cart_item, $cart_item_key) {
-    // Solo aplicar en checkout
     if (!is_checkout()) {
         return $product_name;
     }
     
     $preview_url = '';
     
-    // Verificar si existe un preview personalizado
     if (isset($cart_item['wapf_product_preview']) && !empty($cart_item['wapf_product_preview'])) {
         $preview_url = esc_url($cart_item['wapf_product_preview']);
     } elseif (isset($cart_item['wapf_lcp_preview']) && !empty($cart_item['wapf_lcp_preview'])) {
         $preview_url = esc_url($cart_item['wapf_lcp_preview']);
     }
     
-    // Si hay preview, agregarlo al nombre
     if ($preview_url) {
         $product = $cart_item['data'];
         $thumbnail = sprintf(
@@ -672,7 +639,6 @@ function wapf_show_preview_in_checkout_name($product_name, $cart_item, $cart_ite
             esc_attr($product->get_name())
         );
         
-        // Agregar la imagen antes del nombre
         return $thumbnail . ' ' . $product_name;
     }
     
@@ -680,12 +646,9 @@ function wapf_show_preview_in_checkout_name($product_name, $cart_item, $cart_ite
 }
 add_filter('woocommerce_cart_item_name', 'wapf_show_preview_in_checkout_name', 10, 3);
 
-// Eliminar el enlace del nombre del producto en la página del carrito
 function remove_cart_product_link($product_name, $cart_item, $cart_item_key) {
-    // Solo aplicar en la página del carrito
     if (is_cart()) {
         $product = $cart_item['data'];
-        // Devolver solo el nombre sin enlace
         return $product->get_name();
     }
     
@@ -693,17 +656,10 @@ function remove_cart_product_link($product_name, $cart_item, $cart_item_key) {
 }
 add_filter('woocommerce_cart_item_name', 'remove_cart_product_link', 20, 3);
 
-
-
-
-// Forzar la visualización de campos WAPF en el mini-cart (solo filtro en memoria, sin escritura a BD)
-
-// FORZAR que WAPF muestre TODOS los campos en el mini-cart, sin importar la configuración
 add_filter('option_wapf_settings_show_in_mini_cart', function($value) {
     return 'yes';
 }, 999);
 
-// También forzar en las otras páginas para asegurar consistencia
 add_filter('option_wapf_settings_show_in_cart', function($value) {
     return 'yes';
 }, 999);
@@ -711,11 +667,6 @@ add_filter('option_wapf_settings_show_in_cart', function($value) {
 add_filter('option_wapf_settings_show_in_checkout', function($value) {
     return 'yes';
 }, 999);
-
-// Estilos de mini-cart/carrito/checkout movidos a ctc-style.css
-
-
-
 
 function preserve_variation_selections() {
     if (!is_product()) return;
@@ -968,7 +919,6 @@ function wapf_preserve_uploads_on_variation_change() {
         $(window).on('load', function() { setTimeout(function() { saveUploadedFiles(); }, 1500); });
         $(document).on('wapf/file_uploaded', function(e, data) {
             if (!isRestoringFiles) {
-                // El usuario subió un archivo, limpiar el flag de "manualmente borrado"
                 if (data && data.fieldId) {
                     var dzId = 'wapf-dz-' + data.fieldId;
                     delete manuallyCleared[dzId];
@@ -978,16 +928,12 @@ function wapf_preserve_uploads_on_variation_change() {
         });
         $(document).on('wapf/file_deleted', function(e, data) {
             if (!isRestoringFiles) {
-                // El usuario eliminó el archivo manualmente
                 if (data && data.fieldId) {
                     var dzId = 'wapf-dz-' + data.fieldId;
                     manuallyCleared[dzId] = true;
                     
-                    // Limpiar los archivos persistentes para este dropzone
                     delete persistentFiles[dzId];
                     delete persistentInputs[data.fieldId];
-                    
-                    console.log('Archivo eliminado manualmente:', dzId);
                 }
                 setTimeout(function() { saveUploadedFiles(); }, 200);
             }
@@ -1001,8 +947,7 @@ function wapf_preserve_uploads_on_variation_change() {
 add_action('wp_footer', 'wapf_preserve_uploads_on_variation_change', 999);
 
 /**
- * AJAX add-to-cart simplificado
- * Miniatura del carrito = imagen base + diseño (sin variaciones de color)
+ * AJAX add-to-cart
  */
 function prevent_wapf_upload_clear_on_add_to_cart() {
     if (!is_product()) return;
@@ -1013,7 +958,6 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
         var lastAddToCartTime = 0;
         var isRestoringFiles = false;
         
-        // Habilitar botón de añadir al carrito (excepto cuando se está capturando preview)
         var forceEnableButton = function() {
             if (isAddingToCart) return;
             var $button = $('.single_add_to_cart_button');
@@ -1023,12 +967,10 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
         };
         $(document.body).on('woocommerce_variation_has_changed updated_checkout', forceEnableButton);
 
-        // Variables para protección de Dropzone (solo en memoria)
         var persistentFiles = {};
         var persistentInputs = {};
-        var manuallyCleared = {}; // Flag para saber si el usuario borró manualmente
+        var manuallyCleared = {};
         
-        // Guardar archivos de Dropzone
         var saveDropzoneFiles = function() {
             if (typeof Dropzone === 'undefined' || !Dropzone.instances.length) return;
             
@@ -1049,7 +991,6 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                         };
                     });
                     
-                    // Guardar también el valor del input asociado
                     var fieldId = dzId.replace('wapf-dz-', '');
                     var $input = $('input[data-field-id="' + fieldId + '"]');
                     if ($input.length && $input.val()) {
@@ -1059,7 +1000,6 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
             });
         };
         
-        // Restaurar archivos de Dropzone
         var restoreDropzoneFiles = function() {
             if (typeof Dropzone === 'undefined' || !Dropzone.instances.length) return;
             
@@ -1068,7 +1008,6 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
             Dropzone.instances.forEach(function(dz) {
                 var dzId = dz.element.id;
                 
-                // NO restaurar si el usuario borró manualmente
                 if (manuallyCleared[dzId]) {
                     return;
                 }
@@ -1095,7 +1034,6 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                         dz.emit("complete", mockFile);
                     });
                     
-                    // Restaurar el valor del input asociado
                     var fieldId = dzId.replace('wapf-dz-', '');
                     if (persistentInputs[fieldId]) {
                         var $input = $('input[data-field-id="' + fieldId + '"]');
@@ -1115,7 +1053,6 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
             }, 100);
         };
         
-        // Proteger Dropzone de limpieza
         var setupDropzoneProtection = function() {
             if (typeof Dropzone === 'undefined' || !Dropzone.instances.length) {
                 setTimeout(setupDropzoneProtection, 500);
@@ -1126,13 +1063,10 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                 var dzId = dz.element.id;
                 var originalRemoveAll = dz.removeAllFiles.bind(dz);
                 
-                // Detectar cuando el usuario hace clic en la X para borrar un archivo
                 dz.on('removedfile', function(file) {
                     if (!isRestoringFiles) {
-                        console.log('Usuario eliminó archivo de:', dzId);
                         manuallyCleared[dzId] = true;
                         
-                        // Limpiar los archivos persistentes
                         delete persistentFiles[dzId];
                         var fieldId = dzId.replace('wapf-dz-', '');
                         delete persistentInputs[fieldId];
@@ -1140,13 +1074,11 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                 });
                 
                 dz.removeAllFiles = function(cancelIfNecessary) {
-                    // Si el usuario borró manualmente, permitir la eliminación
                     if (manuallyCleared[dzId]) {
                         return originalRemoveAll(cancelIfNecessary);
                     }
                     
                     if (persistentFiles[dzId] && persistentFiles[dzId].length > 0) {
-                        // Asegurar que el input mantenga su valor antes de restaurar
                         var fieldId = dzId.replace('wapf-dz-', '');
                         if (persistentInputs[fieldId]) {
                             var $input = $('input[data-field-id="' + fieldId + '"]');
@@ -1162,14 +1094,12 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
             });
         };
         
-        // Overlay de estado del carrito
         var showNotification = function(message, type) {
             var state = (type === 'error') ? 'error' : 'success';
             window.updateCartOverlay(state);
             window.hideCartOverlay(2800);
         };
         
-        // Cargar html2canvas
         var loadHtml2Canvas = function(callback) {
             if (typeof html2canvas !== 'undefined') {
                 callback();
@@ -1186,7 +1116,6 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
             document.head.appendChild(script);
         };
         
-        // Capturar preview UNA VEZ (imagen base + diseño)
         var captureProductPreview = function(callback) {
             var $activeImage = $('.woocommerce-product-gallery__image.flex-active-slide img').first();
             if (!$activeImage.length) {
@@ -1255,23 +1184,19 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                     });
                 });
             } else {
-                // Sin LCP, solo proceder
                 if (callback) callback();
             }
         };
         
-        // Cuando se sube un archivo, capturar preview
         $(document).on('wapf/file_uploaded', function(e, data) {
             setTimeout(saveDropzoneFiles, 100);
             setTimeout(forceEnableButton, 150);
             
-            // Capturar preview después de subir archivo
             setTimeout(function() {
                 captureProductPreview();
             }, 800);
         });
         
-        // IMPORTANTE: Recapturar preview cuando cambia la variación (color/talla)
         $('form.variations_form').on('found_variation', function(event, variation) {
             setTimeout(function() {
                 if (typeof Dropzone !== 'undefined' && Dropzone.instances.length > 0) {
@@ -1308,12 +1233,10 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
             }, 600);
         });
         
-        // Guardar cuando cambia el input de archivo WAPF
         $(document).on('change', 'input[data-is-file="1"]', function() {
             setTimeout(saveDropzoneFiles, 100);
         });
         
-        // AJAX add-to-cart
         $(document).on('click', '.single_add_to_cart_button', function(e) {
             var now = Date.now();
             
@@ -1329,8 +1252,6 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
                     var dzId = dz.element.id;
                     var fieldId = dzId.replace('wapf-dz-', '');
                     
-                    // Limpiar el flag de "manualmente borrado" al añadir al carrito
-                    // para que el archivo se mantenga para el siguiente producto
                     delete manuallyCleared[dzId];
                     
                     if (persistentInputs[fieldId]) {
@@ -1398,7 +1319,6 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
         
         setupDropzoneProtection();
         
-        // Restaurar archivos y sincronizar inputs por eventos en lugar de polling
         function syncDropzoneInputs() {
             if (typeof Dropzone === 'undefined' || !Dropzone.instances.length) return;
             Dropzone.instances.forEach(function(dz) {
@@ -1484,26 +1404,21 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
 add_action('wp_footer', 'prevent_wapf_upload_clear_on_add_to_cart', 1001);
 
 /**
- * Handler AJAX para añadir al carrito sin recargar la página
- * Compatible con Advanced Product Fields
+ * Handler AJAX para añadir al carrito
  */
 function wapf_ajax_add_to_cart_handler() {
-    // Verificar que sea una petición AJAX
     if (!defined('DOING_AJAX') || !DOING_AJAX) {
         return;
     }
     
-    // Obtener datos del producto
     $product_id = apply_filters('woocommerce_add_to_cart_product_id', absint($_POST['product_id'] ?? $_POST['add-to-cart'] ?? 0));
     $quantity = empty($_POST['quantity']) ? 1 : wc_stock_amount(wp_unslash($_POST['quantity']));
     $variation_id = absint($_POST['variation_id'] ?? 0);
     $variation = array();
     
-    // Si es un producto variable, obtener los atributos de variación
     if ($variation_id) {
         $product = wc_get_product($variation_id);
         
-        // Obtener atributos de variación del POST
         foreach ($_POST as $key => $value) {
             if (strpos($key, 'attribute_') === 0) {
                 $variation[sanitize_title($key)] = sanitize_text_field($value);
@@ -1513,7 +1428,6 @@ function wapf_ajax_add_to_cart_handler() {
         $product = wc_get_product($product_id);
     }
     
-    // Verificar que el producto existe
     if (!$product) {
         wp_send_json_error(array(
             'error' => true,
@@ -1522,23 +1436,16 @@ function wapf_ajax_add_to_cart_handler() {
         return;
     }
     
-    // Preparar cart_item_data para incluir campos personalizados de WAPF
     $cart_item_data = array();
     
-    // Guardar preview del producto personalizado si existe en el POST
     if (isset($_POST['wapf_product_preview_url']) && !empty($_POST['wapf_product_preview_url'])) {
         $cart_item_data['wapf_product_preview'] = esc_url_raw($_POST['wapf_product_preview_url']);
     }
     
-    // Guardar preview de LCP si existe en el POST
     if (isset($_POST['wapf_lcp_preview_url']) && !empty($_POST['wapf_lcp_preview_url'])) {
         $cart_item_data['wapf_lcp_preview'] = esc_url_raw($_POST['wapf_lcp_preview_url']);
     }
     
-    // WAPF guarda sus datos en el POST, dejar que WAPF los procese
-    // Los hooks de WAPF capturarán automáticamente los datos de campos personalizados
-    
-    // Añadir al carrito
     $passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variation);
     
     if ($passed_validation) {
@@ -1563,19 +1470,17 @@ function wapf_ajax_add_to_cart_handler() {
     }
 }
 
-// Registrar el handler AJAX para usuarios logueados y no logueados
 add_action('wp_ajax_woocommerce_ajax_add_to_cart', 'wapf_ajax_add_to_cart_handler');
 add_action('wp_ajax_nopriv_woocommerce_ajax_add_to_cart', 'wapf_ajax_add_to_cart_handler');
 
 /**
- * Habilitar soporte para añadir al carrito via AJAX en productos simples y variables
+ * Habilitar AJAX add-to-cart params
  */
 function wapf_enable_ajax_add_to_cart_params() {
     if (!is_product()) {
         return;
     }
     
-    // Asegurar que los parámetros de WooCommerce AJAX estén disponibles
     if (!wp_script_is('wc-add-to-cart', 'enqueued')) {
         wp_enqueue_script('wc-add-to-cart');
     }
@@ -1583,7 +1488,7 @@ function wapf_enable_ajax_add_to_cart_params() {
 add_action('wp_enqueue_scripts', 'wapf_enable_ajax_add_to_cart_params');
 
 /**
- * Añadir meta boxes para imágenes de fondo de secciones en plantilla RealThread
+ * Meta boxes para imágenes de fondo en plantilla RealThread
  */
 function realthread_add_background_metaboxes() {
     add_meta_box(
@@ -1651,7 +1556,6 @@ function realthread_backgrounds_callback($post) {
         echo '<div class="carousel-product-section" style="margin-bottom: 30px; padding: 20px; background: #f9f9f9; border-radius: 5px; border: 1px solid #ddd;">';
         echo '<h4 style="margin-top: 0; color: var(--secondary-color);">Producto ' . $i . '</h4>';
         
-        // Imagen
         echo '<div style="margin-bottom: 15px;">';
         echo '<label style="display: block; font-weight: 600; margin-bottom: 5px;">Imagen del Producto:</label>';
         echo '<div class="carousel-image-container">';
@@ -1666,13 +1570,11 @@ function realthread_backgrounds_callback($post) {
         }
         echo '</div>';
         
-        // Título
         echo '<div style="margin-bottom: 15px;">';
         echo '<label style="display: block; font-weight: 600; margin-bottom: 5px;">Título del Producto:</label>';
         echo '<input type="text" name="carousel_product_' . $i . '_title" value="' . esc_attr($product_title) . '" style="width: 100%; padding: 8px;" placeholder="Ej: Camiseta Una Impresión" />';
         echo '</div>';
         
-        // Enlace
         echo '<div style="margin-bottom: 15px;">';
         echo '<label style="display: block; font-weight: 600; margin-bottom: 5px;">Enlace del Producto:</label>';
         echo '<input type="text" name="carousel_product_' . $i . '_link" value="' . esc_attr($product_link) . '" style="width: 100%; padding: 8px;" placeholder="/producto/camiseta-personalizada/" />';
@@ -1681,13 +1583,11 @@ function realthread_backgrounds_callback($post) {
         echo '</div>';
     }
     
-    // JavaScript para el media uploader
     ?>
     <script>
     jQuery(document).ready(function($) {
         var mediaUploader;
         
-        // Upload para backgrounds
         $('.realthread-upload-btn').on('click', function(e) {
             e.preventDefault();
             var button = $(this);
@@ -1722,7 +1622,6 @@ function realthread_backgrounds_callback($post) {
             mediaUploader.open();
         });
         
-        // Upload para carousel
         $('.carousel-upload-btn').on('click', function(e) {
             e.preventDefault();
             var button = $(this);
@@ -1752,7 +1651,6 @@ function realthread_backgrounds_callback($post) {
             carouselUploader.open();
         });
         
-        // Remove background
         $(document).on('click', '.realthread-remove-btn', function(e) {
             e.preventDefault();
             var button = $(this);
@@ -1764,7 +1662,6 @@ function realthread_backgrounds_callback($post) {
             button.remove();
         });
         
-        // Remove carousel
         $(document).on('click', '.carousel-remove-btn', function(e) {
             e.preventDefault();
             var button = $(this);
@@ -1814,7 +1711,6 @@ function realthread_save_backgrounds($post_id) {
         }
     }
     
-    // Guardar productos del carousel
     for ($i = 1; $i <= 4; $i++) {
         $image_key = "carousel_product_{$i}_image";
         $title_key = "carousel_product_{$i}_title";
@@ -1927,13 +1823,6 @@ function ctc_custom_footer() {
         <div class="ctc-footer-bottom">
             <div class="ctc-footer-bottom-left">
                 <p>&copy; <?php echo esc_html(date('Y')); ?> <?php echo esc_html($site_name); ?>. Todos los derechos reservados. Diseño web por <a href="https://danipereiraweb.es" target="_blank" rel="noopener">danipereiraweb.es</a></p>
-                <p>
-                    <a href="<?php echo esc_url(get_privacy_policy_url()); ?>">Privacidad</a>
-                    <span>·</span>
-                    <a href="<?php echo esc_url(home_url('/aviso-legal')); ?>">Aviso legal</a>
-                    <span>·</span>
-                    <a href="<?php echo esc_url(home_url('/terminos-y-condiciones')); ?>">Términos</a>
-                </p>
             </div>
             <div class="ctc-footer-bottom-payments">
                 <img src="/horultoo/2025/01/logos-tarjetas-global-payments-300x57.png" alt="Métodos de pago aceptados" loading="lazy">
@@ -1944,7 +1833,6 @@ function ctc_custom_footer() {
 }
 add_action('astra_footer_before', 'ctc_custom_footer', 5);
 
-/* Ocultar el footer nativo de Astra */
 function ctc_remove_astra_footer() {
     remove_action('astra_footer', 'astra_footer_markup');
 }

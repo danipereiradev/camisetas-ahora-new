@@ -201,8 +201,6 @@ body {
   max-width: 100%;
 }
 
-
-
 .hero-spreadshirt,
 .hero-realthread,
 .hero-vistaprint {
@@ -432,9 +430,9 @@ body {
   }
 
   .product-title-hero {
-    font-size: 0.85rem !important;
+    font-size: 1.5rem !important;
     letter-spacing: 0.5px !important;
-    padding: 0 0.5rem;
+    padding: 0 2rem !important;
     white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -3050,11 +3048,27 @@ body {
   line-height: 1.5;
 }
 
-/* Imagen de galería en página de producto simple */
+/* Galería de producto: sticky hasta la descripción */
+.single-product div.product {
+  align-items: flex-start !important;
+}
+
+.single-product .woocommerce-product-gallery {
+  position: sticky;
+  top: 80px;
+  align-self: flex-start;
+}
+
 .single-product .woocommerce-product-gallery__image img,
 .single-product .woocommerce-product-gallery__wrapper img {
   border: 1px solid #ebebeb !important;
   border-radius: 6px;
+}
+
+@media (max-width: 768px) {
+  .single-product .woocommerce-product-gallery {
+    position: static;
+  }
 }
 
 /* ================================================
