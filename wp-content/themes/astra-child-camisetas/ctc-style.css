@@ -3012,3 +3012,228 @@ body.home-vistaprint .site-header .ast-container {
   border: 1px solid #ebebeb !important;
   border-radius: 6px;
 }
+
+/* ================================================
+   FOOTER PERSONALIZADO
+   ================================================ */
+
+.ctc-footer {
+  background-color: #1a1a1a;
+  color: #ccc;
+  padding: 4rem 2rem 0;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.ctc-footer-inner {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 3rem;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Col 1: Brand */
+.ctc-footer-logo img {
+  max-width: 140px;
+  height: auto;
+  filter: brightness(0) invert(1);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.ctc-footer-site-name {
+  font-family: 'Franklin Gothic Condensed', 'Franklin Gothic Book', Arial, sans-serif;
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.ctc-footer-tagline {
+  color: #aaa;
+  font-size: 0.85rem;
+  margin-bottom: 1.2rem;
+  line-height: 1.6;
+}
+
+.ctc-footer-address {
+  font-style: normal;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+.ctc-footer-address a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.ctc-footer-address a:hover {
+  color: #fff;
+}
+
+/* Headings footer */
+.ctc-footer-heading {
+  font-family: 'Franklin Gothic Condensed', 'Franklin Gothic Book', Arial, sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.12em !important;
+  color: #fff !important;
+  margin-bottom: 1.2rem !important;
+  margin-top: 0 !important;
+}
+
+/* Nav lists */
+.ctc-footer-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ctc-footer-nav li {
+  margin-bottom: 0.5rem;
+}
+
+.ctc-footer-nav li a,
+.ctc-footer-nav a {
+  color: #aaa;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
+  display: inline-block;
+}
+
+.ctc-footer-nav li a:hover,
+.ctc-footer-nav a:hover {
+  color: var(--secondary-color);
+}
+
+/* Social icons */
+.ctc-footer-social {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.ctc-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+  color: #ccc;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.ctc-social-link:hover {
+  background: var(--secondary-color);
+  color: #fff;
+}
+
+.ctc-social-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Trust list */
+.ctc-footer-trust-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.ctc-footer-trust-list li {
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+/* Footer bottom bar */
+.ctc-footer-bottom {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 1.25rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ctc-footer-bottom p {
+  margin: 0;
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.ctc-footer-bottom-links {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.ctc-footer-bottom-links a {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: color 0.2s ease;
+}
+
+.ctc-footer-bottom-links a:hover {
+  color: var(--secondary-color);
+}
+
+.ctc-footer-bottom-links span {
+  color: #444;
+}
+
+/* Ocultar el footer nativo de Astra */
+.site-footer.ast-small-footer,
+.site-footer {
+  display: none !important;
+}
+
+/* ================================================
+   FOOTER RESPONSIVE
+   ================================================ */
+
+@media (max-width: 1024px) {
+  .ctc-footer-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .ctc-footer-inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .ctc-footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .ctc-footer-bottom-links {
+    justify-content: center;
+  }
+}
