@@ -1021,10 +1021,12 @@ body.home-vistaprint .site-header .ast-container {
 
 .product-carousel {
   position: relative;
-  width: 100%;
-  min-height: 500px;
-  height: 500px;
+  width: 120%;
+  min-height: 600px;
+  height: 600px;
   padding: 2rem;
+  margin-left: -10%;
+  margin-right: -10%;
 }
 
 .carousel-item {
