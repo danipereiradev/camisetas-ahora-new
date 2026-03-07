@@ -1927,7 +1927,7 @@ function ctc_custom_footer() {
         <div class="ctc-footer-bottom">
             <div class="ctc-footer-bottom-left">
                 <p>&copy; <?php echo esc_html(date('Y')); ?> <?php echo esc_html($site_name); ?>. Todos los derechos reservados. Diseño web por <a href="https://danipereiraweb.es" target="_blank" rel="noopener">danipereiraweb.es</a></p>
-                <p class="ctc-footer-bottom-links">
+                <p>
                     <a href="<?php echo esc_url(get_privacy_policy_url()); ?>">Privacidad</a>
                     <span>·</span>
                     <a href="<?php echo esc_url(home_url('/aviso-legal')); ?>">Aviso legal</a>

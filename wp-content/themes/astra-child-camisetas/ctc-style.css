@@ -3099,7 +3099,7 @@ body.home-vistaprint .site-header .ast-container {
   font-weight: bold !important;
   text-transform: uppercase !important;
   letter-spacing: 0.12em !important;
-  color: #fff !important;
+  color: var(--secondary-color);
   margin-bottom: 1.2rem !important;
   margin-top: 0 !important;
 }
@@ -3222,39 +3222,14 @@ body.home-vistaprint .site-header .ast-container {
 .ctc-footer-bottom-payments img {
   height: 28px;
   width: auto;
-  opacity: 0.6;
-  filter: brightness(0) invert(1);
-  transition: opacity 0.2s ease;
 }
 
-.ctc-footer-bottom-payments img:hover {
-  opacity: 0.9;
-}
-
-.ctc-footer-bottom-links {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.ctc-footer-bottom-links a {
-  color: #666;
-  text-decoration: none;
-  font-size: 0.8rem;
-  transition: color 0.2s ease;
-}
-
-.ctc-footer-bottom-links a:hover {
-  color: var(--secondary-color);
-}
-
-.ctc-footer-bottom-links span {
-  color: #444;
-}
 
 /* Ocultar el footer nativo de Astra */
 .site-footer.ast-small-footer,
-.site-footer {
+.site-footer,
+.site-below-footer-wrap,
+.ast-builder-grid-row-container.site-footer-focus-item {
   display: none !important;
 }
 
@@ -3283,9 +3258,5 @@ body.home-vistaprint .site-header .ast-container {
 
   .ctc-footer-bottom-left {
     align-items: center;
-  }
-
-  .ctc-footer-bottom-links {
-    justify-content: center;
   }
 }
