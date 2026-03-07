@@ -1920,10 +1920,10 @@ function ctc_custom_footer() {
                 <div class="ctc-footer-trust">
                     <h4 class="ctc-footer-heading" style="margin-top:1.5rem;">Garantías</h4>
                     <ul class="ctc-footer-trust-list">
-                        <li>✅ Envío rápido en 5–7 días</li>
-                        <li>✅ Pago seguro SSL</li>
-                        <li>✅ Satisfacción garantizada</li>
-                        <li>✅ Atención personalizada</li>
+                        <li><span class="feature-icon">✓</span> Envío rápido en 5–7 días</li>
+                        <li><span class="feature-icon">✓</span> Pago seguro SSL</li>
+                        <li><span class="feature-icon">✓</span> Satisfacción garantizada</li>
+                        <li><span class="feature-icon">✓</span> Atención personalizada</li>
                     </ul>
                 </div>
             </div>

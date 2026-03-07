@@ -3175,6 +3175,14 @@ body.home-vistaprint .site-header .ast-container {
 .ctc-footer-trust-list li {
   color: #aaa;
   font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ctc-footer-trust-list li .feature-icon {
+  color: var(--secondary-color);
+  font-weight: 700;
 }
 
 /* Footer bottom bar */
