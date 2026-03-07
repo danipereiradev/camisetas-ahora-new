@@ -423,6 +423,19 @@ body.home-vistaprint .site-header .ast-container {
     height: 100%;
   }
 
+  .product-title-hero {
+    font-size: 0.85rem !important;
+    letter-spacing: 0.5px !important;
+    padding: 0 0.5rem;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .product-carousel {
+    overflow: hidden;
+  }
+
   .servicio-title {
     font-size: 1.3rem;
   }
