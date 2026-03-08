@@ -397,6 +397,9 @@ function wapf_lcp_capture_preview_script() {
             script.onload = callback;
             document.head.appendChild(script);
         };
+
+        // Guard: only one html2canvas capture can run at a time
+        var lcpCaptureInProgress = false;
         
         function captureLCPPreview() {
             var $activeImage = $('.woocommerce-product-gallery__image.flex-active-slide, .woocommerce-product-gallery__image:first');
@@ -416,19 +419,54 @@ function wapf_lcp_capture_preview_script() {
         }
         
         function generateAndSavePreview(callback) {
+            if (lcpCaptureInProgress) {
+                // Already capturing — wait for it to finish instead of launching a second one
+                var waitAttempts = 0;
+                var waitInterval = setInterval(function() {
+                    waitAttempts++;
+                    if (!lcpCaptureInProgress || waitAttempts > 80) {
+                        clearInterval(waitInterval);
+                        if (callback) callback();
+                    }
+                }, 100);
+                return;
+            }
+
             var preview = captureLCPPreview();
             if (!preview) {
                 if (callback) callback();
                 return;
             }
+
+            lcpCaptureInProgress = true;
+
+            // Use scale 0.5 on mobile to drastically reduce canvas size and CPU load
+            var isMobile = window.innerWidth <= 768;
+            var captureScale = isMobile ? 0.5 : 0.8;
+
+            // Limit capture to the exact bounding box of the image element,
+            // not the full gallery container — much faster on mobile
+            var containerEl = preview.$container[0];
+            var imgEl = preview.$baseImage[0];
+            var containerRect = containerEl.getBoundingClientRect();
+            var imgRect = imgEl.getBoundingClientRect();
+            var offsetX = imgRect.left - containerRect.left;
+            var offsetY = imgRect.top - containerRect.top;
             
             loadHtml2Canvas(function() {
-                html2canvas(preview.$container[0], {
+                html2canvas(containerEl, {
                     backgroundColor: null,
-                    scale: 1,
+                    scale: captureScale,
                     logging: false,
                     useCORS: true,
-                    allowTaint: true
+                    allowTaint: true,
+                    imageTimeout: 8000,
+                    x: offsetX,
+                    y: offsetY,
+                    width: imgRect.width,
+                    height: imgRect.height,
+                    windowWidth: document.documentElement.scrollWidth,
+                    windowHeight: document.documentElement.scrollHeight
                 }).then(function(canvas) {
                     canvas.toBlob(function(blob) {
                         var formData = new FormData();
@@ -445,6 +483,7 @@ function wapf_lcp_capture_preview_script() {
                             processData: false,
                             contentType: false,
                             success: function(response) {
+                                lcpCaptureInProgress = false;
                                 if (response.success) {
                                     var $input = $('input[name=wapf_lcp_preview_url]');
                                     if (!$input.length) {
@@ -456,11 +495,13 @@ function wapf_lcp_capture_preview_script() {
                                 if (callback) callback();
                             },
                             error: function() {
+                                lcpCaptureInProgress = false;
                                 if (callback) callback();
                             }
                         });
-                    }, 'image/png', 0.95);
+                    }, 'image/png', 0.85);
                 }).catch(function(error) {
+                    lcpCaptureInProgress = false;
                     if (callback) callback();
                 });
             });
@@ -479,20 +520,23 @@ function wapf_lcp_capture_preview_script() {
             e.preventDefault();
             e.stopPropagation();
             e.stopImmediatePropagation();
-            
-            var $button = $(button);
 
             window.showCartOverlay('preparando');
 
+            // Mark preview as not yet ready so System B waits for it
+            $form.data('lcp-preview-ready', false);
+
             var safetyTimeout = setTimeout(function() {
-                window.updateCartOverlay('anadiendo');
                 $form.data('lcp-captured', true);
+                $form.data('lcp-preview-ready', true);
+                window.updateCartOverlay('anadiendo');
                 button.click();
-            }, 6000);
+            }, 8000);
 
             generateAndSavePreview(function() {
                 clearTimeout(safetyTimeout);
                 $form.data('lcp-captured', true);
+                $form.data('lcp-preview-ready', true);
                 window.updateCartOverlay('anadiendo');
                 setTimeout(function() {
                     button.click();
@@ -506,6 +550,7 @@ function wapf_lcp_capture_preview_script() {
         
         $('form.variations_form').on('found_variation', function() {
             $('form.cart').data('lcp-captured', false);
+            $('form.cart').data('lcp-preview-ready', false);
             $('input[name=wapf_lcp_preview_url]').remove();
         });
     });
@@ -1169,7 +1214,7 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
             window.hideCartOverlay(2800);
         };
         
-        // Cargar html2canvas
+        // Cargar html2canvas (referencia compartida con System A si ya está cargado)
         var loadHtml2Canvas = function(callback) {
             if (typeof html2canvas !== 'undefined') {
                 callback();
@@ -1180,132 +1225,26 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
             script.src = '<?php echo get_stylesheet_directory_uri(); ?>/html2canvas.min.js';
             script.onload = callback;
             script.onerror = function() {
-                console.error('Error cargando html2canvas');
                 callback();
             };
             document.head.appendChild(script);
         };
         
-        // Capturar preview UNA VEZ (imagen base + diseño)
-        var captureProductPreview = function(callback) {
-            var $activeImage = $('.woocommerce-product-gallery__image.flex-active-slide img').first();
-            if (!$activeImage.length) {
-                $activeImage = $('.woocommerce-product-gallery img').first();
-            }
-            
-            if (!$activeImage.length) {
-                if (callback) callback();
-                return;
-            }
-            
-            var $container = $activeImage.closest('.woocommerce-product-gallery__image');
-            var $lcpWrap = $container.find('.lcp-wrap');
-            
-            // Si hay overlay LCP, capturar con html2canvas
-            if ($lcpWrap.length > 0) {
-                loadHtml2Canvas(function() {
-                    if (typeof html2canvas === 'undefined') {
-                        if (callback) callback();
-                        return;
-                    }
-                    
-                    html2canvas($container[0], {
-                        backgroundColor: null,
-                        scale: 1,
-                        logging: false,
-                        useCORS: true,
-                        allowTaint: true
-                    }).then(function(canvas) {
-                        canvas.toBlob(function(blob) {
-                            var formData = new FormData();
-                            formData.append('action', 'wapf_save_product_preview');
-                            formData.append('nonce', wapf_lcp_nonce);
-                            formData.append('preview_image', blob, 'product-preview.png');
-                            
-                            var $form = $('form.cart');
-                            var productId = $form.find('button[name="add-to-cart"]').val();
-                            
-                            formData.append('product_id', productId || '');
-                            formData.append('variation_id', '0');
-                            
-                            $.ajax({
-                                url: wapf_config.ajax,
-                                type: 'POST',
-                                data: formData,
-                                processData: false,
-                                contentType: false,
-                                success: function(response) {
-                                    if (response.success) {
-                                        var $input = $('input[name=wapf_product_preview_url]');
-                                        if (!$input.length) {
-                                            $input = $('<input type="hidden" name="wapf_product_preview_url">');
-                                            $('form.cart').append($input);
-                                        }
-                                        $input.val(response.data.url);
-                                    }
-                                    if (callback) callback();
-                                },
-                                error: function() {
-                                    if (callback) callback();
-                                }
-                            });
-                        }, 'image/png', 0.95);
-                    }).catch(function(error) {
-                        if (callback) callback();
-                    });
-                });
-            } else {
-                // Sin LCP, solo proceder
-                if (callback) callback();
-            }
-        };
-        
-        // Cuando se sube un archivo, capturar preview
+        // Cuando se sube un archivo, solo guardar referencia — NO capturar preview aquí
+        // (html2canvas en background bloquea el hilo principal en móvil y genera miniaturas incorrectas)
         $(document).on('wapf/file_uploaded', function(e, data) {
             setTimeout(saveDropzoneFiles, 100);
             setTimeout(forceEnableButton, 150);
-            
-            // Capturar preview después de subir archivo
-            setTimeout(function() {
-                captureProductPreview();
-            }, 800);
+            // Invalidar cualquier preview anterior para que se regenere en el click
+            $('input[name=wapf_product_preview_url]').remove();
+            $('input[name=wapf_lcp_preview_url]').remove();
+            $('form.cart').data('lcp-preview-ready', false);
+            $('form.cart').data('lcp-captured', false);
         });
         
-        // IMPORTANTE: Recapturar preview cuando cambia la variación (color/talla)
+        // Al cambiar variación (color/talla): solo invalidar el preview guardado
         $('form.variations_form').on('found_variation', function(event, variation) {
-            setTimeout(function() {
-                if (typeof Dropzone !== 'undefined' && Dropzone.instances.length > 0) {
-                    var hasFiles = false;
-                    Dropzone.instances.forEach(function(dz) {
-                        if (dz.files && dz.files.length > 0) {
-                            hasFiles = true;
-                        }
-                    });
-                    
-                    if (hasFiles) {
-                        $('input[name=wapf_product_preview_url]').remove();
-                        captureProductPreview();
-                    }
-                }
-            }, 600);
-        });
-        
-        $(document).on('change', 'input[name^="wapf[field_"]', function() {
-            setTimeout(function() {
-                if (typeof Dropzone !== 'undefined' && Dropzone.instances.length > 0) {
-                    var hasFiles = false;
-                    Dropzone.instances.forEach(function(dz) {
-                        if (dz.files && dz.files.length > 0) {
-                            hasFiles = true;
-                        }
-                    });
-                    
-                    if (hasFiles) {
-                        $('input[name=wapf_product_preview_url]').remove();
-                        captureProductPreview();
-                    }
-                }
-            }, 600);
+            $('input[name=wapf_product_preview_url]').remove();
         });
         
         // Guardar cuando cambia el input de archivo WAPF
@@ -1349,44 +1288,84 @@ function prevent_wapf_upload_clear_on_add_to_cart() {
             var $btn = $(this);
             var $form = $btn.closest('form.cart');
 
-            window.updateCartOverlay('anadiendo');
-
             lastAddToCartTime = now;
             isAddingToCart = true;
-            
-            var formData = new FormData($form[0]);
-            formData.append('action', 'woocommerce_ajax_add_to_cart');
-            
-            $.ajax({
-                type: 'POST',
-                url: wc_add_to_cart_params.wc_ajax_url.toString().replace('%%endpoint%%', 'add_to_cart'),
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    if (response.error && response.product_url) {
-                        window.location = response.product_url;
-                        return;
-                    }
-                    
-                    if (response.fragments) {
-                        $.each(response.fragments, function(key, value) {
-                            $(key).replaceWith(value);
-                        });
-                    }
-                    
-                    $(document.body).trigger('added_to_cart', [response.fragments, response.cart_hash, $btn]);
-                    
-                    showNotification('Producto añadido al carrito', 'success');
 
-                    setTimeout(saveDropzoneFiles, 100);
-                    isAddingToCart = false;
-                },
-                error: function() {
-                    showNotification('Error al añadir el producto', 'error');
-                    isAddingToCart = false;
+            // Wait until System A has finished saving the preview (lcp-preview-ready flag)
+            // before sending the cart AJAX, so the thumbnail URL is included in the POST.
+            var lcpCheckAttempts = 0;
+            var maxLcpChecks = 60; // up to 6 seconds (60 × 100ms)
+
+            function doAddToCart() {
+                window.updateCartOverlay('anadiendo');
+
+                var formData = new FormData($form[0]);
+                formData.append('action', 'woocommerce_ajax_add_to_cart');
+
+                $.ajax({
+                    type: 'POST',
+                    url: wc_add_to_cart_params.wc_ajax_url.toString().replace('%%endpoint%%', 'add_to_cart'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.error && response.product_url) {
+                            window.location = response.product_url;
+                            return;
+                        }
+
+                        if (response.fragments) {
+                            $.each(response.fragments, function(key, value) {
+                                $(key).replaceWith(value);
+                            });
+                        }
+
+                        $(document.body).trigger('added_to_cart', [response.fragments, response.cart_hash, $btn]);
+
+                        showNotification('Producto añadido al carrito', 'success');
+
+                        setTimeout(saveDropzoneFiles, 100);
+                        isAddingToCart = false;
+
+                        // Reset lcp flags for next add-to-cart
+                        $form.data('lcp-captured', false);
+                        $form.data('lcp-preview-ready', false);
+                    },
+                    error: function() {
+                        showNotification('Error al añadir el producto', 'error');
+                        isAddingToCart = false;
+                        $form.data('lcp-captured', false);
+                        $form.data('lcp-preview-ready', false);
+                    }
+                });
+            }
+
+            function waitForPreviewThenAdd() {
+                var hasLcpWrap = $('.lcp-wrap').length > 0;
+
+                // If no LCP overlay present, proceed immediately
+                if (!hasLcpWrap) {
+                    doAddToCart();
+                    return;
                 }
-            });
+
+                // If System A has confirmed the preview is saved, proceed
+                if ($form.data('lcp-preview-ready') === true) {
+                    doAddToCart();
+                    return;
+                }
+
+                // Keep waiting (max 6 seconds)
+                lcpCheckAttempts++;
+                if (lcpCheckAttempts >= maxLcpChecks) {
+                    doAddToCart();
+                    return;
+                }
+
+                setTimeout(waitForPreviewThenAdd, 100);
+            }
+
+            waitForPreviewThenAdd();
             
             return false;
         });
